@@ -81,9 +81,31 @@ Open CORS on everything, JSON only, cache-friendly, light rate limiting
 | `GET /api/v1/billboards/random?count=8` | Random billboards for widgets (`count` 1–24). |
 | `GET /api/v1/figures` | The full catalogue (summaries). |
 | `GET /api/v1/figures/:slug` | One figure in full — summary, quote, links. |
+| `GET /api/v1/whoami` | Your tier (anonymous/keyed) and rate-limit budget. |
 | `GET /api/v1/meta` | Dataset size and licensing metadata. |
 | `GET /embed.js` | The widget script itself. |
 | `GET /healthz` | Liveness probe. |
+
+### API keys (optional)
+
+The API is **keyless by default** — the embed works for anyone, forever. Keys
+exist for partners and heavy consumers:
+
+| Tier | Limit | Scope |
+| --- | --- | --- |
+| Anonymous (no key) | 120 req/min | per IP |
+| Keyed | 1,200 req/min | per key |
+
+```bash
+npm run issue-key -- --name "Partner App"   # prints the key ONCE
+curl -H "Authorization: Bearer hi_…" https://host/api/v1/whoami
+curl "https://host/api/v1/billboards/random?count=8&key=hi_…"   # also accepted
+```
+
+Keys are stored **only as sha-256 hashes** in `data/keys.json` (safe to
+commit — the plaintext is shown once at issuance and never stored). Embedders
+can pass `data-key="hi_…"` on the billboard container to use a key from the
+widget. Restart the server after issuing keys.
 
 Example billboard:
 

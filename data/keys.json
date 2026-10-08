@@ -1,0 +1,12 @@
+{
+  "$comment": "API keys, stored as sha-256 hashes only — safe to commit. Issue with: npm run issue-key -- --name \"Name\". Plaintext is shown once at issuance and never stored.",
+  "keys": [
+    {
+      "id": "k_1_75c5",
+      "name": "Demo Key",
+      "hash": "f8f8d3d8cb2d39c4e70d0a4b9c10923598c976a6853a4cadc00550d72eae14e7",
+      "createdAt": "2026-10-08T20:31:45.547Z",
+      "enabled": true
+    }
+  ]
+}

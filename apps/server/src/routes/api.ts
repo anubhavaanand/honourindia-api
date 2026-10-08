@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
 import { figures, findBySlug, sampleRandom, toBillboard, toSummary } from '../lib/data.js'
+import type { Env } from '../lib/auth.js'
 
-export const api = new Hono()
+export const api = new Hono<Env>()
 
 api.get('/', (c) =>
   c.json({
@@ -9,15 +10,28 @@ api.get('/', (c) =>
     version: 'v1',
     mission: 'A billboard network for the minds that built India.',
     figures: figures.length,
+    auth: 'Keyless for everyone. Optional keys (Authorization: Bearer) unlock higher rate limits.',
     endpoints: {
       'GET /api/v1/billboards/random?count=8': 'Random billboards for the embed widget (count 1–24).',
       'GET /api/v1/figures': 'The full catalogue of honoured figures.',
       'GET /api/v1/figures/:slug': 'Full record for one figure.',
+      'GET /api/v1/whoami': 'Shows your tier (anonymous/keyed) and rate-limit budget.',
       'GET /api/v1/meta': 'Dataset and licensing metadata.',
     },
     docs: '/',
   }),
 )
+
+api.get('/whoami', (c) => {
+  const key = c.get('authKey')
+  return c.json({
+    tier: key ? 'keyed' : 'anonymous',
+    key: key ? { id: key.id, name: key.name } : null,
+    rateLimit: key
+      ? { max: 1200, window: '1 minute', scope: 'per key' }
+      : { max: 120, window: '1 minute', scope: 'per IP' },
+  })
+})
 
 api.get('/meta', (c) =>
   c.json({

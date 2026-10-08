@@ -4,6 +4,7 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { api } from './routes/api.js'
+import { auth, type Env } from './lib/auth.js'
 import { rateLimit } from './lib/ratelimit.js'
 import { ROOT } from './lib/data.js'
 
@@ -39,9 +40,10 @@ async function serveFile(filePath: string, cacheControl: string): Promise<Respon
   }
 }
 
-const app = new Hono()
+const app = new Hono<Env>()
 
-// Public API: open CORS + light rate limiting.
+// Public API: open CORS, optional-key auth, key-aware rate limiting.
+app.use('/api/*', auth())
 app.use('/api/*', rateLimit())
 app.use('/api/*', cors({ origin: '*' }))
 app.route('/api/v1', api)

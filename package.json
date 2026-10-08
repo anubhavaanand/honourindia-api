@@ -19,6 +19,7 @@
     "build:pages": "npm run build && node scripts/build-pages.mjs",
     "deploy:pages": "npm run build:pages && node scripts/deploy-pages.mjs",
     "seed:images": "node scripts/fetch-images.mjs",
+    "issue-key": "node scripts/issue-key.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present"
   }
 }

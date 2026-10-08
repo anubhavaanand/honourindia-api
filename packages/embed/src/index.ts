@@ -35,6 +35,8 @@ interface MountOptions {
   theme?: Theme
   interval?: number
   size?: Size
+  /** Optional API key (data-key) — unlocks higher rate limits for heavy embeds. */
+  key?: string
 }
 
 interface MountHandle {
@@ -330,6 +332,7 @@ class BillboardWidget {
   private auto: boolean
   private intervalMs: number
   private api: string
+  private keyQuery: string
   private dom: ReturnType<typeof buildDom>
   private shadow: ShadowRoot
   private host: Element
@@ -337,6 +340,7 @@ class BillboardWidget {
   constructor(host: Element, opts: MountOptions) {
     this.host = host
     this.api = opts.api ?? defaultApi()
+    this.keyQuery = opts.key ? `&key=${encodeURIComponent(opts.key)}` : ''
     const interval = clamp(opts.interval ?? DEFAULT_INTERVAL, MIN_INTERVAL, MAX_INTERVAL)
     this.intervalMs = interval * 1000
     this.auto = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -372,7 +376,7 @@ class BillboardWidget {
     for (;;) {
       if (this.destroyed) return
       try {
-        const res = await fetch(`${this.api}/billboards/random?count=${BATCH_SIZE}`)
+        const res = await fetch(`${this.api}/billboards/random?count=${BATCH_SIZE}${this.keyQuery}`)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = (await res.json()) as { billboards: Billboard[] }
         if (this.destroyed) return
@@ -471,6 +475,7 @@ function readDataset(el: Element): MountOptions {
     theme: ds.theme === 'light' ? 'light' : ds.theme === 'dark' ? 'dark' : undefined,
     size: ['rectangle', 'leaderboard', 'poster'].includes(ds.size ?? '') ? (ds.size as Size) : undefined,
     interval: Number.isFinite(interval) ? interval : undefined,
+    key: ds.key,
   }
 }
 

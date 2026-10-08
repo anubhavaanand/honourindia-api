@@ -50,14 +50,26 @@ const DEFAULT_INTERVAL = 8
 const scriptEl = document.currentScript as HTMLScriptElement | null
 
 function defaultApi(): string {
+  // Resolve relative to the script's own directory, not the domain root —
+  // GitHub Pages project sites serve under a subpath (…/repo/embed.js).
   if (scriptEl && /^https?:/.test(scriptEl.src)) {
-    return new URL('/api/v1', scriptEl.src).toString()
+    return new URL('api/v1', new URL('.', scriptEl.src)).toString()
   }
-  return `${location.origin}/api/v1`
+  return new URL('api/v1/', new URL('.', location.href)).toString()
 }
 
 function clamp(n: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, n))
+}
+
+/** Fisher-Yates — randomises order client-side so even a cached or static batch rotates freshly per visitor. */
+function shuffle<T>(items: T[]): T[] {
+  const a = [...items]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j]!, a[i]!]
+  }
+  return a
 }
 
 const CSS = `
@@ -366,7 +378,7 @@ class BillboardWidget {
         if (this.destroyed) return
         this.dom.errorBox.style.display = 'none'
         this.dom.card.style.visibility = 'visible'
-        this.queue.push(...data.billboards)
+        this.queue.push(...shuffle(data.billboards))
         if (this.index < 0) this.show(0)
         else this.schedule()
         this.fetching = false

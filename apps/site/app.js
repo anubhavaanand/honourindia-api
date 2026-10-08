@@ -2,11 +2,15 @@
 (function () {
   'use strict'
 
-  var ORIGIN = location.origin
+  // Work relative to the page URL so the bundle works at a domain root
+  // (local server, Render) AND under a subpath (GitHub Pages project site).
+  var PAGE_DIR = new URL('.', location.href)
+  var EMBED_ORIGIN = PAGE_DIR.toString().replace(/\/$/, '')
+  var API_BASE = new URL('api/v1/', PAGE_DIR)
 
   // Fill origin placeholders in the static HTML.
   document.querySelectorAll('.ph-origin').forEach(function (el) {
-    el.textContent = ORIGIN
+    el.textContent = EMBED_ORIGIN
   })
 
   /* ---------- embed snippet playground ---------- */
@@ -34,7 +38,7 @@
     if (cfg.interval !== 8) attrs += ' data-interval="' + cfg.interval + '"'
     return (
       '<div data-honourindia' + attrs + '></div>\n' +
-      '<script src="' + ORIGIN + '/embed.js" async><' + '/script>'
+      '<script src="' + EMBED_ORIGIN + '/embed.js" async><' + '/script>'
     )
   }
 
@@ -71,7 +75,7 @@
 
   /* ---------- figures grid ---------- */
 
-  fetch(ORIGIN + '/api/v1/figures')
+  fetch(new URL('figures', API_BASE))
     .then(function (r) { return r.json() })
     .then(function (data) {
       var count = document.getElementById('figuresCount')
@@ -89,7 +93,7 @@
 
         var thumb = document.createElement('div')
         thumb.className = 'figure-thumb'
-        if (f.image) thumb.style.backgroundImage = 'url("' + ORIGIN + f.image.url + '")'
+        if (f.image) thumb.style.backgroundImage = 'url("' + new URL(f.image.url, API_BASE) + '")'
 
         var body = document.createElement('div')
         body.className = 'figure-body'

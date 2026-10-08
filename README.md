@@ -150,6 +150,16 @@ plain JavaScript. Put Cloudflare in front for TLS and extra caching — the
 heavy cache headers already live on `/embed.js`, `/images/*`, and the
 catalogue endpoints.
 
+**GitHub Pages edition (free static hosting):** `npm run deploy:pages` builds
+a fully static mirror into `dist-pages/` and force-publishes it to the
+`gh-pages` branch. Because the dataset itself is static, the mirror serves
+the API's JSON at the documented paths — `/api/v1/billboards/random`,
+`/api/v1/figures`, `/api/v1/meta` — as pre-generated files, and the widget
+shuffles batches client-side so rotation stays random per visitor. A static
+host cannot provide per-request randomness or `/api/v1/figures/:slug`
+detail responses; everything else, including third-party embedding, works
+with no server at all.
+
 ## Ideas on the roadmap
 
 - Submit-a-figure flow with source links and license review.

@@ -3,7 +3,10 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// src/lib and dist/lib sit at the same depth, so this resolves correctly
+// whether the server runs from source (tsx) or compiled output (node dist).
 const DATA_DIR = path.resolve(__dirname, '../../../../data')
+export const ROOT = path.resolve(DATA_DIR, '..')
 
 export interface FigureRecord {
   slug: string

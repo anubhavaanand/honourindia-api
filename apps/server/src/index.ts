@@ -1,14 +1,12 @@
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { api } from './routes/api.js'
 import { rateLimit } from './lib/ratelimit.js'
+import { ROOT } from './lib/data.js'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const ROOT = path.resolve(__dirname, '../../..')
 const IMAGES_DIR = path.join(ROOT, 'public/images')
 const SITE_DIR = path.join(ROOT, 'apps/site')
 const EMBED_JS = path.join(ROOT, 'packages/embed/dist/embed.js')

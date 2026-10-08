@@ -14,8 +14,8 @@
   ],
   "scripts": {
     "dev": "npm run build -w packages/embed && npm run dev -w apps/server",
-    "start": "npm run build -w packages/embed && npm run start -w apps/server",
-    "build": "npm run build -w packages/embed",
+    "start": "npm run start -w apps/server",
+    "build": "npm run build -w packages/embed && npm run build -w apps/server",
     "seed:images": "node scripts/fetch-images.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present"
   }

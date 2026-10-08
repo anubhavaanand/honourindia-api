@@ -1,0 +1,17 @@
+# Render Blueprint — deploy from the GitHub repo via "New +" → "Blueprint".
+# Build compiles the embed widget (esbuild) and the server (tsc);
+# start runs the compiled server with plain Node, so production
+# runtime needs only the dependencies listed in "dependencies".
+services:
+  - type: web
+    name: honourindia
+    runtime: node
+    plan: free
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production

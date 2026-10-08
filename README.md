@@ -127,10 +127,28 @@ Example billboard:
 
 ## Deployment
 
-Single stateless Node process (≥ 20). `PORT` env var (default 3000) is the only
-configuration. Deploys as-is on Render, Fly.io, Railway, or any VPS; put
-Cloudflare in front for TLS and extra caching. The heavy cache headers already
-live on `/embed.js`, `/images/*`, and the catalogue endpoints.
+Single stateless Node process (≥ 20) — no database, no secrets. `PORT`
+(default 3000) is the only configuration.
+
+**Render (one click):** the repo ships a `render.yaml` Blueprint. In Render:
+*New + → Blueprint* → select the repo → apply. The build compiles both
+workspaces (`esbuild` for the widget, `tsc` for the server) and the service
+then runs plain Node — production runtime needs only the `dependencies`, so
+`NODE_ENV=production` is safe. Health check: `/healthz`. Note the free tier
+sleeps after idle; the widget's retry loop transparently recovers on wake.
+
+**Any platform or VPS:**
+
+```bash
+npm install       # dev deps are needed for this step
+npm run build     # esbuild → packages/embed/dist/embed.js · tsc → apps/server/dist
+npm start         # node apps/server/dist/index.js
+```
+
+All build tooling runs during `npm run build` only; the running server is
+plain JavaScript. Put Cloudflare in front for TLS and extra caching — the
+heavy cache headers already live on `/embed.js`, `/images/*`, and the
+catalogue endpoints.
 
 ## Ideas on the roadmap
 

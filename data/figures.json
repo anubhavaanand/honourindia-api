@@ -1,0 +1,341 @@
+{
+  "$comment": "Honour India seed dataset. Each record honours one Indian scientist or great mind. Fields: slug (stable id), name, born/died (year, died null if living), field, tagline (one line shown on billboards), summary (2-3 sentences), quote (only where widely attributed; null otherwise), wiki (exact English Wikipedia page title, used to fetch the portrait and build the link). Image credit/license live in data/images.json, produced by scripts/fetch-images.mjs.",
+  "version": 1,
+  "figures": [
+    {
+      "slug": "cv-raman",
+      "name": "C. V. Raman",
+      "born": 1888,
+      "died": 1970,
+      "field": "Physics",
+      "tagline": "Discovered how light shifts colour as it scatters — the Raman effect — winning India its first Nobel Prize in the sciences.",
+      "summary": "Raman found that when light passes through a transparent substance, a tiny fraction emerges with a shifted wavelength — the Raman effect, announced on 28 February 1928. The discovery won him the 1930 Nobel Prize in Physics, and India now celebrates National Science Day on its anniversary. He founded the Raman Research Institute and received the Bharat Ratna in 1954.",
+      "quote": {
+        "text": "The true wealth of a nation consists not in the stored-up gold but in the intellectual and physical strength of its people.",
+        "source": "widely attributed"
+      },
+      "wiki": "C. V. Raman"
+    },
+    {
+      "slug": "srinivasa-ramanujan",
+      "name": "Srinivasa Ramanujan",
+      "born": 1887,
+      "died": 1920,
+      "field": "Mathematics",
+      "tagline": "Self-taught genius whose identities in number theory still guide mathematics a century after his death.",
+      "summary": "With almost no formal training in pure mathematics, Ramanujan produced thousands of results in number theory, infinite series and continued fractions. His 1913 letters to G. H. Hardy brought him to Cambridge, where he was elected a Fellow of the Royal Society at thirty. His notebooks continue to yield new mathematics to this day.",
+      "quote": {
+        "text": "An equation for me has no meaning unless it expresses a thought of God.",
+        "source": "as recounted in accounts of his life"
+      },
+      "wiki": "Srinivasa Ramanujan"
+    },
+    {
+      "slug": "jagadish-chandra-bose",
+      "name": "Jagadish Chandra Bose",
+      "born": 1858,
+      "died": 1937,
+      "field": "Physics · Biology",
+      "tagline": "Demonstrated wireless signalling in 1895, then proved that plants respond to stimuli — a pioneer of two sciences.",
+      "summary": "In 1895 in Calcutta, Bose publicly demonstrated communication using millimetre-range radio waves, before Marconi's wireless patent. He then turned to plant physiology, inventing the crescograph to measure how plants respond to light, heat and gravity, and founded the Bose Institute in 1917. He rarely patented his inventions, believing knowledge should be free.",
+      "quote": null,
+      "wiki": "Jagadish Chandra Bose"
+    },
+    {
+      "slug": "homi-bhabha",
+      "name": "Homi J. Bhabha",
+      "born": 1909,
+      "died": 1966,
+      "field": "Nuclear Physics",
+      "tagline": "Architect of India's atomic energy programme and founder of the Tata Institute of Fundamental Research.",
+      "summary": "A physicist of international standing in cosmic rays and quantum theory, Bhabha founded the Tata Institute of Fundamental Research in 1945 and became the first chairman of India's Atomic Energy Commission. He charted the country's three-stage nuclear power programme and mentored a generation of Indian scientists before dying in an air crash on Mont Blanc.",
+      "quote": null,
+      "wiki": "Homi J. Bhabha"
+    },
+    {
+      "slug": "satyendra-nath-bose",
+      "name": "Satyendra Nath Bose",
+      "born": 1894,
+      "died": 1974,
+      "field": "Physics",
+      "tagline": "His way of counting photons forced physics to invent new statistics — the bosons carry his name.",
+      "summary": "In 1924 Bose sent Albert Einstein a paper deriving Planck's radiation law in a way that treated light as indistinguishable quanta. Einstein translated and extended it, and Bose–Einstein statistics — and much later the Bose–Einstein condensate — were born. Particles obeying his statistics are called bosons. India later honoured him as National Professor with the Padma Vibhushan.",
+      "quote": null,
+      "wiki": "Satyendra Nath Bose"
+    },
+    {
+      "slug": "meghnad-saha",
+      "name": "Meghnad Saha",
+      "born": 1893,
+      "died": 1956,
+      "field": "Astrophysics",
+      "tagline": "Derived the equation that lets astronomers take the temperature of stars from their light.",
+      "summary": "Saha's 1920 ionization equation connects a star's spectrum to its temperature and pressure — the foundation of modern astrophysics. He also built institutions: the journal Science and Culture, and what is now the Saha Institute of Nuclear Physics in Kolkata. He was elected a Fellow of the Royal Society in 1927.",
+      "quote": null,
+      "wiki": "Meghnad Saha"
+    },
+    {
+      "slug": "subrahmanyan-chandrasekhar",
+      "name": "S. Chandrasekhar",
+      "born": 1910,
+      "died": 1995,
+      "field": "Astrophysics",
+      "tagline": "Worked out how stars die — the Chandrasekhar limit names the tipping point beyond which they collapse.",
+      "summary": "At nineteen, on the ship from India to Cambridge, Chandrasekhar calculated that white dwarf stars cannot exceed about 1.4 solar masses. The idea was resisted for decades and finally earned the 1983 Nobel Prize in Physics. NASA named its flagship X-ray observatory, Chandra, after him.",
+      "quote": null,
+      "wiki": "Subrahmanyan Chandrasekhar"
+    },
+    {
+      "slug": "vikram-sarabhai",
+      "name": "Vikram Sarabhai",
+      "born": 1919,
+      "died": 1971,
+      "field": "Space Science",
+      "tagline": "Father of the Indian space programme — from a rocket shed in Kerala to India's first satellite.",
+      "summary": "Sarabhai convinced a young India that space technology could serve development — communication, weather forecasting and education. He founded the Physical Research Laboratory, led the committee that grew into ISRO, and set up the Thumba launching station where India's first rockets were assembled beside a fishing village. He also helped found IIM Ahmedabad.",
+      "quote": {
+        "text": "We must be second to none in the application of advanced technologies to the real problems of man and society.",
+        "source": "on the purpose of India's space programme"
+      },
+      "wiki": "Vikram Sarabhai"
+    },
+    {
+      "slug": "apj-abdul-kalam",
+      "name": "A. P. J. Abdul Kalam",
+      "born": 1931,
+      "died": 2015,
+      "field": "Aerospace Engineering",
+      "tagline": "The 'Missile Man' who led India's rocket and missile programmes, then became its most beloved President.",
+      "summary": "An aeronautical engineer who helped build India's first satellite launcher, SLV-3, and led the integrated guided missile programme that produced Agni and Prithvi — earning the name 'Missile Man of India'. As the eleventh President (2002–2007) he became the 'People's President', and spent his last decades inspiring students. He died while delivering a lecture, at eighty-three.",
+      "quote": {
+        "text": "Dream is not that which you see while sleeping; it is something that does not let you sleep.",
+        "source": "widely quoted from his speeches"
+      },
+      "wiki": "A. P. J. Abdul Kalam"
+    },
+    {
+      "slug": "m-s-swaminathan",
+      "name": "M. S. Swaminathan",
+      "born": 1925,
+      "died": 2023,
+      "field": "Agricultural Science",
+      "tagline": "Plant geneticist who helped end India's food dependence — the architect of the Green Revolution.",
+      "summary": "Combining high-yielding wheat varieties with strategy and farmer outreach, Swaminathan helped turn India from a food-deficient nation into one self-sufficient in grain within a decade of the mid-1960s crises. He later founded the M. S. Swaminathan Research Foundation and championed an 'evergreen revolution' — productivity that respects ecology. He was the first laureate of the World Food Prize, in 1987.",
+      "quote": null,
+      "wiki": "M. S. Swaminathan"
+    },
+    {
+      "slug": "verghese-kurien",
+      "name": "Verghese Kurien",
+      "born": 1921,
+      "died": 2012,
+      "field": "Dairy Engineering",
+      "tagline": "The 'Milkman of India' — built Operation Flood and the cooperative movement that made India the world's largest milk producer.",
+      "summary": "An engineer who planned to leave for a petroleum career, Kurien stayed in Anand, Gujarat, and built Amul into a farmer-owned dairy cooperative. Replicating that model through Operation Flood, he made India the world's largest milk producer, with millions of small farmers as its owners.",
+      "quote": null,
+      "wiki": "Verghese Kurien"
+    },
+    {
+      "slug": "anna-mani",
+      "name": "Anna Mani",
+      "born": 1918,
+      "died": 2001,
+      "field": "Physics · Meteorology",
+      "tagline": "Insisted India build its own weather instruments — the 'weather woman of India'.",
+      "summary": "Trained as a physicist, Mani made her mark in meteorological instrumentation, insisting that India manufacture its scientific instruments rather than import them. As deputy director general of the India Meteorological Department she built networks for measuring solar radiation, ozone and wind — foundations for India's renewable-energy planning. A 2022 Google Doodle celebrated her 104th birthday.",
+      "quote": null,
+      "wiki": "Anna Mani",
+      "commonsFile": "Anna Mani - Oil painting by Rajasekharan.jpg"
+    },
+    {
+      "slug": "janaki-ammal",
+      "name": "E. K. Janaki Ammal",
+      "born": 1897,
+      "died": 1984,
+      "field": "Botany · Cytogenetics",
+      "tagline": "Bred sweeter sugarcane for India and co-authored the Chromosome Atlas of Cultivated Plants.",
+      "summary": "Earning a doctorate in botany in Michigan in 1931, Janaki Ammal became a leading cytogeneticist, crossing sugarcane varieties to give India sweeter, hardier canes. She co-authored the Chromosome Atlas of Cultivated Plants, helped reorganise the Botanical Survey of India, and received the Padma Shri in 1977. A magnolia — Magnolia 'Janaki Ammal' — is named in her honour.",
+      "quote": null,
+      "wiki": "E. K. Janaki Ammal"
+    },
+    {
+      "slug": "asima-chatterjee",
+      "name": "Asima Chatterjee",
+      "born": 1918,
+      "died": 2006,
+      "field": "Chemistry",
+      "tagline": "Pioneered medicines from Indian plants — the first woman to earn a DSc from an Indian university.",
+      "summary": "Chatterjee's research on alkaloids from Indian plants led to anti-convulsive and anti-malarial compounds, including the anti-epileptic drug Ayush-56. In 1944 she became the first woman awarded a Doctorate of Science by an Indian university, and in 1975 the first woman to preside over the Indian Science Congress.",
+      "quote": null,
+      "wiki": "Asima Chatterjee",
+      "commonsFile": "Asima Chatterjee 1.jpg",
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+    },
+    {
+      "slug": "anandi-gopal-joshi",
+      "name": "Anandi Gopal Joshi",
+      "born": 1865,
+      "died": 1887,
+      "field": "Medicine",
+      "tagline": "One of the first Indian women doctors, graduating in medicine in America in 1886 — at twenty-one.",
+      "summary": "Sent to America with her husband's support, Joshi graduated from the Women's Medical College of Pennsylvania in 1886, among the first Indian women to qualify in Western medicine. Queen Victoria sent her a congratulatory message. She died of tuberculosis within a year of returning home, before her work could begin.",
+      "quote": null,
+      "wiki": "Anandi Gopal Joshi"
+    },
+    {
+      "slug": "kadambini-ganguly",
+      "name": "Kadambini Ganguly",
+      "born": 1861,
+      "died": 1923,
+      "field": "Medicine",
+      "tagline": "One of British India's first women doctors — in practice when women could hardly leave the home.",
+      "summary": "Ganguly was among the first women graduates of Calcutta University and, in 1886, among the first women of South Asia to qualify as a doctor of Western medicine. She practised for decades, worked for women's education and rights, and was among the first women to speak at the Indian National Congress.",
+      "quote": null,
+      "wiki": "Kadambini Ganguly"
+    },
+    {
+      "slug": "g-n-ramachandran",
+      "name": "G. N. Ramachandran",
+      "born": 1922,
+      "died": 2001,
+      "field": "Biophysics",
+      "tagline": "Mapped the shapes a protein chain can fold into — the Ramachandran plot is in every textbook since.",
+      "summary": "In 1963 Ramachandran and his students plotted the full range of angles a protein backbone can adopt, creating the Ramachandran plot — still the first check on any new protein structure. A decade earlier he had proposed the triple-helix structure of collagen. He built India's leading school of molecular biophysics in Chennai.",
+      "quote": null,
+      "wiki": "G. N. Ramachandran",
+      "commonsFile": "G N Ramachandran.jpg",
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+    },
+    {
+      "slug": "yellapragada-subbarow",
+      "name": "Yellapragada Subbarow",
+      "born": 1895,
+      "died": 1948,
+      "field": "Biochemistry",
+      "tagline": "Co-discovered how ATP carries the cell's energy, and developed lifesaving drugs — one of science's most unsung minds.",
+      "summary": "At Harvard, Subbarow and Cyrus Fiske isolated ATP and phosphocreatine, the molecules that store and carry energy in every living cell. Moving to Lederle Laboratories, he drove the development of diethylcarbamazine against filariasis, methotrexate against cancer, and the tetracycline antibiotics. A colleague's memorial line: 'Because he lived, the world lives.'",
+      "quote": null,
+      "wiki": "Yellapragada Subbarow"
+    },
+    {
+      "slug": "birbal-sahni",
+      "name": "Birbal Sahni",
+      "born": 1891,
+      "died": 1949,
+      "field": "Palaeobotany",
+      "tagline": "Read plant fossils hundreds of millions of years old to reconstruct the Indian subcontinent's deep past.",
+      "summary": "Sahni founded palaeobotany as a discipline in India, studying fossils from the Gondwana deposits to trace the subcontinent's ancient vegetation. The institute he established in Lucknow, now the Birbal Sahni Institute of Palaeosciences, carries the work forward. He was elected a Fellow of the Royal Society in 1936.",
+      "quote": null,
+      "wiki": "Birbal Sahni"
+    },
+    {
+      "slug": "p-c-mahalanobis",
+      "name": "P. C. Mahalanobis",
+      "born": 1893,
+      "died": 1972,
+      "field": "Statistics",
+      "tagline": "Founded the Indian Statistical Institute and the measure that bears his name — the Mahalanobis distance.",
+      "summary": "Mahalanobis started the Indian Statistical Institute in 1931 with a few students in a Calcutta classroom and built it into a world centre. He created the Mahalanobis distance, pioneered large-scale sample surveys, and brought statistics to national planning. He received the Padma Vibhushan in 1968.",
+      "quote": null,
+      "wiki": "P. C. Mahalanobis"
+    },
+    {
+      "slug": "salim-ali",
+      "name": "Sálim Ali",
+      "born": 1896,
+      "died": 1987,
+      "field": "Ornithology",
+      "tagline": "The 'Birdman of India' — surveyed the subcontinent's birds and made citizens into naturalists.",
+      "summary": "Ali surveyed the birds of the subcontinent across decades of expeditions, from the Himalaya to the Andamans, and wrote The Book of Indian Birds, which turned generations of readers into observers. With Dillon Ripley he produced the landmark Handbook of the Birds of India and Pakistan. He received the Padma Vibhushan in 1976.",
+      "quote": null,
+      "wiki": "Sálim Ali"
+    },
+    {
+      "slug": "shakuntala-devi",
+      "name": "Shakuntala Devi",
+      "born": 1929,
+      "died": 2013,
+      "field": "Mathematics",
+      "tagline": "The 'human computer' — multiplied two 13-digit numbers in 28 seconds, and made numbers fun for millions.",
+      "summary": "Discovered as a child prodigy in Bangalore, Devi performed calculations that outran computers of her era — in 1982 she multiplied two randomly chosen 13-digit numbers in 28 seconds. She wrote books bringing mathematics to children, and in 1977 wrote the first Indian study of homosexuality, arguing for its decriminalisation.",
+      "quote": null,
+      "wiki": "Shakuntala Devi"
+    },
+    {
+      "slug": "m-visvesvaraya",
+      "name": "M. Visvesvaraya",
+      "born": 1861,
+      "died": 1962,
+      "field": "Civil Engineering",
+      "tagline": "Engineer of dams and water systems — India celebrates Engineers' Day on his birthday.",
+      "summary": "Visvesvaraya patented automatic sluice gates, engineered the Krishna Raja Sagara dam and city water and drainage systems, and as Diwan of Mysore industrialised the state. He received the Bharat Ratna in 1955, and India marks Engineers' Day on his birthday, 15 September.",
+      "quote": {
+        "text": "Remember, your work may be only to sweep a railway crossing, but it is your duty to keep it so clean that no other crossing in the world is as clean as yours.",
+        "source": "widely attributed"
+      },
+      "wiki": "M. Visvesvaraya"
+    },
+    {
+      "slug": "kalpana-chawla",
+      "name": "Kalpana Chawla",
+      "born": 1962,
+      "died": 2003,
+      "field": "Aerospace Engineering",
+      "tagline": "First woman of Indian origin in space — flew twice on the Space Shuttle.",
+      "summary": "Born in Karnal, Haryana, Chawla earned her doctorate in aerospace engineering in the United States and was selected by NASA in 1994. She flew on Space Shuttle Columbia in 1997, operating the robotic arm, and again on STS-107 in 2003 — the mission that ended in tragedy on re-entry. Asteroid 51826 Kalpanachawla and NASA's Kalpana Chawla supercomputer bear her name.",
+      "quote": {
+        "text": "The path from dreams to success does exist. May you have the vision to find it, the courage to get on to it, and the perseverance for the journey.",
+        "source": "widely quoted from her message to students"
+      },
+      "wiki": "Kalpana Chawla"
+    },
+    {
+      "slug": "nambi-narayanan",
+      "name": "Nambi Narayanan",
+      "born": 1941,
+      "died": null,
+      "field": "Rocket Engineering",
+      "tagline": "Led development of the Vikas engine that still powers Indian rockets — and fought a false case to vindication.",
+      "summary": "At ISRO, Narayanan led the team that developed the Vikas liquid engine — the workhorse of the PSLV and GSLV rockets. In 1994 he was arrested in a fabricated espionage case; the charges collapsed, and decades later the Supreme Court upheld his innocence and India awarded him the Padma Bhushan in 2019.",
+      "quote": null,
+      "wiki": "Nambi Narayanan"
+    },
+    {
+      "slug": "tessy-thomas",
+      "name": "Tessy Thomas",
+      "born": 1963,
+      "died": null,
+      "field": "Missile Engineering",
+      "tagline": "First woman to head a major Indian missile project — led Agni-IV as its project director.",
+      "summary": "Joining DRDO in 1985, Thomas rose through the Agni programme to become project director of Agni-IV — the first woman to lead a major Indian missile project — and later directed the Advanced Systems Laboratory. Known as the 'Missile Woman of India', she has championed women in engineering throughout her career.",
+      "quote": null,
+      "wiki": "Tessy Thomas"
+    },
+    {
+      "slug": "g-d-naidu",
+      "name": "G. D. Naidu",
+      "born": 1893,
+      "died": 1974,
+      "field": "Invention",
+      "tagline": "Self-taught inventor called the 'Edison of India' — built motors, pumps and cameras from scratch.",
+      "summary": "With little formal schooling, Naidu built one of India's earliest indigenous electric motors, manufactured the Rasant razor, pumps and film cameras, and ran Coimbatore's famous industrial exhibition. He later endowed a polytechnic and a museum of technology, seeding the engineering culture of his city.",
+      "quote": null,
+      "wiki": "G. D. Naidu",
+      "commonsFile": "Gopalswamy D. Naidu.jpg",
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+    },
+    {
+      "slug": "raj-chandra-bose",
+      "name": "Raj Chandra Bose",
+      "born": 1901,
+      "died": 1987,
+      "field": "Statistics · Mathematics",
+      "tagline": "Co-created the BCH error-correcting codes that keep modern digital storage and communication honest.",
+      "summary": "Rising from poverty in Mymensingh to the heart of Calcutta statistics, Bose co-constructed the BCH error-correcting codes with his student D. K. Ray-Chaudhuri in 1959–60 — mathematics that underpins reliable digital storage and communication today. He also developed foundational tools of combinatorial design, including the Bose–Mesner algebra, and spent his final decades building a combinatorics school in Colorado.",
+      "quote": null,
+      "wiki": "Raj Chandra Bose",
+      "commonsFile": "Raj Chandra Bose.jpg",
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+    }
+  ]
+}

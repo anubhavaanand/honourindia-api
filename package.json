@@ -1,0 +1,22 @@
+{
+  "name": "honourindia",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A billboard network for the minds that built India — an embeddable widget + public API honouring Indian scientists and great minds.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run build -w packages/embed && npm run dev -w apps/server",
+    "start": "npm run build -w packages/embed && npm run start -w apps/server",
+    "build": "npm run build -w packages/embed",
+    "seed:images": "node scripts/fetch-images.mjs",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

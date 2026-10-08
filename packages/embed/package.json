@@ -1,0 +1,17 @@
+{
+  "name": "@honourindia/embed",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Honour India billboard widget — one script tag, rotating billboards honouring Indian scientists.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/embed.js",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --minify --format=iife --target=es2018 --outfile=dist/embed.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.0"
+  }
+}

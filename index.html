@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>सम्मान · Honour India — billboards for the minds that built India</title>
+  <meta name="description" content="A free, embeddable billboard network honouring Indian scientists and great minds. One line of code puts a rotating billboard on any website or app." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <a class="wordmark" href="/">सम्मान · Honour&nbsp;India</a>
+      <nav>
+        <a href="#embed">Embed</a>
+        <a href="#api">API</a>
+        <a href="#figures">The figures</a>
+        <a href="#mission">Why</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <p class="kicker">A billboard network for the minds that built India</p>
+      <h1>Sell nothing.<br />Honour <em>someone</em>.</h1>
+      <p class="lede">
+        Websites reserve corners of every page for advertisements. Honour India turns that
+        corner into a billboard for Indian scientists and great minds — the discoverers,
+        builders and quiet geniuses who are rarely celebrated. One line of code, rotating
+        every few seconds, free forever.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#embed">Get the embed code</a>
+        <a class="btn ghost" href="#api">Read the API docs</a>
+      </div>
+      <p class="hero-note">No tracking. No cookies. Open CORS. Portraits under free licenses with credit shown.</p>
+    </div>
+    <div class="hero-stage">
+      <div data-honourindia data-size="poster" data-theme="dark" data-interval="8"></div>
+    </div>
+  </section>
+
+  <section class="wrap strip">
+    <div data-honourindia data-size="leaderboard" data-theme="dark" data-interval="7"></div>
+  </section>
+
+  <main>
+    <section id="embed" class="wrap section">
+      <h2><span class="num">01</span> Put a billboard anywhere</h2>
+      <p class="section-lede">
+        Paste this anywhere in your HTML. The widget renders inside a shadow root, so it can
+        never clash with your styles — and it only weighs a few kilobytes.
+      </p>
+      <div class="embed-grid">
+        <div class="code-col">
+          <div class="code-head">
+            <span>your-page.html</span>
+            <button class="copy-btn" id="copySnippet" type="button">Copy</button>
+          </div>
+          <pre id="snippet"><code>&lt;div data-honourindia&gt;&lt;/div&gt;
+&lt;script src="<span class="ph-origin"></span>/embed.js" async&gt;&lt;/script&gt;</code></pre>
+          <div class="playground">
+            <h3>Tune it</h3>
+            <div class="controls">
+              <label>Theme
+                <select id="optTheme">
+                  <option value="dark" selected>dark</option>
+                  <option value="light">light</option>
+                </select>
+              </label>
+              <label>Size
+                <select id="optSize">
+                  <option value="rectangle" selected>rectangle · 300×250</option>
+                  <option value="poster">poster · 480×520</option>
+                  <option value="leaderboard">leaderboard · 728×96</option>
+                </select>
+              </label>
+              <label>Interval <output id="optIntervalOut">8s</output>
+                <input type="range" id="optInterval" min="5" max="15" step="1" value="8" />
+              </label>
+            </div>
+            <p class="hint">Changes apply live to the preview and to the snippet.</p>
+          </div>
+        </div>
+        <div class="preview-col">
+          <p class="preview-label">Live preview</p>
+          <div id="previewMount"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="api" class="wrap section">
+      <h2><span class="num">02</span> The API</h2>
+      <p class="section-lede">
+        Everything the widget consumes is public. Build your own displays, apps, classroom
+        screensavers — whatever honours these minds best.
+      </p>
+      <div class="api-cards">
+        <article class="api-card">
+          <header><code>GET /api/v1/billboards/random?count=8</code></header>
+          <p>Random billboards: name, years, field, one-line achievement, portrait with license, and a link to read more. <code>count</code> between 1 and 24.</p>
+          <pre><code>$ curl <span class="ph-origin"></span>/api/v1/billboards/random?count=1</code></pre>
+        </article>
+        <article class="api-card">
+          <header><code>GET /api/v1/figures</code></header>
+          <p>The full catalogue of honoured figures, with summaries on detail pages.</p>
+          <pre><code>$ curl <span class="ph-origin"></span>/api/v1/figures</code></pre>
+        </article>
+        <article class="api-card">
+          <header><code>GET /api/v1/figures/:slug</code></header>
+          <p>One figure in full — tagline, summary, quote and links.</p>
+          <pre><code>$ curl <span class="ph-origin"></span>/api/v1/figures/anna-mani</code></pre>
+        </article>
+        <article class="api-card">
+          <header><code>GET /api/v1/meta</code></header>
+          <p>Dataset size and licensing metadata.</p>
+          <pre><code>$ curl <span class="ph-origin"></span>/api/v1/meta</code></pre>
+        </article>
+      </div>
+      <p class="fineprint">Open CORS everywhere · cache-friendly headers · light rate limiting (120 req/min) · JSON only.</p>
+    </section>
+
+    <section id="figures" class="wrap section">
+      <h2><span class="num">03</span> The figures</h2>
+      <p class="section-lede" id="figuresCount">Loading…</p>
+      <div class="figure-grid" id="figureGrid"></div>
+    </section>
+
+    <section id="mission" class="wrap section mission">
+      <h2><span class="num">04</span> Why this exists</h2>
+      <div class="mission-copy">
+        <p>
+          In India and across the developing world, the people who cured diseases, fed nations,
+          launched rockets and decoded the universe are rarely given a billboard. Their faces
+          don't sell phones. Their names get a paragraph in a textbook.
+        </p>
+        <p>
+          The ad industry built a global machine to put products in front of eyes. This project
+          borrows that machine — the slot, the rotation, the craft — and points it at people
+          worth looking up to. Every site that embeds a billboard donates a little corner of
+          the internet to someone who earned it.
+        </p>
+        <p class="sig">— सम्मान · Honour India</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot-row">
+      <p>सम्मान · Honour India — a billboard network for the minds that built India.</p>
+      <p class="fineprint">
+        Portraits from Wikipedia/Wikimedia Commons under their respective free licenses;
+        credit shown on every billboard. Code MIT. Facts belong to everyone.
+      </p>
+    </div>
+  </footer>
+
+  <script src="embed.js" async></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

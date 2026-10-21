@@ -64,10 +64,10 @@ app.get('/images/*', (c) => {
   )
 })
 
-// Demo + docs site.
+// Demo + docs site. Assets uncached outside production for fast iteration.
 app.get('/', (c) => serveFile(path.join(SITE_DIR, 'index.html'), 'no-cache'))
-app.get('/styles.css', (c) => serveFile(path.join(SITE_DIR, 'styles.css'), 'public, max-age=600'))
-app.get('/app.js', (c) => serveFile(path.join(SITE_DIR, 'app.js'), 'public, max-age=600'))
+app.get('/styles.css', (c) => serveFile(path.join(SITE_DIR, 'styles.css'), isProd ? 'public, max-age=600' : 'no-cache'))
+app.get('/app.js', (c) => serveFile(path.join(SITE_DIR, 'app.js'), isProd ? 'public, max-age=600' : 'no-cache'))
 
 app.get('/healthz', (c) => c.json({ ok: true }))
 

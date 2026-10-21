@@ -91,15 +91,15 @@ const CSS = `
 .hi--leaderboard { max-width: 728px; aspect-ratio: auto; height: 96px; }
 
 /* themes */
-.hi--dark { background: #101418; color: #f4f1ea; }
+.hi--dark { background: #0a0a0c; color: #f2efe9; }
 .hi--light { background: #faf7f0; color: #1a1d21; }
-.hi--dark .hi-card { box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+.hi--dark .hi-card { box-shadow: 0 10px 30px rgba(0,0,0,.5); }
 .hi--light .hi-card { box-shadow: 0 10px 30px rgba(20,20,30,.18); }
 
 /* split-layout panels (poster, leaderboard): solid text column beside the photo */
-.hi--dark .hi-nameplate { background: #151a22; border-top: 1px solid #262e3a; }
-.hi--dark .hi-panel { background: #151a22; border-left: 1px solid #262e3a; }
-.hi--poster.hi--dark .hi-foot { background: #151a22; border-top: 1px solid #262e3a; }
+.hi--dark .hi-nameplate { background: #101013; border-top: 1px solid #24242b; }
+.hi--dark .hi-panel { background: #101013; border-left: 1px solid #24242b; }
+.hi--poster.hi--dark .hi-foot { background: #101013; border-top: 1px solid #24242b; }
 .hi--light .hi-nameplate { background: #f3eee2; border-top: 1px solid #d9d0bd; }
 .hi--light .hi-panel { background: #f3eee2; border-left: 1px solid #d9d0bd; }
 .hi--poster.hi--light .hi-foot { background: #f3eee2; border-top: 1px solid #d9d0bd; }

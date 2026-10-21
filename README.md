@@ -53,7 +53,7 @@ Drop the container anywhere; attributes tune it:
 | Attribute       | Values                                   | Default     |
 | --------------- | ---------------------------------------- | ----------- |
 | `data-theme`    | `dark` \| `light`                        | `dark`      |
-| `data-size`     | `rectangle` (300×250) \| `leaderboard` (728×96) \| `poster` (480×520) | `rectangle` |
+| `data-size`     | `rectangle` (300×250) \| `leaderboard` (728×96) \| `poster` (480×320) | `rectangle` |
 | `data-interval` | seconds per billboard (5–60)             | `8`         |
 | `data-api`      | override API base                        | origin of `embed.js` |
 

@@ -48,8 +48,11 @@ app.use('/api/*', rateLimit())
 app.use('/api/*', cors({ origin: '*' }))
 app.route('/api/v1', api)
 
-// The embeddable widget script — usable from any origin.
-app.get('/embed.js', (c) => serveFile(EMBED_JS, 'public, max-age=600, stale-while-revalidate=3600'))
+// The embeddable widget script — usable from any origin. Uncached outside
+// production so local iteration isn't bitten by the browser cache.
+app.get('/embed.js', (c) =>
+  serveFile(EMBED_JS, isProd ? 'public, max-age=600, stale-while-revalidate=3600' : 'no-cache'),
+)
 
 // Portraits (seeded from Wikimedia Commons; per-image license in data/images.json).
 app.get('/images/*', (c) => {
@@ -74,6 +77,8 @@ app.notFound((c) => {
   }
   return c.text('Not found', 404)
 })
+
+const isProd = process.env.NODE_ENV === 'production'
 
 const port = Number(process.env.PORT ?? 3000)
 serve({ fetch: app.fetch, port }, (info) => {

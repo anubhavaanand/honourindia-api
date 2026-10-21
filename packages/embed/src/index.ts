@@ -75,7 +75,7 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 const CSS = `
-:host { display: block; }
+:host { display: block; width: 100%; }
 
 .hi {
   position: relative;
@@ -87,7 +87,7 @@ const CSS = `
   -webkit-font-smoothing: antialiased;
 }
 .hi--rectangle { max-width: 300px; aspect-ratio: 300 / 250; }
-.hi--poster { max-width: 480px; aspect-ratio: 480 / 520; }
+.hi--poster { max-width: 480px; aspect-ratio: 480 / 320; }
 .hi--leaderboard { max-width: 728px; aspect-ratio: auto; height: 96px; }
 
 /* themes */
@@ -95,6 +95,14 @@ const CSS = `
 .hi--light { background: #faf7f0; color: #1a1d21; }
 .hi--dark .hi-card { box-shadow: 0 10px 30px rgba(0,0,0,.45); }
 .hi--light .hi-card { box-shadow: 0 10px 30px rgba(20,20,30,.18); }
+
+/* split-layout panels (poster, leaderboard): solid text column beside the photo */
+.hi--dark .hi-nameplate { background: #151a22; border-top: 1px solid #262e3a; }
+.hi--dark .hi-panel { background: #151a22; border-left: 1px solid #262e3a; }
+.hi--poster.hi--dark .hi-foot { background: #151a22; border-top: 1px solid #262e3a; }
+.hi--light .hi-nameplate { background: #f3eee2; border-top: 1px solid #d9d0bd; }
+.hi--light .hi-panel { background: #f3eee2; border-left: 1px solid #d9d0bd; }
+.hi--poster.hi--light .hi-foot { background: #f3eee2; border-top: 1px solid #d9d0bd; }
 
 .hi-card {
   position: absolute; inset: 0;
@@ -147,14 +155,56 @@ const CSS = `
   font-size: 1.22rem;
   margin: 0 0 5px;
 }
-.hi--poster .hi-name { font-size: 1.9rem; }
 .hi-tag {
   font-size: .74rem; line-height: 1.35; opacity: .88;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
-.hi--poster .hi-tag { font-size: .85rem; -webkit-line-clamp: 4; }
-.hi--leaderboard .hi-tag { -webkit-line-clamp: 2; }
-.hi--leaderboard .hi-info { padding: 10px 14px 8px; }
+
+/* ---- split layouts (poster, leaderboard): face + name, achievement column ---- */
+.hi-body { position: relative; display: flex; flex: 1; min-height: 0; }
+.hi--poster .hi-layer { flex-direction: column; }
+
+.hi-face { display: flex; flex-direction: column; width: 45%; min-width: 0; }
+.hi-face .hi-media { position: relative; flex: 1; }
+
+.hi-nameplate { padding: 9px 12px 10px; }
+.hi-nameplate .hi-name { margin: 0; font-size: 1.14rem; line-height: 1.15; }
+.hi-nameplate-sub { margin-top: 3px; font-size: .66rem; letter-spacing: .08em; opacity: .6; }
+
+.hi-panel {
+  flex: 1; min-width: 0;
+  padding: 14px 16px;
+  display: flex; flex-direction: column; justify-content: center; gap: 8px;
+}
+.hi--poster .hi-field { margin-bottom: 0; }
+.hi--poster .hi-tag { font-size: .82rem; -webkit-line-clamp: 5; }
+
+.hi-quote {
+  display: none; margin: 2px 0 0; padding-left: 10px;
+  border-left: 2px solid #ffb454;
+  font-family: Georgia, 'Times New Roman', serif; font-style: italic;
+  font-size: .78rem; line-height: 1.45; opacity: .82;
+}
+.hi--light .hi-quote { border-left-color: #b05e00; }
+.hi-quote.has {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.hi--poster .hi-foot { position: relative; padding: 6px 12px 8px; }
+
+.hi--leaderboard .hi-media { right: auto; width: 96px; }
+.hi--leaderboard .hi-panel { position: absolute; top: 0; bottom: 0; left: 96px; right: 0; padding: 8px 92px 8px 14px; gap: 2px; }
+.hi--leaderboard .hi-field { font-size: 9px; margin-bottom: 0; }
+.hi--leaderboard .hi-name { font-size: 1.02rem; margin: 0; }
+.hi--leaderboard .hi-tag { font-size: .71rem; -webkit-line-clamp: 2; }
+.hi--leaderboard .hi-foot {
+  position: absolute; right: 10px; bottom: 7px; z-index: 3;
+  padding: 0; flex-direction: column; align-items: flex-end; gap: 1px;
+  max-width: 82px; font-size: 7px; line-height: 1.35; opacity: .55;
+}
+.hi--leaderboard .hi-brand { font-size: 7px; }
+.hi--leaderboard .hi-noimg { font-size: 1.7rem; }
+.hi--poster .hi-noimg { font-size: 3rem; }
 
 .hi-foot {
   position: relative;
@@ -228,11 +278,29 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
     layer.className = 'hi-layer'
     // only the active crossfade layer is exposed to assistive tech
     if (i === 1) layer.setAttribute('aria-hidden', 'true')
-    layer.innerHTML =
-      '<div class="hi-media"></div>' +
-      '<div class="hi-scrim"></div>' +
-      '<div class="hi-info"><div class="hi-field"></div><h3 class="hi-name"></h3><p class="hi-tag"></p></div>' +
-      '<div class="hi-foot"><span class="hi-attr"></span><span class="hi-brand">सम्मान · Honour India</span></div>'
+    if (size === 'poster') {
+      layer.innerHTML =
+        '<div class="hi-body">' +
+          '<div class="hi-face"><div class="hi-media"></div>' +
+            '<div class="hi-nameplate"><h3 class="hi-name"></h3><div class="hi-nameplate-sub"></div></div>' +
+          '</div>' +
+          '<div class="hi-panel"><div class="hi-field"></div><p class="hi-tag"></p><blockquote class="hi-quote"></blockquote></div>' +
+        '</div>' +
+        '<div class="hi-foot"><span class="hi-attr"></span><span class="hi-brand">सम्मान · Honour India</span></div>'
+    } else if (size === 'leaderboard') {
+      layer.innerHTML =
+        '<div class="hi-body">' +
+          '<div class="hi-media"></div>' +
+          '<div class="hi-panel"><div class="hi-field"></div><h3 class="hi-name"></h3><p class="hi-tag"></p></div>' +
+        '</div>' +
+        '<div class="hi-foot"><span class="hi-attr"></span><span class="hi-brand">सम्मान · Honour India</span></div>'
+    } else {
+      layer.innerHTML =
+        '<div class="hi-media"></div>' +
+        '<div class="hi-scrim"></div>' +
+        '<div class="hi-info"><div class="hi-field"></div><h3 class="hi-name"></h3><p class="hi-tag"></p></div>' +
+        '<div class="hi-foot"><span class="hi-attr"></span><span class="hi-brand">सम्मान · Honour India</span></div>'
+    }
     card.appendChild(layer)
     layers.push(layer)
   }
@@ -277,9 +345,27 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string): void {
   const tag = layer.querySelector<HTMLElement>('.hi-tag')!
   const attr = layer.querySelector<HTMLElement>('.hi-attr')!
 
-  field.textContent = b.field + (b.years ? ` · ${b.years}` : '')
+  // poster carries the years on the nameplate under the photo; other sizes append them to the kicker
+  const nameplateSub = layer.querySelector<HTMLElement>('.hi-nameplate-sub')
+  if (nameplateSub) {
+    field.textContent = b.field
+    nameplateSub.textContent = b.years ?? ''
+  } else {
+    field.textContent = b.field + (b.years ? ` · ${b.years}` : '')
+  }
   name.textContent = b.name
   tag.textContent = b.tagline
+
+  const quote = layer.querySelector<HTMLElement>('.hi-quote')
+  if (quote) {
+    if (b.quote) {
+      quote.textContent = `“${b.quote.text}”`
+      quote.classList.add('has')
+    } else {
+      quote.textContent = ''
+      quote.classList.remove('has')
+    }
+  }
 
   if (b.image) {
     const img = document.createElement('img')

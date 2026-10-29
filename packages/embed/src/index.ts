@@ -9,7 +9,7 @@
  *   data-api       — API base, defaults to <origin of embed.js>/api/v1
  *   data-theme     — "dark" (default) | "light"
  *   data-interval  — seconds per billboard, default 8, min 5, max 60
- *   data-size      — "rectangle" (300x250, default) | "leaderboard" (728x96) | "poster" (480x520)
+ *   data-size      — "rectangle" (300x250, default) | "leaderboard" (728x96) | "poster" (480x320)
  *
  * The widget mounts into a shadow root (no CSS clashes with the host page),
  * fetches a batch of billboards once, rotates them client-side, pauses when
@@ -256,12 +256,30 @@ const CSS = `
 }
 .hi-retry:hover { opacity: .8; }
 
+.hi-loading {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; opacity: 1; transition: opacity .3s ease; pointer-events: none; z-index: 2;
+}
+.hi-loading-hidden { display: none !important; }
+.hi-loading-brand {
+  font-family: Georgia, 'Times New Roman', serif; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; font-size: .72rem; opacity: .75;
+}
+.hi--dark .hi-loading-brand { color: #ffb454; }
+.hi--light .hi-loading-brand { color: #b05e00; }
+.hi-loading-pulse {
+  width: 24px; height: 24px; border: 2px solid currentColor; border-bottom-color: transparent;
+  border-radius: 50%; animation: hi-pulse .7s linear infinite;
+}
+@keyframes hi-pulse { to { transform: rotate(360deg); } }
+
 @media (prefers-reduced-motion: reduce) {
   .hi-layer { transition: none; }
 }
 `
 
-function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTMLElement; card: HTMLAnchorElement; layers: [HTMLElement, HTMLElement]; navPrev: HTMLButtonElement; navNext: HTMLButtonElement; errorBox: HTMLElement } {
+function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTMLElement; card: HTMLAnchorElement; layers: [HTMLElement, HTMLElement]; navPrev: HTMLButtonElement; navNext: HTMLButtonElement; errorBox: HTMLElement; loading: HTMLElement } {
   const root = document.createElement('div')
   root.className = `hi hi--${size} hi--${theme}`
   root.setAttribute('role', 'region')
@@ -323,10 +341,17 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
   errorBox.style.display = 'none'
   errorBox.innerHTML =
     '<div class="hi-error-title">सम्मान · Honour India</div>' +
-    '<div class="hi-error-sub">Could not reach the Honour India API. Retrying…</div>'
+    '<div class="hi-error-sub">Could not reach the Honour India API. Retrying…</div>' +
+    '<button class="hi-retry" type="button">Try again</button>'
 
-  root.append(progress, card, navPrev, navNext, errorBox)
-  return { root, progress, card, layers: [layers[0]!, layers[1]!], navPrev, navNext, errorBox }
+  const loading = document.createElement('div')
+  loading.className = 'hi-loading'
+  loading.innerHTML =
+    '<div class="hi-loading-brand">सम्मान · Honour India</div>' +
+    '<div class="hi-loading-pulse"></div>'
+
+  root.append(progress, card, navPrev, navNext, errorBox, loading)
+  return { root, progress, card, layers: [layers[0]!, layers[1]!], navPrev, navNext, errorBox, loading }
 }
 
 function initials(name: string): string {
@@ -442,6 +467,12 @@ class BillboardWidget {
 
     this.dom.navPrev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(-1) })
     this.dom.navNext.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(1) })
+
+    this.dom.card.style.visibility = 'visible'
+
+    var retryBtn = this.dom.errorBox.querySelector('.hi-retry')
+    if (retryBtn) retryBtn.addEventListener('click', () => void this.fetchBatch())
+
     document.addEventListener('visibilitychange', this.onVisibility)
 
     void this.fetchBatch()
@@ -468,6 +499,7 @@ class BillboardWidget {
         if (this.destroyed) return
         this.dom.errorBox.style.display = 'none'
         this.dom.card.style.visibility = 'visible'
+        this.dom.loading.classList.add('hi-loading-hidden')
         this.queue.push(...shuffle(data.billboards))
         if (this.index < 0) this.show(0)
         else this.schedule()
@@ -477,6 +509,7 @@ class BillboardWidget {
         if (this.index < 0) {
           this.dom.errorBox.style.display = 'flex'
           this.dom.card.style.visibility = 'hidden'
+          this.dom.loading.classList.add('hi-loading-hidden')
         }
         await new Promise((r) => setTimeout(r, retryMs))
         retryMs = Math.min(retryMs * 3, 90000)

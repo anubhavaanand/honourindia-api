@@ -15,13 +15,19 @@
 
   /* ---------- embed snippet playground ---------- */
 
-  var snippetEl = document.getElementById('snippet')
-  var previewMount = document.getElementById('previewMount')
-  var optTheme = document.getElementById('optTheme')
-  var optSize = document.getElementById('optSize')
-  var optInterval = document.getElementById('optInterval')
-  var optIntervalOut = document.getElementById('optIntervalOut')
-  var copyBtn = document.getElementById('copySnippet')
+  function required(id) {
+    var el = document.getElementById(id)
+    if (!el) throw new Error('[honourindia] missing required element: #' + id)
+    return el
+  }
+
+  var snippetEl = required('snippet')
+  var previewMount = required('previewMount')
+  var optTheme = required('optTheme')
+  var optSize = required('optSize')
+  var optInterval = required('optInterval')
+  var optIntervalOut = required('optIntervalOut')
+  var copyBtn = required('copySnippet')
 
   function currentConfig() {
     return {
@@ -57,7 +63,31 @@
     previewMount.appendChild(host)
     if (window.HonourIndia) {
       previewHandle = window.HonourIndia.mount(host, cfg)
+    } else {
+      previewMount.appendChild(document.createTextNode('Loading billboard widget…'))
     }
+  }
+
+  function embedScript() {
+    return document.querySelector('script[src*="embed.js"]')
+  }
+
+  function attachEmbedListeners() {
+    var el = embedScript()
+    if (!el) return
+    var ready = el.readyState === 'loaded' || el.readyState === 'complete'
+    el.addEventListener('load', function () {
+  attachEmbedListeners()
+  renderPreview()
+    })
+    el.addEventListener('error', function () {
+      previewMount.innerHTML = ''
+      var msg = document.createElement('div')
+      msg.textContent = 'Could not load the Honour India widget (embed.js). Check your connection or host.'
+      msg.style.color = '#b00020'
+      previewMount.appendChild(msg)
+    })
+    if (ready) renderPreview()
   }
 
   optTheme.addEventListener('change', renderPreview)

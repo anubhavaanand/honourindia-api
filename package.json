@@ -20,6 +20,11 @@
     "deploy:pages": "npm run build:pages && node scripts/deploy-pages.mjs",
     "seed:images": "node scripts/fetch-images.mjs",
     "issue-key": "node scripts/issue-key.mjs",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0",
+    "jsdom": "^25.0.0"
   }
 }

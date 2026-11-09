@@ -18,6 +18,9 @@ export interface FigureRecord {
   summary: string
   quote: { text: string; source?: string } | null
   wiki: string
+  era: 'ancient' | 'medieval' | 'colonial' | 'modern' | 'living'
+  enduring: boolean
+  stillUsed: string | null
   image: { file: string; credit?: string; license?: string } | null
 }
 
@@ -39,6 +42,9 @@ export interface Billboard {
   years: string | null
   field: string
   tagline: string
+  era: 'ancient' | 'medieval' | 'colonial' | 'modern' | 'living'
+  enduring: boolean
+  stillUsed: string | null
   quote: FigureRecord['quote']
   image: { url: string; credit?: string; license?: string } | null
   link: string
@@ -50,6 +56,7 @@ export interface FigureSummary {
   years: string | null
   field: string
   tagline: string
+  era: 'ancient' | 'medieval' | 'colonial' | 'modern' | 'living'
   image: { url: string } | null
   link: string
 }
@@ -89,6 +96,9 @@ export function toBillboard(f: FigureRecord): Billboard {
     years: years(f.born, f.died),
     field: f.field,
     tagline: f.tagline,
+    era: f.era,
+    enduring: f.enduring,
+    stillUsed: f.stillUsed,
     quote: f.quote,
     image: f.image ? { url: `/images/${f.image.file}`, credit: f.image.credit, license: f.image.license } : null,
     link: wikiLink(f.wiki),
@@ -102,6 +112,7 @@ export function toSummary(f: FigureRecord): FigureSummary {
     years: years(f.born, f.died),
     field: f.field,
     tagline: f.tagline,
+    era: f.era,
     image: f.image ? { url: `/images/${f.image.file}` } : null,
     link: wikiLink(f.wiki),
   }

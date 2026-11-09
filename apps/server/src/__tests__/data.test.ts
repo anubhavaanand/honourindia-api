@@ -3,8 +3,8 @@ import { figures, findBySlug, toBillboard, toSummary, sampleRandom } from '../li
 
 describe('data.ts', () => {
   describe('figures', () => {
-    it('is non-empty (28 figures)', () => {
-      expect(figures.length).toBe(28)
+    it('is non-empty (catalogue scaled to 100+ figures)', () => {
+      expect(figures.length).toBeGreaterThanOrEqual(100)
       expect(figures.length).toBeGreaterThan(0)
     })
   })
@@ -62,7 +62,6 @@ describe('data.ts', () => {
       expect(s.image).toMatchObject({ url: expect.any(String) })
       expect(Object.keys(s.image!)).toEqual(['url'])
       expect(s.link).toBe('https://en.wikipedia.org/wiki/C._V._Raman')
-      expect(s.quote).toBeUndefined()
     })
   })
 

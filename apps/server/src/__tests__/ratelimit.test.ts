@@ -17,7 +17,9 @@ function makeContext(authKey: AuthKey | null = null, ip = '1.2.3.4') {
       c.headers[name] = String(value)
     },
     json: (body: unknown, status: number, headersObj: Record<string, string>) => {
-      c.lastJson = { body, status, headers: { ...headersObj } }
+      const h = new Headers()
+      for (const [k, v] of Object.entries(headersObj)) h.set(k, v)
+      c.lastJson = { body, status, headers: h }
       return c.lastJson
     },
   }
@@ -42,8 +44,8 @@ describe('rateLimit', () => {
 
     const res = await mw(c, () => Promise.resolve())
     expect(res!.status).toBe(429)
-    expect(res!.headers['Retry-After']).toBeDefined()
-    expect(res!.headers['X-RateLimit-Remaining']).toBe('0')
+    expect(res!.headers.get('Retry-After')).toBeDefined()
+    expect(res!.headers.get('X-RateLimit-Remaining')).toBe('0')
   })
 
   it('keyed callers use key:<id> and keyedMax, separate from anonymous', async () => {

@@ -226,3 +226,131 @@ pre {
   .embed-grid, .api-cards { grid-template-columns: 1fr; }
   .figure-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* figure detail page */
+.figure-detail {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  margin-top: 30px;
+  align-items: start;
+}
+.figure-media { position: relative; }
+.figure-portrait {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 14px;
+  border: 1px solid var(--line-strong);
+  display: block;
+  background: var(--bg-raise);
+}
+.figure-monogram {
+  width: 220px;
+  height: 220px;
+  border-radius: 14px;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: var(--saffron);
+  letter-spacing: 0.06em;
+}
+.figure-name {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+.figure-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.figure-years { color: var(--ink-dim); }
+.figure-field {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.65rem;
+  color: var(--saffron);
+  font-weight: 600;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+.figure-era-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  font-weight: 600;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+.figure-tagline {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+.figure-summary {
+  font-size: 1.05rem;
+  color: #cfccc5;
+  margin: 0 0 22px;
+  max-width: 44em;
+  line-height: 1.7;
+}
+.figure-quote {
+  border-left: 3px solid var(--saffron);
+  margin: 0 0 22px;
+  padding: 0 0 0 18px;
+  font-style: italic;
+  color: var(--ink-dim);
+}
+.figure-quote p { margin: 0 0 6px; font-size: 1.1rem; }
+.figure-quote cite {
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+  font-style: normal;
+}
+.figure-still-used {
+  color: var(--green);
+  font-weight: 600;
+  margin: 0 0 18px;
+  font-size: 0.95rem;
+}
+.figure-credit {
+  color: var(--ink-faint);
+  font-size: 0.77rem;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.figure-not-found {
+  color: var(--ink-dim);
+  font-size: 1.2rem;
+  padding: 40px 0;
+  text-align: center;
+}
+.back-link {
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.back-link:hover { color: var(--ink); text-decoration: none; }
+
+@media (min-width: 760px) {
+  .figure-detail { grid-template-columns: 1fr 1.1fr; gap: 44px; }
+}

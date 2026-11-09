@@ -68,6 +68,8 @@ app.get('/images/*', (c) => {
 app.get('/', (c) => serveFile(path.join(SITE_DIR, 'index.html'), 'no-cache'))
 app.get('/styles.css', (c) => serveFile(path.join(SITE_DIR, 'styles.css'), isProd ? 'public, max-age=600' : 'no-cache'))
 app.get('/app.js', (c) => serveFile(path.join(SITE_DIR, 'app.js'), isProd ? 'public, max-age=600' : 'no-cache'))
+app.get('/figure.js', (c) => serveFile(path.join(SITE_DIR, 'figure.js'), isProd ? 'public, max-age=600' : 'no-cache'))
+app.get('/figures/:slug', (c) => serveFile(path.join(SITE_DIR, 'figure.html'), 'no-cache'))
 
 app.get('/healthz', (c) => c.json({ ok: true }))
 

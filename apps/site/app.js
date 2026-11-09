@@ -117,8 +117,7 @@
       data.figures.forEach(function (f) {
         var a = document.createElement('a')
         a.className = 'figure-card'
-        a.href = f.link
-        a.target = '_blank'
+        a.href = '/figures/' + f.slug
         a.rel = 'noopener noreferrer'
 
         var thumb = document.createElement('div')

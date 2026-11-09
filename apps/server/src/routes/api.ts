@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
-import { figures, findBySlug, sampleRandom, toBillboard, toSummary } from '../lib/data.js'
+import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary } from '../lib/data.js'
+import type { FigureFilter } from '../lib/data.js'
 import type { Env } from '../lib/auth.js'
 
 export const api = new Hono<Env>()
@@ -59,8 +60,41 @@ api.get('/billboards/random', (c) => {
 })
 
 api.get('/figures', (c) => {
+  const field = c.req.query('field')
+  const search = c.req.query('search')
+  const enduringRaw = c.req.query('enduring')
+  const limitRaw = c.req.query('limit')
+  const offsetRaw = c.req.query('offset')
+
+  let enduring: boolean | undefined
+  if (enduringRaw !== undefined) {
+    enduring = enduringRaw === 'true'
+  }
+  let limit: number | undefined
+  if (limitRaw !== undefined) {
+    const n = Number.parseInt(limitRaw, 10)
+    if (!Number.isFinite(n) || n < 1 || n > 100) {
+      return c.json({ error: 'limit must be an integer between 1 and 100' }, 400)
+    }
+    limit = n
+  }
+  let offset: number | undefined
+  if (offsetRaw !== undefined) {
+    const n = Number.parseInt(offsetRaw, 10)
+    if (!Number.isFinite(n) || n < 0) {
+      return c.json({ error: 'offset must be a non-negative integer' }, 400)
+    }
+    offset = n
+  }
+
+  const filtered = filterFigures({ field, search, enduring, limit, offset })
   c.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400')
-  return c.json({ count: figures.length, figures: figures.map(toSummary) })
+  return c.json({
+    count: filtered.length,
+    total: figures.length,
+    filters: { field, search, enduring, limit, offset },
+    figures: filtered.map(toSummary),
+  })
 })
 
 api.get('/figures/:slug', (c) => {

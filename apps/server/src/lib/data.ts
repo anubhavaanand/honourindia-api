@@ -122,6 +122,36 @@ export function findBySlug(slug: string): FigureRecord | undefined {
   return bySlug.get(slug)
 }
 
+export interface FigureFilter {
+  field?: string
+  search?: string
+  enduring?: boolean
+  limit?: number
+  offset?: number
+}
+
+export function filterFigures(opts: FigureFilter): FigureRecord[] {
+  let out = [...figures]
+  if (opts.field) {
+    const q = opts.field.toLowerCase()
+    out = out.filter((f) => f.field.toLowerCase().includes(q))
+  }
+  if (opts.search) {
+    const q = opts.search.toLowerCase()
+    out = out.filter((f) =>
+      f.name.toLowerCase().includes(q) ||
+      f.tagline.toLowerCase().includes(q) ||
+      f.summary.toLowerCase().includes(q)
+    )
+  }
+  if (opts.enduring !== undefined) {
+    out = out.filter((f) => f.enduring === opts.enduring)
+  }
+  if (opts.offset !== undefined) out = out.slice(opts.offset)
+  if (opts.limit !== undefined) out = out.slice(0, opts.limit)
+  return out
+}
+
 /** Random sample without replacement; wraps by reshuffling if count exceeds total. */
 export function sampleRandom(count: number): FigureRecord[] {
   const pool = [...figures]

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { figures, findBySlug, toBillboard, toSummary, sampleRandom } from '../lib/data.js'
+import { figures, findBySlug, filterFigures, toBillboard, toSummary, sampleRandom } from '../lib/data.js'
 
 describe('data.ts', () => {
   describe('figures', () => {
@@ -90,6 +90,46 @@ describe('data.ts', () => {
 
     it('sampleRandom(0) returns []', () => {
       expect(sampleRandom(0)).toEqual([])
+    })
+  })
+
+  describe('filterFigures', () => {
+    it('filter by field returns matching figures only', () => {
+      const out = filterFigures({ field: 'physics' })
+      expect(out.length).toBeGreaterThan(0)
+      expect(out.every((f) => f.field.toLowerCase().includes('physics'))).toBe(true)
+    })
+
+    it('search matches name/tagline/summary', () => {
+      const out = filterFigures({ search: 'Raman' })
+      expect(out.some((f) => f.name.toLowerCase().includes('raman'))).toBe(true)
+    })
+
+    it('enduring=true returns only enduring figures', () => {
+      const out = filterFigures({ enduring: true })
+      expect(out.every((f) => f.enduring === true)).toBe(true)
+    })
+
+    it('enduring=false returns only non-enduring figures', () => {
+      const out = filterFigures({ enduring: false })
+      expect(out.every((f) => f.enduring === false)).toBe(true)
+    })
+
+    it('limit caps results', () => {
+      const out = filterFigures({ limit: 5 })
+      expect(out.length).toBeLessThanOrEqual(5)
+    })
+
+    it('offset skips results', () => {
+      const full = filterFigures({})
+      const out = filterFigures({ offset: full.length - 1 })
+      expect(out.length).toBe(1)
+    })
+
+    it('combined filters work', () => {
+      const out = filterFigures({ field: 'mathematics', enduring: true, limit: 10, offset: 0 })
+      expect(out.length).toBeLessThanOrEqual(10)
+      expect(out.every((f) => f.field.toLowerCase().includes('mathematics') && f.enduring === true)).toBe(true)
     })
   })
 })

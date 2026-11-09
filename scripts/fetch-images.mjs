@@ -203,9 +203,11 @@ async function main() {
 
     // be polite to the APIs
     await new Promise((r) => setTimeout(r, 500))
-  }
 
-  await writeFile(OUT_FILE, JSON.stringify(results, null, 2) + '\n')
+    // persist progress after every figure so the script is resumable
+    // across interruptions (network blips, timeouts, rate limits)
+    await writeFile(OUT_FILE, JSON.stringify(results, null, 2) + '\n')
+  }
 
   console.log(`\nDone: ${ok} downloaded, ${skipped} already present, ${failed.length} failed.`)
   if (failed.length) {

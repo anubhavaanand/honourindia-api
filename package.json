@@ -20,6 +20,9 @@
     "deploy:pages": "npm run build:pages && node scripts/deploy-pages.mjs",
     "seed:images": "node scripts/fetch-images.mjs",
     "issue-key": "node scripts/issue-key.mjs",
+    "research:wikidata": "node scripts/research-wikidata.mjs",
+    "dedup:figures": "node scripts/dedup-figures.mjs",
+    "import:candidates": "node scripts/import-candidates.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run"
   },

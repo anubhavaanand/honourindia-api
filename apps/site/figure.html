@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Figure · सम्मान · Honour India</title>
+  <meta name="description" content="Read the full record of an honoured Indian mind on the Honour India billboard network." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <a class="wordmark" href="/">सम्मान · Honour&nbsp;India</a>
+      <nav>
+        <a href="#embed">Embed</a>
+        <a href="#api">API</a>
+        <a href="#figures">The figures</a>
+        <a href="#mission">Why</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap section">
+      <article class="figure-detail">
+        <div class="figure-media">
+          <img id="figurePortrait" class="figure-portrait" alt="" />
+          <div id="figureMonogram" class="figure-monogram">AA</div>
+        </div>
+        <div class="figure-copy">
+          <h1 id="figureName" class="figure-name">Name</h1>
+          <div class="figure-meta">
+            <span id="figureYears" class="figure-years"></span>
+            <span id="figureField" class="figure-field"></span>
+            <span id="figureEra" class="figure-era-badge"></span>
+          </div>
+          <p id="figureTagline" class="figure-tagline"></p>
+          <div id="figureSummary" class="figure-summary"></div>
+          <blockquote id="figureQuote" class="figure-quote"></blockquote>
+          <p id="figureStillUsed" class="figure-still-used"></p>
+          <div class="figure-actions">
+            <a id="figureWiki" class="btn primary" href="#" target="_blank" rel="noopener noreferrer">Read on Wikipedia</a>
+            <p id="figureCredit" class="figure-credit"></p>
+          </div>
+          <a id="backLink" href="/" class="back-link">&#8592; Back to the figures</a>
+        </div>
+      </article>
+      <div id="figureNotFound" class="figure-not-found" hidden>Figure not found</div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot-row">
+      <p>सम्मान · Honour India — a billboard network for the minds that built India.</p>
+      <p class="fineprint">
+        Portraits from Wikipedia/Wikimedia Commons under their respective free licenses;
+        credit shown on every billboard. Code MIT. Facts belong to everyone.
+      </p>
+    </div>
+  </footer>
+
+  <script src="figure.js" defer></script>
+</body>
+</html>

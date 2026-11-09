@@ -9,7 +9,7 @@
  *   data-api       — API base, defaults to <origin of embed.js>/api/v1
  *   data-theme     — "dark" (default) | "light"
  *   data-interval  — seconds per billboard, default 8, min 5, max 60
- *   data-size      — "rectangle" (300x250, default) | "leaderboard" (728x96) | "poster" (480x320)
+ *   data-size      — "rectangle" (300x250, default) | "leaderboard" (728x96) | "poster" (480x480 square)
  *
  * The widget mounts into a shadow root (no CSS clashes with the host page),
  * fetches a batch of billboards once, rotates them client-side, pauses when
@@ -87,7 +87,7 @@ const CSS = `
   -webkit-font-smoothing: antialiased;
 }
 .hi--rectangle { max-width: 300px; aspect-ratio: 300 / 250; }
-.hi--poster { max-width: 480px; aspect-ratio: 480 / 320; }
+.hi--poster { max-width: 480px; aspect-ratio: 1 / 1; }
 .hi--leaderboard { max-width: 728px; aspect-ratio: auto; height: 96px; }
 
 /* themes */
@@ -96,7 +96,7 @@ const CSS = `
 .hi--dark .hi-card { box-shadow: 0 10px 30px rgba(0,0,0,.5); }
 .hi--light .hi-card { box-shadow: 0 10px 30px rgba(20,20,30,.18); }
 
-/* split-layout panels (poster, leaderboard): solid text column beside the photo */
+/* split-layout panels (leaderboard): solid text column beside the photo */
 .hi--dark .hi-nameplate { background: #101013; border-top: 1px solid #24242b; }
 .hi--dark .hi-panel { background: #101013; border-left: 1px solid #24242b; }
 .hi--poster.hi--dark .hi-foot { background: #101013; border-top: 1px solid #24242b; }
@@ -160,37 +160,36 @@ const CSS = `
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
 
-/* ---- split layouts (poster, leaderboard): face + name, achievement column ---- */
+/* ---- split layout (leaderboard): slim image column + text column ---- */
 .hi-body { position: relative; display: flex; flex: 1; min-height: 0; }
-.hi--poster .hi-layer { flex-direction: column; }
-
-.hi-face { display: flex; flex-direction: column; width: 45%; min-width: 0; }
-.hi-face .hi-media { position: relative; flex: 1; }
-
-.hi-nameplate { padding: 9px 12px 10px; }
-.hi-nameplate .hi-name { margin: 0; font-size: 1.14rem; line-height: 1.15; }
-.hi-nameplate-sub { margin-top: 3px; font-size: .66rem; letter-spacing: .08em; opacity: .6; }
 
 .hi-panel {
   flex: 1; min-width: 0;
   padding: 14px 16px;
   display: flex; flex-direction: column; justify-content: center; gap: 8px;
 }
-.hi--poster .hi-field { margin-bottom: 0; }
-.hi--poster .hi-tag { font-size: .82rem; -webkit-line-clamp: 5; }
 
-.hi-quote {
-  display: none; margin: 2px 0 0; padding-left: 10px;
-  border-left: 2px solid #ffb454;
-  font-family: Georgia, 'Times New Roman', serif; font-style: italic;
-  font-size: .78rem; line-height: 1.45; opacity: .82;
+/* ---- poster: square, image-dominant; info over scrim at the bottom ---- */
+.hi--poster .hi-panel { display: none; }
+.hi--poster .hi-quote { display: none; }
+
+.hi--poster .hi-scrim {
+  background: linear-gradient(180deg, rgba(8,10,12,0) 0%, rgba(8,10,12,.45) 55%, rgba(8,10,12,.92) 100%);
 }
-.hi--light .hi-quote { border-left-color: #b05e00; }
-.hi-quote.has {
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+.hi--light .hi--poster .hi-scrim {
+  background: linear-gradient(180deg, rgba(250,247,240,0) 0%, rgba(250,247,240,.45) 55%, rgba(250,247,240,.96) 100%);
 }
 
-.hi--poster .hi-foot { position: relative; padding: 6px 12px 8px; }
+.hi--poster .hi-media { background-position: 50% 50%; }
+.hi--poster .hi-media img { object-position: 50% 50%; }
+
+.hi--poster .hi-info { margin-top: auto; padding: 14px 16px 12px; }
+.hi--poster .hi-field { margin-bottom: 6px; }
+.hi--poster .hi-name { font-size: 1.4rem; margin: 0 0 5px; line-height: 1.15; }
+.hi--poster .hi-nameplate-sub { margin-top: 3px; font-size: .66rem; letter-spacing: .08em; opacity: .6; }
+.hi--poster .hi-tag { font-size: .82rem; line-height: 1.4; -webkit-line-clamp: 3; }
+
+.hi--poster .hi-foot { position: relative; padding: 8px 14px 10px; }
 
 .hi--leaderboard .hi-media { right: auto; width: 96px; }
 .hi--leaderboard .hi-panel { position: absolute; top: 0; bottom: 0; left: 96px; right: 0; padding: 8px 92px 8px 14px; gap: 2px; }
@@ -204,7 +203,7 @@ const CSS = `
 }
 .hi--leaderboard .hi-brand { font-size: 7px; }
 .hi--leaderboard .hi-noimg { font-size: 1.7rem; }
-.hi--poster .hi-noimg { font-size: 3rem; }
+.hi--poster .hi-noimg { font-size: 3.5rem; }
 
 .hi-foot {
   position: relative;
@@ -298,12 +297,10 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
     if (i === 1) layer.setAttribute('aria-hidden', 'true')
     if (size === 'poster') {
       layer.innerHTML =
-        '<div class="hi-body">' +
-          '<div class="hi-face"><div class="hi-media"></div>' +
-            '<div class="hi-nameplate"><h3 class="hi-name"></h3><div class="hi-nameplate-sub"></div></div>' +
-          '</div>' +
-          '<div class="hi-panel"><div class="hi-field"></div><p class="hi-tag"></p><blockquote class="hi-quote"></blockquote></div>' +
-        '</div>' +
+        '<div class="hi-media"></div>' +
+        '<div class="hi-scrim"></div>' +
+        '<div class="hi-info"><div class="hi-field"></div><h3 class="hi-name"></h3>' +
+        '<div class="hi-nameplate-sub"></div><p class="hi-tag"></p></div>' +
         '<div class="hi-foot"><span class="hi-attr"></span><span class="hi-brand">सम्मान · Honour India</span></div>'
     } else if (size === 'leaderboard') {
       layer.innerHTML =
@@ -370,7 +367,7 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string): void {
   const tag = layer.querySelector<HTMLElement>('.hi-tag')!
   const attr = layer.querySelector<HTMLElement>('.hi-attr')!
 
-  // poster carries the years on the nameplate under the photo; other sizes append them to the kicker
+  // poster: field name only; years render under the name via hi-nameplate-sub; other sizes append years to the kicker
   const nameplateSub = layer.querySelector<HTMLElement>('.hi-nameplate-sub')
   if (nameplateSub) {
     field.textContent = b.field

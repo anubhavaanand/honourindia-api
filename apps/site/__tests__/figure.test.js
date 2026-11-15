@@ -92,6 +92,39 @@ describe('figure detail page (apps/site/figure.js)', () => {
     expect(document.getElementById('figureNotFound').hidden).toBe(true)
   })
 
+  it('injects JSON-LD Person structured data (issue #80)', async () => {
+    const { resolve } = stubFetch()
+    vi.resetModules()
+
+    // @ts-expect-error test harness mock
+    await import('../figure.js')
+
+    resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          ...figurePayload,
+          born: 1918,
+          died: 2001,
+          image: { url: '/images/anna-mani.jpg' },
+        }),
+    })
+    await new Promise((r) => setTimeout(r, 0))
+
+    const script = document.getElementById('figureJsonLd')
+    expect(script).toBeTruthy()
+    expect(script.getAttribute('type')).toBe('application/ld+json')
+    const data = JSON.parse(script.textContent)
+    expect(data['@context']).toBe('https://schema.org')
+    expect(data['@type']).toBe('Person')
+    expect(data.name).toBe('Anna Mani')
+    expect(data.jobTitle).toBe('Physics')
+    expect(data.birthDate).toBe('1918')
+    expect(data.deathDate).toBe('2001')
+    expect(data.sameAs).toBe('https://en.wikipedia.org/wiki/Anna_Mani')
+    expect(data.image).toContain('/images/anna-mani.jpg')
+  })
+
   it('shows not-found when the figure returns 404 (issue #23)', async () => {
     const { resolve } = stubFetch()
     vi.resetModules()

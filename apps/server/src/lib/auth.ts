@@ -1,5 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync, watch, type FSWatcher } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Context, Next } from 'hono'
@@ -24,7 +24,7 @@ export interface Env {
   Variables: { authKey: AuthKey | null }
 }
 
-interface KeyRecord {
+export interface KeyRecord {
   id: string
   name: string
   hash: string
@@ -37,23 +37,88 @@ interface KeysFile {
   keys: KeyRecord[]
 }
 
-const KEY_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../data/keys.json')
+export const DEFAULT_KEY_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../data/keys.json')
 
-function loadKeys(): Map<string, KeyRecord> {
+let currentKeyFile = DEFAULT_KEY_FILE
+let lastMtimeMs = 0
+let keyIndex = new Map<string, KeyRecord>()
+let fileWatcher: FSWatcher | null = null
+
+export function loadKeys(filePath = currentKeyFile): Map<string, KeyRecord> {
   const map = new Map<string, KeyRecord>()
-  if (!existsSync(KEY_FILE)) return map
+  if (!existsSync(filePath)) {
+    lastMtimeMs = 0
+    return map
+  }
   try {
-    const parsed = JSON.parse(readFileSync(KEY_FILE, 'utf8')) as KeysFile
+    const stat = statSync(filePath)
+    lastMtimeMs = stat.mtimeMs
+    const parsed = JSON.parse(readFileSync(filePath, 'utf8')) as KeysFile
     for (const k of parsed.keys ?? []) {
       if (k.enabled !== false) map.set(k.hash, k)
     }
   } catch (err) {
-    console.warn('[auth] could not parse data/keys.json — running keyless:', (err as Error).message)
+    console.warn('[auth] could not parse keys file — running keyless:', (err as Error).message)
   }
   return map
 }
 
-const keyIndex = loadKeys()
+export function reloadKeys(filePath?: string): void {
+  if (filePath) currentKeyFile = filePath
+  keyIndex = loadKeys(currentKeyFile)
+}
+
+export function getKeyRecord(hash: string): KeyRecord | undefined {
+  try {
+    if (existsSync(currentKeyFile)) {
+      const stat = statSync(currentKeyFile)
+      if (stat.mtimeMs !== lastMtimeMs) {
+        reloadKeys()
+      }
+    }
+  } catch {
+    // Non-fatal, keep existing keyIndex
+  }
+  return keyIndex.get(hash)
+}
+
+export function setKeyFile(filePath: string): void {
+  currentKeyFile = filePath
+  reloadKeys(filePath)
+  setupKeyWatcher()
+}
+
+export function resetKeyFile(): void {
+  setKeyFile(DEFAULT_KEY_FILE)
+}
+
+export function setupKeyWatcher(): void {
+  if (fileWatcher) {
+    try { fileWatcher.close() } catch { /* ignore */ }
+    fileWatcher = null
+  }
+  try {
+    if (existsSync(currentKeyFile)) {
+      fileWatcher = watch(currentKeyFile, () => {
+        reloadKeys()
+      })
+      fileWatcher.unref()
+    }
+  } catch {
+    // Non-fatal if watching is unsupported in environment
+  }
+}
+
+export function closeKeyWatcher(): void {
+  if (fileWatcher) {
+    try { fileWatcher.close() } catch { /* ignore */ }
+    fileWatcher = null
+  }
+}
+
+// Initial boot load
+reloadKeys()
+setupKeyWatcher()
 
 export function hashKey(raw: string): string {
   return createHash('sha256').update(raw, 'utf8').digest('hex')
@@ -76,7 +141,7 @@ export function auth() {
     if (!raw) {
       c.set('authKey', null)
     } else {
-      const record = keyIndex.get(hashKey(raw))
+      const record = getKeyRecord(hashKey(raw))
       if (!record || !safeEqual(hashKey(raw), record.hash)) {
         return c.json({ error: 'Unknown API key. Omit the key for anonymous access, or get one from the project maintainers.' }, 401)
       }

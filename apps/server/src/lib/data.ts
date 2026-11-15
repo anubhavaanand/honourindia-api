@@ -8,6 +8,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = path.resolve(__dirname, '../../../../data')
 export const ROOT = path.resolve(DATA_DIR, '..')
 
+export interface TextAttribution {
+  source: string
+  url: string
+  license?: string
+  revisionDate?: string | null
+}
+
 export interface FigureRecord {
   slug: string
   name: string
@@ -18,6 +25,7 @@ export interface FigureRecord {
   summary: string
   quote: { text: string; source?: string } | null
   wiki: string
+  attribution?: TextAttribution | null
   era: 'ancient' | 'medieval' | 'colonial' | 'modern' | 'living'
   enduring: boolean
   stillUsed: string | null
@@ -48,6 +56,7 @@ export interface Billboard {
   quote: FigureRecord['quote']
   image: { url: string; credit?: string; license?: string } | null
   link: string
+  attribution: TextAttribution
 }
 
 export interface FigureSummary {
@@ -120,6 +129,16 @@ function validateFigure(f: unknown, index: number): void {
       throw new Error(`figures[${index}] (slug=${fig['slug']}): "quote.text" must be a non-empty string`)
     }
   }
+
+  if (fig['attribution'] !== null && fig['attribution'] !== undefined) {
+    const attr = fig['attribution'] as Record<string, unknown>
+    if (typeof attr['source'] !== 'string' || (attr['source'] as string).trim() === '') {
+      throw new Error(`figures[${index}] (slug=${fig['slug']}): "attribution.source" must be a non-empty string`)
+    }
+    if (typeof attr['url'] !== 'string' || (attr['url'] as string).trim() === '') {
+      throw new Error(`figures[${index}] (slug=${fig['slug']}): "attribution.url" must be a non-empty string`)
+    }
+  }
 }
 
 function loadFigures(): FigureRecord[] {
@@ -159,6 +178,11 @@ export function toBillboard(f: FigureRecord): Billboard {
     quote: f.quote,
     image: f.image ? { url: `/images/${f.image.file}`, credit: f.image.credit, license: f.image.license } : null,
     link: wikiLink(f.wiki),
+    attribution: f.attribution ?? {
+      source: 'Wikipedia',
+      url: wikiLink(f.wiki),
+      license: 'CC BY-SA 4.0',
+    },
   }
 }
 

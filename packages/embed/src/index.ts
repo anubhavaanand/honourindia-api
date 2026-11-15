@@ -28,6 +28,7 @@ interface Billboard {
   quote: { text: string; source?: string } | null
   image: { url: string; credit?: string; license?: string } | null
   link: string
+  attribution?: { source: string; url: string; license?: string; revisionDate?: string | null }
 }
 
 interface MountOptions {

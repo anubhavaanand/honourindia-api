@@ -71,6 +71,13 @@ async function main() {
       if (f.quote !== null && f.quote !== undefined) {
         if (typeof f.quote.text !== 'string') error(`${where}: quote.text must be a string`)
       }
+      if (f.attribution !== null && f.attribution !== undefined) {
+        if (typeof f.attribution !== 'object') error(`${where}: attribution must be an object`)
+        else {
+          if (typeof f.attribution.source !== 'string' || !f.attribution.source) error(`${where}: attribution.source missing or not a string`)
+          if (typeof f.attribution.url !== 'string' || !f.attribution.url) error(`${where}: attribution.url missing or not a string`)
+        }
+      }
       if (f.wiki) {
         if (seenWiki.has(f.wiki)) warn(`${where}: duplicate wiki title "${f.wiki}" (see #96)`)
         seenWiki.set(f.wiki, f.slug)

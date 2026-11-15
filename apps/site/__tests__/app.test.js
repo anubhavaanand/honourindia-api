@@ -49,6 +49,8 @@ describe('site app.js', () => {
 
     // embed snippet generated
     const snippetCode = document.querySelector('#snippet code')
+    expect(snippetCode.textContent).toContain('<div data-honourindia></div>')
+    expect(snippetCode.textContent).toContain('<script src="http://localhost/embed.js" async></script>')
     expect(snippetCode.innerHTML).toContain('data-honourindia')
     expect(snippetCode.innerHTML).toContain('http://localhost/embed.js')
     expect(snippetCode.innerHTML).not.toContain('data-theme=') // dark is default

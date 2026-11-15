@@ -8,7 +8,7 @@
  *   slug       — from the name
  *   tagline    — from the description, truncated to one billboard line
  *   summary    — from the description
- *   era        — estimated from the birth year
+ *   era        — estimated from the birth year (and death year for living)
  *   enduring   — false by default (needs human review)
  *   stillUsed  — null (needs human review)
  *   wiki       — the enwiki sitelink title
@@ -38,13 +38,13 @@ function slugify(name) {
     .replace(/^-|-$/g, '')
 }
 
-function estimateEra(born) {
+function estimateEra(born, died) {
   if (born === null || born === undefined) return null
-  if (born < 500) return 'Ancient'
-  if (born < 1500) return 'Medieval'
-  if (born < 1900) return 'Early Modern'
-  if (born < 2000) return 'Modern'
-  return 'Contemporary'
+  if (born < 500) return 'ancient'
+  if (born < 1500) return 'medieval'
+  if (born < 1900) return 'colonial'
+  if ((died === null || died === undefined) && born >= 1960) return 'living'
+  return 'modern'
 }
 
 function truncateWords(value, maxChars = 180) {
@@ -82,7 +82,7 @@ async function main() {
       summary: c.description || null,
       quote: null,
       wiki: c.wiki,
-      era: estimateEra(c.born),
+      era: estimateEra(c.born, c.died),
       enduring: false,
       stillUsed: null,
       commonsFile: c.commonsFile,

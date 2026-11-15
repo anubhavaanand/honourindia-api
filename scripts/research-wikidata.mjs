@@ -26,7 +26,7 @@ const MAX_PAGES = 5 // ~5,000 rows; enough for the 3,000 figure target after fil
 const PAGE_DELAY_MS = 1000
 
 const SPARQL_TEMPLATE = `
-SELECT ?person ?personLabel ?birth ?death ?sitelink ?commonsFile ?description (GROUP_CONCAT(DISTINCT ?occupationLabel; separator=" · ") AS ?fields)
+SELECT ?person ?personLabel ?birth ?death ?sitelink ?commonsFile ?description (GROUP_CONCAT(DISTINCT ?activityName; separator=" · ") AS ?fields)
 WHERE {
   ?person wdt:P31 wd:Q5 .
   {
@@ -35,35 +35,74 @@ WHERE {
     ?person wdt:P19 ?placeOfBirth .    # place of birth in India
     ?placeOfBirth wdt:P17 wd:Q668 .
   }
-  ?person wdt:P106 ?occupation .       # occupation
-  VALUES ?occupation {
-    wd:Q169470   # scientist
-    wd:Q159902   # mathematician
-    wd:Q169475   # physicist
-    wd:Q169469   # chemist
-    wd:Q165091   # biologist
-    wd:Q169482   # physician
-    wd:Q42973    # engineer
-    wd:Q42964    # astronomer
-    wd:Q169484   # biochemist
-    wd:Q169480   # meteorologist
-    wd:Q169481   # geologist
-    wd:Q169485   # botanist
-    wd:Q169483   # zoologist
-    wd:Q169486   # geneticist
-    wd:Q169487   # anatomist
-    wd:Q169488   # pathologist
-    wd:Q169489   # epidemiologist
-    wd:Q169490   # immunologist
-    wd:Q169491   # neuroscientist
-    wd:Q169492   # psychologist
-    wd:Q169493   # sociologist
-    wd:Q169494   # anthropologist
-    wd:Q169495   # archaeologist
-    wd:Q169496   # historian
-    wd:Q169497   # economist
-    wd:Q169498   # statistician
+  {
+    # Primary: occupation
+    ?person wdt:P106 ?activity .
+    VALUES ?activity {
+      wd:Q169470   # scientist
+      wd:Q159902   # mathematician
+      wd:Q169475   # physicist
+      wd:Q169469   # chemist
+      wd:Q165091   # biologist
+      wd:Q169482   # physician
+      wd:Q42973    # engineer
+      wd:Q42964    # astronomer
+      wd:Q169484   # biochemist
+      wd:Q169480   # meteorologist
+      wd:Q169481   # geologist
+      wd:Q169485   # botanist
+      wd:Q169483   # zoologist
+      wd:Q169486   # geneticist
+      wd:Q169487   # anatomist
+      wd:Q169488   # pathologist
+      wd:Q169489   # epidemiologist
+      wd:Q169490   # immunologist
+      wd:Q169491   # neuroscientist
+      wd:Q169492   # psychologist
+      wd:Q169493   # sociologist
+      wd:Q169494   # anthropologist
+      wd:Q169495   # archaeologist
+      wd:Q169496   # historian
+      wd:Q169497   # economist
+      wd:Q169498   # statistician
+      wd:Q2995536  # polymath
+      wd:Q170790   # mathematician-astronomer
+    }
+  } UNION {
+    # Alternative 1: field of work (captures ancient figures without occupation statements)
+    ?person wdt:P101 ?activity .
+    VALUES ?activity {
+      wd:Q395      # mathematics
+      wd:Q333      # astronomy
+      wd:Q413      # physics
+      wd:Q2329     # chemistry
+      wd:Q420      # biology
+      wd:Q11190    # medicine
+      wd:Q11193    # Ayurveda
+      wd:Q8162     # linguistics (e.g. Panini, Pingala)
+      wd:Q11660    # metallurgy
+      wd:Q162      # alchemy / Rasashastra
+      wd:Q8087     # geometry
+      wd:Q5891     # philosophy (Indian logic / Nyaya / Vaisheshika)
+    }
+  } UNION {
+    # Alternative 2: notable work in science, mathematics, medicine, astronomy
+    ?person wdt:P800 ?notableWork .
+    ?notableWork (wdt:P921|wdt:P101) ?activity .
+    VALUES ?activity {
+      wd:Q395      # mathematics
+      wd:Q333      # astronomy
+      wd:Q413      # physics
+      wd:Q2329     # chemistry
+      wd:Q11190    # medicine
+      wd:Q11193    # Ayurveda
+      wd:Q11660    # metallurgy
+      wd:Q8087     # geometry
+      wd:Q162      # alchemy
+    }
   }
+  ?activity rdfs:label ?activityName .
+  FILTER(LANG(?activityName) = "en")
   OPTIONAL { ?person wdt:P569 ?birth . }
   OPTIONAL { ?person wdt:P570 ?death . }
   OPTIONAL { ?person wdt:P18 ?commonsFile . }               # Wikimedia Commons file (portrait)
@@ -76,7 +115,6 @@ WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 }
 GROUP BY ?person ?personLabel ?birth ?death ?sitelink ?commonsFile ?description
-ORDER BY ?birth
 LIMIT __LIMIT__ OFFSET __OFFSET__
 `
 

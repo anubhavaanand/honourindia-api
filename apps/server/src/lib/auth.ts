@@ -81,6 +81,9 @@ export function getKeyRecord(hash: string): KeyRecord | undefined {
       if (stat.mtimeMs !== lastMtimeMs) {
         reloadKeys()
       }
+    } else if (keyIndex.size > 0) {
+      // The keys file is gone — no issued key is valid any more.
+      reloadKeys()
     }
   } catch {
     // Non-fatal, keep existing keyIndex

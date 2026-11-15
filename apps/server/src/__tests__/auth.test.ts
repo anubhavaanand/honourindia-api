@@ -69,4 +69,32 @@ describe('auth.ts', () => {
       fs.rmSync(tempDir, { recursive: true, force: true })
     }
   })
+
+  it('revokes every key when the keys file is removed (issue #175)', () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'auth-keys-test-'))
+    const tempKeyFile = path.join(tempDir, 'keys.json')
+
+    try {
+      const key = 'test-key-revoked'
+      const hash = hashKey(key)
+      fs.writeFileSync(
+        tempKeyFile,
+        JSON.stringify({
+          keys: [
+            { id: 'partner-1', name: 'Partner One', hash, createdAt: '2026-01-01', enabled: true },
+          ],
+        }),
+        'utf8',
+      )
+
+      setKeyFile(tempKeyFile)
+      expect(getKeyRecord(hash)).toBeDefined()
+
+      // Removing the keys file must revoke the key right away.
+      fs.unlinkSync(tempKeyFile)
+      expect(getKeyRecord(hash)).toBeUndefined()
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true })
+    }
+  })
 })

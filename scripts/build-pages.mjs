@@ -37,6 +37,9 @@ const billboards = figures.map((f) => ({
   years: years(f),
   field: f.field,
   tagline: f.tagline,
+  era: f.era,
+  enduring: f.enduring,
+  stillUsed: f.stillUsed,
   quote: f.quote,
   image: img(f.slug),
   link: wikiLink(f.wiki),
@@ -48,6 +51,7 @@ const summaries = figures.map((f) => ({
   years: years(f),
   field: f.field,
   tagline: f.tagline,
+  era: f.era,
   image: images[f.slug] ? { url: `../../images/${images[f.slug].file}` } : null,
   link: wikiLink(f.wiki),
 }))

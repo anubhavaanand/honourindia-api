@@ -294,4 +294,49 @@ describe('widget (packages/embed)', () => {
     vi.useRealTimers()
     vi.clearAllTimers()
   })
+
+  it('shows error box on subsequent batch fetch failures when index >= 0 (issue #4)', async () => {
+    vi.useFakeTimers()
+    fetchMock.mockReturnValueOnce(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
+
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+
+    const errorBox = host.shadowRoot!.querySelector('.hi-error') as HTMLElement
+    const card = host.shadowRoot!.querySelector('.hi-card') as HTMLElement
+    expect(errorBox.style.display).toBe('none')
+    expect(card.style.visibility).toBe('visible')
+
+    // Next fetch (subsequent batch) fails
+    fetchMock.mockReturnValue(Promise.reject(new Error('subsequent failure')))
+
+    // Advance timer or trigger step near end of queue: with 2 billboards, index=0 is length-2 <= 3
+    // In fact show() was called for index 0, queue has 2 items. length - index = 2 <= 3 triggers fetchBatch!
+    // But fetchBatch was already running for initial fetch; let's trigger next step so show() checks again:
+    const nextBtn = host.shadowRoot!.querySelector('.hi-next') as HTMLButtonElement
+    nextBtn.click()
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+
+    // The subsequent batch fetch failed, so errorBox must be shown and card hidden
+    expect(errorBox.style.display).toBe('flex')
+    expect(card.style.visibility).toBe('hidden')
+
+    // Now let retry succeed
+    fetchMock.mockReturnValueOnce(jsonResponse({ billboards }))
+    await vi.advanceTimersByTimeAsync(6000)
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+
+    expect(errorBox.style.display).toBe('none')
+    expect(card.style.visibility).toBe('visible')
+
+    handle.destroy()
+    vi.useRealTimers()
+    vi.clearAllTimers()
+  })
 })

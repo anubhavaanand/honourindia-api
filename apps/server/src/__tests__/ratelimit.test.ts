@@ -1,5 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { rateLimit } from '../lib/ratelimit.js'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { rateLimit, FileRateLimitStore, MemoryRateLimitStore, type RateLimitStore } from '../lib/ratelimit.js'
 
 type AuthKey = { id: string; name: string }
 
@@ -101,5 +104,55 @@ describe('rateLimit', () => {
     } finally {
       vi.useRealTimers()
     }
+  })
+
+  it('FileRateLimitStore survives store recreation (simulated restart)', async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ratelimit-test-'))
+    const tempFile = path.join(tempDir, 'ratelimit.json')
+
+    try {
+      const store1 = new FileRateLimitStore(tempFile)
+      const mw1 = rateLimit({ anonymousMax: 2, keyedMax: 10, windowMs: 60_000, store: store1 })
+      const { c } = makeContext(null, '9.9.9.9')
+
+      // Use up 2 hits
+      await mw1(c, () => Promise.resolve())
+      await mw1(c, () => Promise.resolve())
+
+      // Check file was written to disk
+      expect(fs.existsSync(tempFile)).toBe(true)
+
+      // Simulate server restart by creating a new store reading the same file
+      const store2 = new FileRateLimitStore(tempFile)
+      const mw2 = rateLimit({ anonymousMax: 2, keyedMax: 10, windowMs: 60_000, store: store2 })
+
+      // Next hit should be blocked (429) because state was restored
+      const blocked = await mw2(c, () => Promise.resolve())
+      expect(blocked).toBeDefined()
+      expect(blocked!.status).toBe(429)
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true })
+    }
+  })
+
+  it('supports custom pluggable RateLimitStore implementations', async () => {
+    const customHits: Record<string, number[]> = {}
+    const customStore: RateLimitStore = {
+      getHits: (id) => customHits[id] ?? [],
+      recordHit: (id, now) => {
+        if (!customHits[id]) customHits[id] = []
+        customHits[id]!.push(now)
+      },
+    }
+
+    const mw = rateLimit({ anonymousMax: 1, keyedMax: 5, store: customStore })
+    const { c } = makeContext(null, '8.8.8.8')
+
+    const first = await mw(c, () => Promise.resolve())
+    expect(first).toBeUndefined()
+    expect(customHits['ip:8.8.8.8']?.length).toBe(1)
+
+    const second = await mw(c, () => Promise.resolve())
+    expect(second!.status).toBe(429)
   })
 })

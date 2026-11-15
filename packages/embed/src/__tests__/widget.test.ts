@@ -89,6 +89,65 @@ describe('widget (packages/embed)', () => {
     handle.destroy()
   })
 
+  it('mounts the poster size with the poster-specific layer markup', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      size: 'poster',
+      theme: 'light',
+    })
+
+    const root = host.shadowRoot!.querySelector('.hi')!
+    expect(root.classList.contains('hi--poster')).toBe(true)
+    expect(root.classList.contains('hi--light')).toBe(true)
+
+    const layer = root.querySelector('.hi-layer')!
+    expect(layer.querySelector('.hi-nameplate-sub')).toBeTruthy()
+    expect(layer.querySelector('.hi-panel')).toBeNull()
+
+    await new Promise((r) => setTimeout(r, 0))
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    expect(active.querySelector('.hi-name')!.textContent).toBeTruthy()
+    expect(active.querySelector('.hi-nameplate-sub')).toBeTruthy()
+
+    handle.destroy()
+  })
+
+  it('mounts the leaderboard size with the split image/text layout', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      size: 'leaderboard',
+    })
+
+    const root = host.shadowRoot!.querySelector('.hi')!
+    expect(root.classList.contains('hi--leaderboard')).toBe(true)
+
+    const layer = root.querySelector('.hi-layer')!
+    expect(layer.querySelector('.hi-body')).toBeTruthy()
+    expect(layer.querySelector('.hi-media')).toBeTruthy()
+    expect(layer.querySelector('.hi-panel')).toBeTruthy()
+    expect(layer.querySelector('.hi-scrim')).toBeNull()
+
+    await new Promise((r) => setTimeout(r, 0))
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    expect(active.querySelector('.hi-name')!.textContent).toBeTruthy()
+
+    handle.destroy()
+  })
+
   it('shows the error box on fetch failure and retries internally with backoff', async () => {
     vi.useFakeTimers()
     fetchMock.mockReturnValue(Promise.reject(new Error('down')))

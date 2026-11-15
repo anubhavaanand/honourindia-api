@@ -169,6 +169,11 @@ async function main() {
     return a.born - b.born
   })
 
+  if (process.argv.includes('--dry-run')) {
+    console.log(`Dry run: would write ${candidates.length} candidates to ${OUT_FILE}`)
+    return
+  }
+
   await new Promise((resolve, reject) => {
     const stream = createWriteStream(OUT_FILE)
     stream.write(JSON.stringify(candidates, null, 2) + '\n')

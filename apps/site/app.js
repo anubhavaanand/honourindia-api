@@ -116,68 +116,140 @@
   renderPreview()
   attachEmbedListeners()
 
-  /* ---------- figures grid ---------- */
+  /* ---------- figures grid & filters (issue #21) ---------- */
 
-  fetch(new URL('figures', API_BASE))
-    .then(function (r) { return r.json() })
-    .then(function (data) {
-      var count = document.getElementById('figuresCount')
-      var grid = document.getElementById('figureGrid')
-      grid.innerHTML = ''
+  var figureSearch = document.getElementById('figureSearch')
+  var figureField = document.getElementById('figureField')
+  var figureEnduring = document.getElementById('figureEnduring')
 
-      if (!data.figures || data.figures.length === 0) {
-        count.textContent = 'The seed catalogue — no figures to show yet.'
-        var empty = document.createElement('p')
-        empty.className = 'figure-empty'
-        empty.textContent = 'No figures to show yet. New honoured figures will appear here.'
-        grid.appendChild(empty)
-        return
-      }
+  var fieldsPopulated = false
+  function populateFieldOptions(figures) {
+    if (fieldsPopulated || !figureField) return
+    var set = {}
+    figures.forEach(function (f) {
+      if (f.field) set[f.field] = true
+    })
+    var list = Object.keys(set).sort()
+    list.forEach(function (name) {
+      var opt = document.createElement('option')
+      opt.value = name
+      opt.textContent = name
+      figureField.appendChild(opt)
+    })
+    if (list.length > 0) fieldsPopulated = true
+  }
 
-      count.textContent =
-        'The seed catalogue — ' + data.count + ' minds from Raman\'s generation to ISRO\'s. ' +
-        'Suggest more via the repository.'
+  var fetchSeq = 0
 
-      data.figures.forEach(function (f) {
-        var a = document.createElement('a')
-        a.className = 'figure-card'
-        a.href = new URL('figures/' + encodeURIComponent(f.slug), PAGE_DIR).toString()
-        a.rel = 'noopener noreferrer'
+  function fetchAndRenderFigures() {
+    var seq = ++fetchSeq
+    var url = new URL('figures', API_BASE)
+    var search = figureSearch ? figureSearch.value.trim() : ''
+    var field = figureField ? figureField.value : ''
+    var enduring = figureEnduring ? figureEnduring.checked : false
 
-        var thumb = document.createElement('div')
-        thumb.className = 'figure-thumb'
-        if (f.image) thumb.style.backgroundImage = 'url("' + new URL(f.image.url, API_BASE) + '")'
+    if (search) url.searchParams.set('search', search)
+    if (field) url.searchParams.set('field', field)
+    if (enduring) url.searchParams.set('enduring', 'true')
 
-        var body = document.createElement('div')
-        body.className = 'figure-body'
-        var fieldRow = document.createElement('div')
-        fieldRow.className = 'figure-field-row'
-        var field = document.createElement('div')
-        field.className = 'figure-field'
-        field.textContent = f.field
-        fieldRow.appendChild(field)
+    var hasFilters = Boolean(search || field || enduring)
 
-        if (f.era) {
-          var era = document.createElement('span')
-          era.className = 'figure-era-badge'
-          era.textContent = f.era.charAt(0).toUpperCase() + f.era.slice(1)
-          fieldRow.appendChild(era)
+    fetch(url)
+      .then(function (r) { return r.json() })
+      .then(function (data) {
+        if (seq !== fetchSeq) return
+        var count = document.getElementById('figuresCount')
+        var grid = document.getElementById('figureGrid')
+        if (!grid) return
+        grid.innerHTML = ''
+
+        if (!data.figures || data.figures.length === 0) {
+          if (hasFilters) {
+            if (count) count.textContent = 'No figures found matching your filter criteria.'
+            var emptyFilter = document.createElement('p')
+            emptyFilter.className = 'figure-empty'
+            emptyFilter.textContent = 'No figures match the selected filters. Try clearing your search.'
+            grid.appendChild(emptyFilter)
+          } else {
+            if (count) count.textContent = 'The seed catalogue — no figures to show yet.'
+            var empty = document.createElement('p')
+            empty.className = 'figure-empty'
+            empty.textContent = 'No figures to show yet. New honoured figures will appear here.'
+            grid.appendChild(empty)
+          }
+          return
         }
 
-        var name = document.createElement('h3')
-        name.className = 'figure-name'
-        name.textContent = f.name
-        var years = document.createElement('div')
-        years.className = 'figure-years'
-        years.textContent = f.years || ''
+        if (!hasFilters) {
+          populateFieldOptions(data.figures)
+          if (count) {
+            count.textContent =
+              'The seed catalogue — ' + data.count + ' minds from Raman\'s generation to ISRO\'s. ' +
+              'Suggest more via the repository.'
+          }
+        } else {
+          if (count) {
+            count.textContent =
+              'Showing ' + data.count + ' of ' + (data.total != null ? data.total : data.count) + ' minds.'
+          }
+        }
 
-        body.append(fieldRow, name, years)
-        a.append(thumb, body)
-        grid.appendChild(a)
+        data.figures.forEach(function (f) {
+          var a = document.createElement('a')
+          a.className = 'figure-card'
+          a.href = new URL('figures/' + encodeURIComponent(f.slug), PAGE_DIR).toString()
+          a.rel = 'noopener noreferrer'
+
+          var thumb = document.createElement('div')
+          thumb.className = 'figure-thumb'
+          if (f.image) thumb.style.backgroundImage = 'url("' + new URL(f.image.url, API_BASE) + '")'
+
+          var body = document.createElement('div')
+          body.className = 'figure-body'
+          var fieldRow = document.createElement('div')
+          fieldRow.className = 'figure-field-row'
+          var fieldEl = document.createElement('div')
+          fieldEl.className = 'figure-field'
+          fieldEl.textContent = f.field
+          fieldRow.appendChild(fieldEl)
+
+          if (f.era) {
+            var era = document.createElement('span')
+            era.className = 'figure-era-badge'
+            era.textContent = f.era.charAt(0).toUpperCase() + f.era.slice(1)
+            fieldRow.appendChild(era)
+          }
+
+          var name = document.createElement('h3')
+          name.className = 'figure-name'
+          name.textContent = f.name
+          var years = document.createElement('div')
+          years.className = 'figure-years'
+          years.textContent = f.years || ''
+
+          body.append(fieldRow, name, years)
+          a.append(thumb, body)
+          grid.appendChild(a)
+        })
       })
-    })
-    .catch(function () {
-      document.getElementById('figuresCount').textContent =
-        'Could not load the catalogue — is the API running?'
-    })
+      .catch(function () {
+        if (seq !== fetchSeq) return
+        var count = document.getElementById('figuresCount')
+        if (count) {
+          count.textContent = 'Could not load the catalogue — is the API running?'
+        }
+      })
+  }
+
+  if (figureSearch) {
+    figureSearch.addEventListener('input', fetchAndRenderFigures)
+  }
+  if (figureField) {
+    figureField.addEventListener('change', fetchAndRenderFigures)
+  }
+  if (figureEnduring) {
+    figureEnduring.addEventListener('change', fetchAndRenderFigures)
+  }
+
+  fetchAndRenderFigures()
 })()

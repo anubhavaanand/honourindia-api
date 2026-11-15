@@ -213,6 +213,68 @@ pre {
 .api-card pre { border-radius: 8px; margin-top: 12px; font-size: .73rem; }
 .fineprint { color: var(--ink-faint); font-size: .77rem; letter-spacing: .01em; }
 
+/* figures filter UI (issue #21) */
+.figure-filters {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20px 0 28px;
+  padding: 16px 20px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.filter-search {
+  flex: 1;
+  min-width: 220px;
+}
+.figure-filters input[type='search'],
+.figure-filters select {
+  background: var(--bg-raise);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-family: var(--sans);
+}
+.figure-filters input[type='search']:focus,
+.figure-filters select:focus {
+  outline: 1px solid var(--saffron);
+}
+.filter-checkbox {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  user-select: none;
+}
+.filter-checkbox input[type='checkbox'] {
+  accent-color: var(--saffron);
+  width: 16px;
+  height: 16px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* figures grid */
 .figure-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 30px;
@@ -412,6 +474,7 @@ pre {
   .hero-actions,
   .playground,
   .copy-btn,
+  .figure-filters,
   .figure-actions .btn,
   .back-link,
   .figure-loading,

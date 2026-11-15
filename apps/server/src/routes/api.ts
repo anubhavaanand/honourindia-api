@@ -1,7 +1,25 @@
+import { existsSync, readFileSync } from 'node:fs'
+import path from 'node:path'
 import { Hono } from 'hono'
-import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary } from '../lib/data.js'
+import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary, ROOT } from '../lib/data.js'
 import type { FigureFilter } from '../lib/data.js'
 import type { Env } from '../lib/auth.js'
+
+const OPENAPI_JSON = path.join(ROOT, 'docs/openapi.json')
+const OPENAPI_YAML = path.join(ROOT, 'docs/openapi.yaml')
+
+let openapiDoc: unknown = null
+function loadOpenApi(): unknown {
+  if (openapiDoc) return openapiDoc
+  if (existsSync(OPENAPI_JSON)) {
+    try {
+      openapiDoc = JSON.parse(readFileSync(OPENAPI_JSON, 'utf8'))
+    } catch {
+      openapiDoc = null
+    }
+  }
+  return openapiDoc
+}
 
 export const api = new Hono<Env>()
 
@@ -18,6 +36,7 @@ api.get('/', (c) =>
       'GET /api/v1/figures/:slug': 'Full record for one figure.',
       'GET /api/v1/whoami': 'Shows your tier (anonymous/keyed) and rate-limit budget.',
       'GET /api/v1/meta': 'Dataset and licensing metadata.',
+      'GET /api/v1/openapi': 'OpenAPI 3.1 specification (also available as /openapi.json or /openapi.yaml).',
     },
     docs: '/',
   }),
@@ -110,5 +129,28 @@ api.get('/figures/:slug', (c) => {
     died: f.died,
     summary: f.summary,
     wikipedia: `https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki.replace(/ /g, '_'))}`,
+  })
+})
+
+api.get('/openapi', (c) => {
+  const doc = loadOpenApi()
+  if (!doc) return c.json({ error: 'OpenAPI specification not found' }, 404)
+  c.header('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800')
+  return c.json(doc)
+})
+
+api.get('/openapi.json', (c) => {
+  const doc = loadOpenApi()
+  if (!doc) return c.json({ error: 'OpenAPI specification not found' }, 404)
+  c.header('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800')
+  return c.json(doc)
+})
+
+api.get('/openapi.yaml', (c) => {
+  if (!existsSync(OPENAPI_YAML)) return c.text('Not found', 404)
+  const yamlContent = readFileSync(OPENAPI_YAML, 'utf8')
+  return c.text(yamlContent, 200, {
+    'Content-Type': 'text/yaml; charset=utf-8',
+    'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
   })
 })

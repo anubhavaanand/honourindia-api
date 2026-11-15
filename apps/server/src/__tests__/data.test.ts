@@ -7,6 +7,43 @@ describe('data.ts', () => {
       expect(figures.length).toBeGreaterThanOrEqual(100)
       expect(figures.length).toBeGreaterThan(0)
     })
+
+    it('every figure has a valid era', () => {
+      const validEras = new Set(['ancient', 'medieval', 'colonial', 'modern', 'living'])
+      for (const f of figures) {
+        expect(validEras.has(f.era), `${f.slug} has invalid era: ${f.era}`).toBe(true)
+      }
+    })
+
+    it('every figure has a non-empty slug, name, field, tagline, summary, wiki', () => {
+      for (const f of figures) {
+        expect(f.slug.trim()).toBeTruthy()
+        expect(f.name.trim()).toBeTruthy()
+        expect(f.field.trim()).toBeTruthy()
+        expect(f.tagline.trim()).toBeTruthy()
+        expect(f.summary.trim()).toBeTruthy()
+        expect(f.wiki.trim()).toBeTruthy()
+      }
+    })
+
+    it('every figure born is a number', () => {
+      for (const f of figures) {
+        expect(typeof f.born).toBe('number')
+      }
+    })
+
+    it('every figure enduring is a boolean', () => {
+      for (const f of figures) {
+        expect(typeof f.enduring).toBe('boolean')
+      }
+    })
+
+    it('every figure died is a number or null', () => {
+      for (const f of figures) {
+        const ok = f.died === null || typeof f.died === 'number'
+        expect(ok, `${f.slug} has invalid died: ${f.died}`).toBe(true)
+      }
+    })
   })
 
   describe('findBySlug', () => {
@@ -131,5 +168,32 @@ describe('data.ts', () => {
       expect(out.length).toBeLessThanOrEqual(10)
       expect(out.every((f) => f.field.toLowerCase().includes('mathematics') && f.enduring === true)).toBe(true)
     })
+  })
+})
+
+// ── Schema validation integration tests (using real data to exercise the validator) ──
+describe('figures.json schema validation', () => {
+  it('all loaded figures pass schema validation without throwing', () => {
+    // If validation throws, the import at the top of this file would have crashed.
+    // Double-check by asserting the figures array is populated and well-shaped.
+    expect(figures.length).toBeGreaterThan(0)
+    const validEras = new Set(['ancient', 'medieval', 'colonial', 'modern', 'living'])
+    for (const f of figures) {
+      expect(typeof f.slug).toBe('string')
+      expect(typeof f.name).toBe('string')
+      expect(typeof f.born).toBe('number')
+      expect(typeof f.field).toBe('string')
+      expect(typeof f.tagline).toBe('string')
+      expect(typeof f.summary).toBe('string')
+      expect(typeof f.wiki).toBe('string')
+      expect(validEras.has(f.era)).toBe(true)
+      expect(typeof f.enduring).toBe('boolean')
+      const diedOk = f.died === null || typeof f.died === 'number'
+      expect(diedOk).toBe(true)
+      if (f.quote !== null && f.quote !== undefined) {
+        expect(typeof f.quote.text).toBe('string')
+        expect(f.quote.text.trim().length).toBeGreaterThan(0)
+      }
+    }
   })
 })

@@ -109,4 +109,51 @@ describe('site app.js', () => {
     expect(empty.textContent).toMatch(/No figures/)
     expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(0)
   })
+
+  it('builds subpath-safe figure card links when deployed under a subpath (issue #100)', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+    `
+
+    Object.defineProperty(window, 'location', {
+      value: { href: 'https://user.github.io/my-subpath/' },
+      configurable: true,
+    })
+
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: vi.fn(() => ({ destroy: vi.fn() })) }
+    const figures = [
+      {
+        slug: 'aryabhata',
+        name: 'Aryabhata',
+        field: 'Mathematics',
+        years: '476–550',
+        link: 'https://en.wikipedia.org/wiki/Aryabhata',
+        image: null,
+      },
+    ]
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ count: 1, figures }) }),
+    )
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+    await new Promise((r) => setTimeout(r, 0))
+
+    const cards = document.querySelectorAll('#figureGrid .figure-card')
+    expect(cards.length).toBe(1)
+    expect(cards[0].getAttribute('href')).toBe('https://user.github.io/my-subpath/figures/aryabhata')
+  })
 })

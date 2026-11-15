@@ -24,6 +24,7 @@ export interface FigureSubmission {
   submittedAt: string
   reviewedAt?: string | null
   reviewNote?: string | null
+  reviewedBy?: string | null
 }
 
 export interface SubmissionsFile {
@@ -44,8 +45,16 @@ export function saveSubmissions(list: FigureSubmission[]): void {
   writeFileSync(SUBMISSIONS_FILE, JSON.stringify({ submissions: list }, null, 2) + '\n', 'utf8')
 }
 
+export function listSubmissions(options?: { status?: SubmissionStatus }): FigureSubmission[] {
+  const all = loadSubmissions()
+  if (options?.status) {
+    return all.filter((s) => s.status === options.status)
+  }
+  return all
+}
+
 export function createSubmission(
-  input: Omit<FigureSubmission, 'id' | 'status' | 'submittedAt' | 'reviewedAt' | 'reviewNote'>,
+  input: Omit<FigureSubmission, 'id' | 'status' | 'submittedAt' | 'reviewedAt' | 'reviewNote' | 'reviewedBy'>,
 ): FigureSubmission {
   const id = `sub_${Date.now()}_${randomBytes(4).toString('hex')}`
   const submission: FigureSubmission = {
@@ -55,6 +64,7 @@ export function createSubmission(
     submittedAt: new Date().toISOString(),
     reviewedAt: null,
     reviewNote: null,
+    reviewedBy: null,
   }
   const current = loadSubmissions()
   current.push(submission)
@@ -70,6 +80,7 @@ export function updateSubmissionStatus(
   id: string,
   status: SubmissionStatus,
   reviewNote?: string | null,
+  reviewedBy?: string | null,
 ): FigureSubmission | null {
   const current = loadSubmissions()
   const idx = current.findIndex((s) => s.id === id)
@@ -79,7 +90,8 @@ export function updateSubmissionStatus(
     ...current[idx]!,
     status,
     reviewedAt: new Date().toISOString(),
-    reviewNote: reviewNote ?? current[idx]!.reviewNote ?? null,
+    reviewNote: reviewNote !== undefined ? reviewNote : current[idx]!.reviewNote ?? null,
+    reviewedBy: reviewedBy !== undefined ? reviewedBy : current[idx]!.reviewedBy ?? null,
   }
   current[idx] = updated
   saveSubmissions(current)

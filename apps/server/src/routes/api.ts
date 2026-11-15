@@ -5,7 +5,8 @@ import { etag } from 'hono/etag'
 import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary, figuresVersion, ROOT } from '../lib/data.js'
 import type { FigureFilter } from '../lib/data.js'
 import type { Env } from '../lib/auth.js'
-import { createSubmission } from '../lib/submissions.js'
+import { createSubmission, listSubmissions, getSubmissionById, updateSubmissionStatus, type SubmissionStatus } from '../lib/submissions.js'
+import { adminAuth } from '../lib/admin-auth.js'
 
 const OPENAPI_JSON = path.join(ROOT, 'docs/openapi.json')
 const OPENAPI_YAML = path.join(ROOT, 'docs/openapi.yaml')
@@ -39,6 +40,8 @@ api.get('/', (c) =>
       'GET /api/v1/figures': 'The full catalogue of honoured figures.',
       'GET /api/v1/figures/:slug': 'Full record for one figure.',
       'POST /api/v1/figures/submit': 'Submit a new figure for moderation and inclusion in the catalogue.',
+      'GET /api/v1/admin/submissions': 'Admin: List candidate submissions with optional ?status= filter.',
+      'PATCH /api/v1/admin/submissions/:id': 'Admin: Update moderation status (approve/reject/pending).',
       'GET /api/v1/whoami': 'Shows your tier (anonymous/keyed) and rate-limit budget.',
       'GET /api/v1/meta': 'Dataset and licensing metadata.',
       'GET /api/v1/openapi': 'OpenAPI 3.1 specification (also available as /openapi.json or /openapi.yaml).',
@@ -194,6 +197,59 @@ api.post('/figures/submit', async (c) => {
     },
     201,
   )
+})
+
+// Admin moderation endpoints
+api.use('/admin/*', adminAuth())
+
+api.get('/admin/submissions', (c) => {
+  const statusParam = c.req.query('status')
+  if (statusParam && !['pending', 'approved', 'rejected'].includes(statusParam)) {
+    return c.json({ error: 'Invalid status filter. Must be "pending", "approved", or "rejected"' }, 400)
+  }
+  const submissions = listSubmissions(statusParam ? { status: statusParam as SubmissionStatus } : undefined)
+  return c.json({
+    total: submissions.length,
+    submissions,
+  })
+})
+
+api.get('/admin/submissions/:id', (c) => {
+  const id = c.req.param('id')
+  const submission = getSubmissionById(id)
+  if (!submission) {
+    return c.json({ error: `Submission "${id}" not found` }, 404)
+  }
+  return c.json({ submission })
+})
+
+api.patch('/admin/submissions/:id', async (c) => {
+  const id = c.req.param('id')
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    return c.json({ error: 'Request body must be valid JSON' }, 400)
+  }
+
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    return c.json({ error: 'Request body must be an object' }, 400)
+  }
+
+  const { status, reviewNote, reviewer } = body
+  if (!status || !['pending', 'approved', 'rejected'].includes(status)) {
+    return c.json({ error: 'Field "status" is required and must be "pending", "approved", or "rejected"' }, 400)
+  }
+
+  const updated = updateSubmissionStatus(id, status as SubmissionStatus, reviewNote, reviewer)
+  if (!updated) {
+    return c.json({ error: `Submission "${id}" not found` }, 404)
+  }
+
+  return c.json({
+    message: `Submission status updated to ${status}`,
+    submission: updated,
+  })
 })
 
 api.get('/openapi', (c) => {

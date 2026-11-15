@@ -433,4 +433,45 @@ describe('widget (packages/embed)', () => {
       expect(DEFAULT_PRELOAD_TIMEOUT).toBe(8000)
     })
   })
+
+  it('updates options dynamically after mount via handle.update() (issue #8)', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      size: 'rectangle',
+      theme: 'dark',
+      interval: 10,
+    })
+
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+
+    const root = host.shadowRoot!.querySelector('.hi')!
+    expect(root.classList.contains('hi--dark')).toBe(true)
+    expect(root.classList.contains('hi--rectangle')).toBe(true)
+
+    // Update theme
+    handle.update({ theme: 'light' })
+    expect(root.classList.contains('hi--light')).toBe(true)
+    expect(root.classList.contains('hi--dark')).toBe(false)
+
+    // Update size to poster
+    handle.update({ size: 'poster' })
+    const updatedRoot = host.shadowRoot!.querySelector('.hi')!
+    expect(updatedRoot.classList.contains('hi--poster')).toBe(true)
+    expect(updatedRoot.querySelector('.hi-nameplate-sub')).toBeTruthy()
+
+    // Update api triggers a re-fetch
+    const initialCalls = fetchMock.mock.calls.length
+    handle.update({ api: 'http://localhost/api/v2' })
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+    expect(fetchMock).toHaveBeenCalledTimes(initialCalls + 1)
+    expect(fetchMock.mock.calls[initialCalls]![0]).toContain('http://localhost/api/v2/billboards/random')
+
+    handle.destroy()
+  })
 })

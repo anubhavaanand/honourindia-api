@@ -83,9 +83,23 @@ app.notFound((c) => {
 const isProd = process.env.NODE_ENV === 'production'
 
 const port = Number(process.env.PORT ?? 3000)
-serve({ fetch: app.fetch, port }, (info) => {
+const server = serve({ fetch: app.fetch, port }, (info) => {
   console.log(`सम्मान · Honour India — serving on http://localhost:${info.port}`)
   console.log(`  demo & docs : http://localhost:${info.port}/`)
   console.log(`  api         : http://localhost:${info.port}/api/v1`)
   console.log(`  embed       : http://localhost:${info.port}/embed.js`)
 })
+
+// Stop accepting new connections and let in-flight requests finish before exit.
+let shuttingDown = false
+function shutdown(signal: NodeJS.Signals): void {
+  if (shuttingDown) return
+  shuttingDown = true
+  console.log(`${signal} received — draining connections`)
+  server.close(() => process.exit(0))
+  // Do not hang forever on keep-alive sockets or a stuck response.
+  setTimeout(() => process.exit(1), 10_000).unref()
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'))
+process.on('SIGINT', () => shutdown('SIGINT'))

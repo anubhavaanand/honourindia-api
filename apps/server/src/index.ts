@@ -6,6 +6,7 @@ import { cors } from 'hono/cors'
 import { api } from './routes/api.js'
 import { auth, type Env } from './lib/auth.js'
 import { rateLimit } from './lib/ratelimit.js'
+import { securityHeaders } from './lib/security.js'
 import { ROOT } from './lib/data.js'
 
 const IMAGES_DIR = path.join(ROOT, 'public/images')
@@ -41,6 +42,8 @@ async function serveFile(filePath: string, cacheControl: string): Promise<Respon
 }
 
 const app = new Hono<Env>()
+
+app.use('*', securityHeaders())
 
 // Public API: open CORS, optional-key auth, key-aware rate limiting.
 app.use('/api/*', auth())

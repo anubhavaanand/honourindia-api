@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Load the widget so window.HonourIndia is defined
-import { parseRetryAfter } from '../index'
+import { parseRetryAfter, MAX_FETCH_RETRIES } from '../index'
 
 const billboards = [
   {
@@ -232,6 +232,62 @@ describe('widget (packages/embed)', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
 
     // Second request succeeded; error box hidden
+    expect((errorBox as HTMLElement).style.display).toBe('none')
+
+    handle.destroy()
+    vi.useRealTimers()
+    vi.clearAllTimers()
+  })
+
+  it('stops retrying after MAX_FETCH_RETRIES failures and shows persistent error state (issue #2)', async () => {
+    vi.useFakeTimers()
+    fetchMock.mockReturnValue(Promise.reject(new Error('connection refused')))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
+
+    const errorBox = host.shadowRoot!.querySelector('.hi-error')!
+    const sub = errorBox.querySelector('.hi-error-sub')!
+
+    // Initial attempt
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(sub.textContent).toContain('Retrying…')
+
+    // Retry 1: wait 5s
+    await vi.advanceTimersByTimeAsync(6000)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(sub.textContent).toContain('Retrying…')
+
+    // Retry 2: wait 15s
+    await vi.advanceTimersByTimeAsync(16000)
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+    expect(sub.textContent).toContain('Retrying…')
+
+    // Retry 3: wait 45s
+    await vi.advanceTimersByTimeAsync(46000)
+    expect(fetchMock).toHaveBeenCalledTimes(4)
+    expect(sub.textContent).toContain('Retrying…')
+
+    // Retry 4: wait 90s (MAX_FETCH_RETRIES reached)
+    await vi.advanceTimersByTimeAsync(91000)
+    expect(fetchMock).toHaveBeenCalledTimes(MAX_FETCH_RETRIES)
+    expect(sub.textContent).toContain('Maximum retries exceeded')
+
+    // Further time passing does NOT trigger any more retries
+    await vi.advanceTimersByTimeAsync(300000)
+    expect(fetchMock).toHaveBeenCalledTimes(MAX_FETCH_RETRIES)
+
+    // Clicking "Try again" resets error sub and triggers a new fetch attempt
+    fetchMock.mockReturnValueOnce(jsonResponse({ billboards }))
+    const retryBtn = errorBox.querySelector('.hi-retry') as HTMLButtonElement
+    retryBtn.click()
+
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+    expect(fetchMock).toHaveBeenCalledTimes(MAX_FETCH_RETRIES + 1)
     expect((errorBox as HTMLElement).style.display).toBe('none')
 
     handle.destroy()

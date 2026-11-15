@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Load the widget so window.HonourIndia is defined
-import { parseRetryAfter, MAX_FETCH_RETRIES } from '../index'
+import { parseRetryAfter, MAX_FETCH_RETRIES, MAX_IMAGE_RETRIES } from '../index'
 
 const billboards = [
   {
@@ -334,6 +334,66 @@ describe('widget (packages/embed)', () => {
 
     expect(errorBox.style.display).toBe('none')
     expect(card.style.visibility).toBe('visible')
+
+    handle.destroy()
+    vi.useRealTimers()
+    vi.clearAllTimers()
+  })
+
+  it('retries image load on error before falling back to monogram (issue #6)', async () => {
+    vi.useFakeTimers()
+    const figureWithImage = [
+      {
+        slug: 'cv-raman',
+        name: 'C. V. Raman',
+        years: '1888–1970',
+        field: 'Physics',
+        tagline: 'Discovered Raman effect.',
+        quote: null,
+        image: { url: '/images/portraits/cv-raman.webp' },
+        link: 'https://en.wikipedia.org/wiki/C._V._Raman',
+      },
+    ]
+
+    fetchMock.mockReturnValue(jsonResponse({ billboards: figureWithImage }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by widget bundle
+    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
+
+    // Let fetch resolve, then advance preload timer (2000ms)
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+    await vi.advanceTimersByTimeAsync(2500)
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    const media = active.querySelector('.hi-media')!
+    let img = media.querySelector('img') as HTMLImageElement
+    expect(img).toBeTruthy()
+    const originalSrc = img.src
+
+    // 1st error: should not immediately show monogram, schedules retry
+    img.dispatchEvent(new Event('error'))
+    expect(media.querySelector('.hi-noimg')).toBeNull()
+    expect(media.querySelector('img')).toBeTruthy()
+
+    // Advance timer past first retry delay (300ms)
+    await vi.advanceTimersByTimeAsync(350)
+    expect(img.src).toContain('retry=1')
+
+    // 2nd error: schedules second retry
+    img.dispatchEvent(new Event('error'))
+    expect(media.querySelector('.hi-noimg')).toBeNull()
+    await vi.advanceTimersByTimeAsync(650)
+    expect(img.src).toContain('retry=2')
+
+    // 3rd error (exceeded MAX_IMAGE_RETRIES): falls back to monogram
+    img.dispatchEvent(new Event('error'))
+    expect(media.querySelector('img')).toBeNull()
+    const fallback = media.querySelector('.hi-noimg')!
+    expect(fallback).toBeTruthy()
+    expect(fallback.textContent).toBe('CV')
 
     handle.destroy()
     vi.useRealTimers()

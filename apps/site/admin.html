@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submissions Moderation · सम्मान · Honour India</title>
+  <meta name="description" content="Review and moderate community figure submissions for Honour India." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+  <style>
+    .admin-container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .admin-header {
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 20px;
+    }
+    .admin-title h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 2rem;
+      color: var(--ink);
+    }
+    .admin-title p {
+      margin: 4px 0 0;
+      color: var(--ink-dim);
+      font-size: 0.95rem;
+    }
+    .admin-auth-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: var(--bg-raise);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    .admin-auth-bar input {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      width: 180px;
+    }
+    .admin-auth-bar button, .filter-btn, .action-btn {
+      cursor: pointer;
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      padding: 6px 12px;
+      transition: background 0.15s ease;
+      border: 1px solid var(--line);
+    }
+    .admin-auth-bar button {
+      background: var(--saffron);
+      color: #161006;
+      border: none;
+    }
+    .admin-auth-bar button:hover {
+      background: var(--saffron-hot);
+    }
+    .filters-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: var(--bg-soft);
+      color: var(--ink-dim);
+    }
+    .filter-btn.active {
+      background: var(--saffron-tint);
+      color: var(--saffron);
+      border-color: var(--saffron);
+    }
+    .submission-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .card-title {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      margin: 0;
+      color: var(--ink);
+    }
+    .card-meta {
+      font-size: 0.85rem;
+      color: var(--ink-dim);
+      margin: 4px 0 0;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-pending {
+      background: rgba(255, 158, 44, 0.2);
+      color: #ffb45e;
+      border: 1px solid rgba(255, 158, 44, 0.4);
+    }
+    .status-approved {
+      background: rgba(53, 181, 98, 0.2);
+      color: #5ce68b;
+      border: 1px solid rgba(53, 181, 98, 0.4);
+    }
+    .status-rejected {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .card-body {
+      color: var(--ink);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .card-tagline {
+      font-style: italic;
+      color: var(--ink-dim);
+      margin-bottom: 8px;
+    }
+    .card-quote {
+      margin: 8px 0;
+      padding: 8px 12px;
+      background: var(--bg-raise);
+      border-left: 3px solid var(--saffron);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+    }
+    .card-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+      color: var(--ink-dim);
+    }
+    .review-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .review-note-input {
+      flex: 1 1 200px;
+      background: var(--bg-raise);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    .btn-approve {
+      background: var(--green);
+      color: #062410;
+      border: none;
+    }
+    .btn-approve:hover {
+      background: #4cdb7c;
+    }
+    .btn-reject {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+    }
+    .btn-reject:hover {
+      background: #f87171;
+    }
+    .btn-reset {
+      background: var(--bg-raise);
+      color: var(--ink-dim);
+      border: 1px solid var(--line);
+    }
+    .btn-reset:hover {
+      background: var(--bg-soft);
+      color: var(--ink);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--ink-dim);
+      background: var(--bg-soft);
+      border-radius: 10px;
+      border: 1px dashed var(--line);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <a class="wordmark" href="/">सम्मान · Honour&nbsp;India</a>
+      <nav>
+        <a href="/">Billboard Home</a>
+        <a href="/#figures">The figures</a>
+        <a href="/#api">API</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <div class="admin-header">
+      <div class="admin-title">
+        <h1>Submission Moderation</h1>
+        <p>Review community-suggested figures for catalogue inclusion</p>
+      </div>
+      <div class="admin-auth-bar">
+        <label for="adminKeyInput" style="font-size: 0.8rem; color: var(--ink-dim);">Admin Key:</label>
+        <input type="password" id="adminKeyInput" placeholder="Enter admin key" />
+        <button type="button" id="saveKeyBtn">Set Key</button>
+      </div>
+    </div>
+
+    <div class="filters-bar">
+      <button type="button" class="filter-btn active" data-status="">All (<span id="countAll">0</span>)</button>
+      <button type="button" class="filter-btn" data-status="pending">Pending (<span id="countPending">0</span>)</button>
+      <button type="button" class="filter-btn" data-status="approved">Approved (<span id="countApproved">0</span>)</button>
+      <button type="button" class="filter-btn" data-status="rejected">Rejected (<span id="countRejected">0</span>)</button>
+      <button type="button" class="filter-btn" id="refreshBtn" style="margin-left: auto;">↻ Refresh</button>
+    </div>
+
+    <div id="statusMessage" style="display:none; padding: 10px; margin-bottom: 16px; border-radius: 6px;"></div>
+
+    <div id="submissionsList">
+      <div class="empty-state">Loading submissions…</div>
+    </div>
+  </main>
+
+  <script src="/admin.js" defer></script>
+</body>
+</html>

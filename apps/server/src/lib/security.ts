@@ -18,6 +18,10 @@ export function securityHeaders() {
     // which replaces headers queued with c.header().
     c.res.headers.set('X-Content-Type-Options', 'nosniff')
     c.res.headers.set('X-Frame-Options', 'DENY')
+    // Billboards link out to Wikipedia and the site links to third-party
+    // resources; send only the origin to those sites, never the full path
+    // or query string of the page that linked there.
+    c.res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
     c.res.headers.set('Content-Security-Policy', c.req.path.startsWith('/api/') ? API_CSP : SITE_CSP)
   }
 }

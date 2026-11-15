@@ -25,10 +25,12 @@
   var creditEl = document.getElementById('figureCredit')
   var notFoundEl = document.getElementById('figureNotFound')
   var detailEl = document.querySelector('.figure-detail')
+  var loadingEl = document.getElementById('figureLoading')
 
   function showNotFound() {
     if (notFoundEl) notFoundEl.hidden = false
     if (detailEl) detailEl.hidden = true
+    if (loadingEl) loadingEl.hidden = true
     document.title = 'Figure not found · Honour India'
   }
 
@@ -53,6 +55,7 @@
     document.title = (f.name || 'Figure') + ' · Honour India'
     if (notFoundEl) notFoundEl.hidden = true
     if (detailEl) detailEl.hidden = false
+    if (loadingEl) loadingEl.hidden = true
 
     if (f.image) {
       portrait.hidden = false
@@ -100,11 +103,17 @@
     }
   }
 
+  if (loadingEl) loadingEl.hidden = false
+  if (detailEl) detailEl.hidden = true
+
   fetch(new URL('figures/' + encodeURIComponent(slug), API_BASE))
     .then(function (r) {
       if (!r.ok) throw new Error('Figure not found')
       return r.json()
     })
-    .then(render)
+    .then(function (f) {
+      if (loadingEl) loadingEl.hidden = true
+      render(f)
+    })
     .catch(showNotFound)
 })()

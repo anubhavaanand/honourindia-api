@@ -44,6 +44,7 @@ interface MountOptions {
 
 interface MountHandle {
   destroy(): void
+  update(options: Partial<MountOptions>): void
 }
 
 const VERSION = '0.1.0'
@@ -493,6 +494,8 @@ class BillboardWidget {
   private preloadTimeout: number
   private api: string
   private keyQuery: string
+  private theme: Theme
+  private size: Size
   private dom: ReturnType<typeof buildDom>
   private shadow: ShadowRoot
   private host: Element
@@ -501,6 +504,8 @@ class BillboardWidget {
     this.host = host
     this.api = opts.api ?? defaultApi()
     this.keyQuery = opts.key ? `&key=${encodeURIComponent(opts.key)}` : ''
+    this.theme = opts.theme ?? 'dark'
+    this.size = opts.size ?? 'rectangle'
     const interval = clamp(opts.interval ?? DEFAULT_INTERVAL, MIN_INTERVAL, MAX_INTERVAL)
     this.intervalMs = interval * 1000
     this.preloadTimeout = opts.preloadTimeout !== undefined ? Math.max(0, opts.preloadTimeout) : DEFAULT_PRELOAD_TIMEOUT
@@ -512,14 +517,20 @@ class BillboardWidget {
     style.textContent = CSS
     this.shadow.appendChild(style)
 
-    this.dom = buildDom(opts.size ?? 'rectangle', opts.theme ?? 'dark')
+    this.dom = buildDom(this.size, this.theme)
     this.shadow.appendChild(this.dom.root)
 
-    this.dom.navPrev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(-1) })
-    this.dom.navNext.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(1) })
-
+    this.attachDomEvents()
     this.dom.card.style.visibility = 'visible'
 
+    document.addEventListener('visibilitychange', this.onVisibility)
+
+    void this.fetchBatch()
+  }
+
+  private attachDomEvents(): void {
+    this.dom.navPrev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(-1) })
+    this.dom.navNext.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(1) })
     var retryBtn = this.dom.errorBox.querySelector('.hi-retry')
     if (retryBtn) {
       retryBtn.addEventListener('click', () => {
@@ -528,10 +539,59 @@ class BillboardWidget {
         void this.fetchBatch()
       })
     }
+  }
 
-    document.addEventListener('visibilitychange', this.onVisibility)
+  update(opts: Partial<MountOptions>): void {
+    if (this.destroyed) return
 
-    void this.fetchBatch()
+    if (opts.theme && opts.theme !== this.theme) {
+      this.dom.root.classList.remove(`hi--${this.theme}`)
+      this.theme = opts.theme
+      this.dom.root.classList.add(`hi--${this.theme}`)
+    }
+
+    if (opts.size && opts.size !== this.size) {
+      this.size = opts.size
+      const oldRoot = this.dom.root
+      this.dom = buildDom(this.size, this.theme)
+      this.shadow.replaceChild(this.dom.root, oldRoot)
+      this.attachDomEvents()
+      this.dom.card.style.visibility = 'visible'
+      if (this.index >= 0 && this.queue.length > 0) {
+        this.show(this.index, true)
+      }
+    }
+
+    if (opts.interval !== undefined) {
+      const interval = clamp(opts.interval, MIN_INTERVAL, MAX_INTERVAL)
+      this.intervalMs = interval * 1000
+      this.schedule()
+    }
+
+    if (opts.preloadTimeout !== undefined) {
+      this.preloadTimeout = Math.max(0, opts.preloadTimeout)
+    }
+
+    let refetchNeeded = false
+    if (opts.api !== undefined && opts.api !== this.api) {
+      this.api = opts.api
+      refetchNeeded = true
+    }
+    if (opts.key !== undefined) {
+      const newKeyQuery = opts.key ? `&key=${encodeURIComponent(opts.key)}` : ''
+      if (newKeyQuery !== this.keyQuery) {
+        this.keyQuery = newKeyQuery
+        refetchNeeded = true
+      }
+    }
+
+    if (refetchNeeded) {
+      this.queue = []
+      this.index = -1
+      this.fetching = false
+      this.dom.loading.classList.remove('hi-loading-hidden')
+      void this.fetchBatch()
+    }
   }
 
   private onVisibility = () => {
@@ -671,7 +731,10 @@ function mount(el: Element | string, opts: MountOptions = {}): MountHandle {
   const host = typeof el === 'string' ? document.querySelector(el) : el
   if (!host) throw new Error('[honourindia] mount target not found')
   const widget = new BillboardWidget(host, opts)
-  return { destroy: () => widget.destroy() }
+  return {
+    destroy: () => widget.destroy(),
+    update: (newOpts: Partial<MountOptions>) => widget.update(newOpts),
+  }
 }
 
 function readDataset(el: Element): MountOptions {

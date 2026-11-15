@@ -408,4 +408,83 @@ describe('site app.js', () => {
     expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(0)
     expect(document.querySelector('#figureGrid .figure-empty')).toBeTruthy()
   })
+
+  it('supports pagination / load more on figures grid (issue #89)', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+      <button id="loadMoreFigures" hidden>Load more minds</button>
+    `
+
+    Object.defineProperty(window, 'location', {
+      value: { href: 'http://localhost/' },
+      configurable: true,
+    })
+
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: vi.fn(() => ({ destroy: vi.fn() })) }
+
+    const batch1 = Array.from({ length: 24 }, (_, i) => ({
+      slug: `figure-${i}`,
+      name: `Figure ${i}`,
+      field: 'Science',
+      years: '1900–1980',
+      era: 'modern',
+      link: `https://en.wikipedia.org/wiki/Figure_${i}`,
+      image: null,
+    }))
+
+    const batch2 = Array.from({ length: 5 }, (_, i) => ({
+      slug: `figure-extra-${i}`,
+      name: `Figure Extra ${i}`,
+      field: 'Science',
+      years: '1910–1990',
+      era: 'modern',
+      link: `https://en.wikipedia.org/wiki/Figure_Extra_${i}`,
+      image: null,
+    }))
+
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn((url) => {
+      const u = new URL(url.toString())
+      const offset = Number(u.searchParams.get('offset') || '0')
+      if (offset === 0) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ count: batch1.length, total: 29, figures: batch1 }),
+        })
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ count: batch2.length, total: 29, figures: batch2 }),
+      })
+    })
+
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+    await new Promise((r) => setTimeout(r, 0))
+
+    const loadMoreBtn = document.getElementById('loadMoreFigures')
+    expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(24)
+    expect(loadMoreBtn.hidden).toBe(false)
+
+    // Click load more
+    loadMoreBtn.click()
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(29)
+    // All items loaded, so button should be hidden
+    expect(loadMoreBtn.hidden).toBe(true)
+  })
 })

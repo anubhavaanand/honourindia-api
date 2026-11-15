@@ -40,6 +40,18 @@ describe('securityHeaders', () => {
     const allowedOrigin = '*'
     expect(allowedOrigin).toBe('*')
   })
+
+  it('sets a Referrer-Policy that withholds the path from third parties (issue #67)', async () => {
+    const c = makeContext('/')
+    await securityHeaders()(c, () => Promise.resolve())
+
+    expect(c.res.headers.get('Referrer-Policy')).toBe('strict-origin-when-cross-origin')
+  })
+
+  it('sends the Referrer-Policy on real API responses too (issue #67)', async () => {
+    const res = await app.request('/api/v1/meta')
+    expect(res.headers.get('Referrer-Policy')).toBe('strict-origin-when-cross-origin')
+  })
 })
 
 describe('/images/* path traversal protection', () => {

@@ -50,6 +50,9 @@ app.use('*', requestId())
 // Public API: open CORS, optional-key auth, key-aware rate limiting.
 app.use('/api/*', auth())
 app.use('/api/*', rateLimit())
+// Public API CORS: Wildcard origin ('*') is intentional and required by design
+// because Honour India is a public embeddable billboard network. Restricting origins
+// would break third-party website integrations. No user credentials/cookies are accepted.
 app.use('/api/*', cors({ origin: '*' }))
 app.route('/api/v1', api)
 

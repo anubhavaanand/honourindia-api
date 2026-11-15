@@ -1,0 +1,19 @@
+# Build output — the builder stage regenerates it.
+dist/
+dist-pages/
+
+# Local state, never part of an image.
+node_modules/
+.git/
+.github/
+.prowl/
+.zcode/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+# Screenshots and scratch files from local work.
+*.png
+!public/images/*.png

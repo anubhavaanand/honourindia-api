@@ -54,8 +54,7 @@
     var cfg = currentConfig()
     optIntervalOut.textContent = cfg.interval + 's'
 
-    snippetEl.querySelector('code').innerHTML = snippetFor(cfg)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    snippetEl.querySelector('code').textContent = snippetFor(cfg)
 
     if (previewHandle) previewHandle.destroy()
     previewMount.innerHTML = ''

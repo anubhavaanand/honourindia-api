@@ -7,6 +7,7 @@
   var PAGE_DIR = new URL('.', location.href)
   var EMBED_ORIGIN = PAGE_DIR.toString().replace(/\/$/, '')
   var API_BASE = new URL('api/v1/', PAGE_DIR)
+  var EMBED_SRI = 'sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK'
 
   // Fill origin placeholders in the static HTML.
   document.querySelectorAll('.ph-origin').forEach(function (el) {
@@ -59,7 +60,9 @@
       '></div>\n' +
       '<script src="' +
       EMBED_ORIGIN +
-      '/embed.js" async><' +
+      '/embed.js" integrity="' +
+      EMBED_SRI +
+      '" crossorigin="anonymous" async><' +
       '/script>'
     )
   }

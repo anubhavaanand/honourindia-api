@@ -9,7 +9,7 @@ rarely celebrated. One line of code on any site, free forever, no tracking.
 
 ```
 <div data-honourindia></div>
-<script src="https://your-host/embed.js" async></script>
+<script src="https://your-host/embed.js" integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK" crossorigin="anonymous" async></script>
 ```
 
 That's the whole integration. A tasteful billboard fades in, rotates through
@@ -85,7 +85,12 @@ The widget is dependency-free and mounts into a shadow root, so it works on any 
 
 ```html
 <div data-honourindia data-size="poster" data-theme="dark" data-interval="8"></div>
-<script src="https://your-host/embed.js" async></script>
+<script
+  src="https://your-host/embed.js"
+  integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK"
+  crossorigin="anonymous"
+  async
+></script>
 ```
 
 ### React
@@ -125,7 +130,12 @@ Add a **Custom HTML** block to your page or widget area:
 
 ```html
 <div data-honourindia data-size="leaderboard"></div>
-<script src="https://your-host/embed.js" async></script>
+<script
+  src="https://your-host/embed.js"
+  integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK"
+  crossorigin="anonymous"
+  async
+></script>
 ```
 
 Some WordPress themes strip `data-*` attributes; if the widget doesn't render, switch the block to "Edit as HTML" and paste it exactly as shown, or load `embed.js` through a header/footer script injector.

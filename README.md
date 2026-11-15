@@ -92,6 +92,21 @@ Open CORS on everything, JSON only, cache-friendly, light rate limiting
 | `GET /embed.js` | The widget script itself. |
 | `GET /healthz` | Liveness probe. |
 
+`count` on the random endpoint must be an integer from 1 to 24 (default 8);
+anything else — including non-integers such as `2.5` and out-of-range values —
+is rejected with HTTP 400 rather than silently clamped.
+
+### API versioning
+
+The API is versioned by path: all public endpoints live under `/api/v1`. There is no
+`/api/v2` and no deprecation schedule for `/api/v1`.
+
+If a breaking change is ever needed, it will ship under a new path (for example
+`/api/v2`) and `/api/v1` will be kept running with an advance deprecation notice.
+Breaking changes are never made inside `/api/v1` itself — additive fields and new
+query parameters are allowed, but existing fields are never removed or renamed and
+response shapes are only extended.
+
 ### API keys (optional)
 
 The API is **keyless by default** — the embed works for anyone, forever. Keys

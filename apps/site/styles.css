@@ -20,6 +20,27 @@
   --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* Keyboard users can jump straight to the main content. */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--saffron);
+  color: #161006;
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.15s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 * { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -210,6 +231,15 @@ pre {
 }
 .figure-name { font-family: var(--serif); font-weight: 600; font-size: 1.02rem; margin: 0 0 4px; letter-spacing: .002em; }
 .figure-years { color: var(--ink-faint); font-size: .73rem; }
+.figure-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 34px 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  color: var(--ink-dim);
+  text-align: center;
+}
 
 /* mission */
 .mission .mission-copy { max-width: 46em; }
@@ -234,6 +264,13 @@ pre {
   gap: 30px;
   margin-top: 30px;
   align-items: start;
+}
+.figure-loading {
+  padding: 72px 0;
+  margin-top: 30px;
+  text-align: center;
+  color: var(--ink-dim);
+  letter-spacing: 0.02em;
 }
 .figure-media { position: relative; }
 .figure-portrait {

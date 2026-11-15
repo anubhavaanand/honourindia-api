@@ -23,6 +23,7 @@
   <link rel="apple-touch-icon" href="favicon.svg" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-head">
     <div class="wrap head-row">
       <a class="wordmark" href="/">सम्मान · Honour&nbsp;India</a>
@@ -35,9 +36,10 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="wrap section">
-      <article class="figure-detail">
+      <div id="figureLoading" class="figure-loading" role="status">Loading figure…</div>
+      <article class="figure-detail" hidden>
         <div class="figure-media">
           <img id="figurePortrait" class="figure-portrait" alt="" />
           <div id="figureMonogram" class="figure-monogram">AA</div>

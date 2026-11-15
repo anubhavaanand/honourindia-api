@@ -70,4 +70,43 @@ describe('site app.js', () => {
     document.getElementById('optTheme').dispatchEvent(new Event('change'))
     expect(mountMock).toHaveBeenCalledTimes(2)
   })
+
+  it('shows an empty state when the catalogue has no figures', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+    `
+
+    Object.defineProperty(window, 'location', {
+      value: { href: 'http://localhost/' },
+      configurable: true,
+    })
+
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: vi.fn(() => ({ destroy: vi.fn() })) }
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ count: 0, figures: [] }) }),
+    )
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(document.getElementById('figuresCount').textContent).toContain('no figures')
+    const empty = document.querySelector('#figureGrid .figure-empty')
+    expect(empty).toBeTruthy()
+    expect(empty.textContent).toMatch(/No figures/)
+    expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(0)
+  })
 })

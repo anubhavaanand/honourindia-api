@@ -109,11 +109,22 @@
     .then(function (r) { return r.json() })
     .then(function (data) {
       var count = document.getElementById('figuresCount')
+      var grid = document.getElementById('figureGrid')
+      grid.innerHTML = ''
+
+      if (!data.figures || data.figures.length === 0) {
+        count.textContent = 'The seed catalogue — no figures to show yet.'
+        var empty = document.createElement('p')
+        empty.className = 'figure-empty'
+        empty.textContent = 'No figures to show yet. New honoured figures will appear here.'
+        grid.appendChild(empty)
+        return
+      }
+
       count.textContent =
         'The seed catalogue — ' + data.count + ' minds from Raman\'s generation to ISRO\'s. ' +
         'Suggest more via the repository.'
 
-      var grid = document.getElementById('figureGrid')
       data.figures.forEach(function (f) {
         var a = document.createElement('a')
         a.className = 'figure-card'

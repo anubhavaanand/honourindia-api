@@ -36,7 +36,6 @@ describe('widget (packages/embed)', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
     fetchMock = vi.fn()
-    // @ts-expect-error test harness mock
     globalThis.fetch = fetchMock
     // jsdom lacks matchMedia; the widget constructor calls it
     // @ts-expect-error test harness mock
@@ -85,7 +84,66 @@ describe('widget (packages/embed)', () => {
     expect(['C. V. Raman', 'Srinivasa Ramanujan']).toContain(name)
     expect(active.querySelector('.hi-tag')!.textContent).toBeTruthy()
 
-    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost/api/v1/billboards/random?count=14')
+    expect(fetchMock.mock.calls[0]![0]).toBe('http://localhost/api/v1/billboards/random?count=14')
+    handle.destroy()
+  })
+
+  it('mounts the poster size with the poster-specific layer markup', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      size: 'poster',
+      theme: 'light',
+    })
+
+    const root = host.shadowRoot!.querySelector('.hi')!
+    expect(root.classList.contains('hi--poster')).toBe(true)
+    expect(root.classList.contains('hi--light')).toBe(true)
+
+    const layer = root.querySelector('.hi-layer')!
+    expect(layer.querySelector('.hi-nameplate-sub')).toBeTruthy()
+    expect(layer.querySelector('.hi-panel')).toBeNull()
+
+    await new Promise((r) => setTimeout(r, 0))
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    expect(active.querySelector('.hi-name')!.textContent).toBeTruthy()
+    expect(active.querySelector('.hi-nameplate-sub')).toBeTruthy()
+
+    handle.destroy()
+  })
+
+  it('mounts the leaderboard size with the split image/text layout', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      size: 'leaderboard',
+    })
+
+    const root = host.shadowRoot!.querySelector('.hi')!
+    expect(root.classList.contains('hi--leaderboard')).toBe(true)
+
+    const layer = root.querySelector('.hi-layer')!
+    expect(layer.querySelector('.hi-body')).toBeTruthy()
+    expect(layer.querySelector('.hi-media')).toBeTruthy()
+    expect(layer.querySelector('.hi-panel')).toBeTruthy()
+    expect(layer.querySelector('.hi-scrim')).toBeNull()
+
+    await new Promise((r) => setTimeout(r, 0))
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    expect(active.querySelector('.hi-name')!.textContent).toBeTruthy()
+
     handle.destroy()
   })
 
@@ -100,17 +158,17 @@ describe('widget (packages/embed)', () => {
     window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
 
     // flush the microtask from the rejected fetch so the catch renders the error box
-    await new Promise((r) => queueMicrotask(r))
+    await new Promise<void>((r) => queueMicrotask(() => r()))
 
     const errorBox = host.shadowRoot!.querySelector('.hi-error')!
     expect(errorBox).toBeTruthy()
-    expect(errorBox.style.display).toBe('flex')
+    expect((errorBox as HTMLElement).style.display).toBe('flex')
     expect(fetchMock).toHaveBeenCalledTimes(1)
 
     // the internal loop retries after the 5s backoff
     vi.advanceTimersByTime(6000)
     // the resolved setTimeout schedules the fetch retry as a microtask
-    await new Promise((r) => queueMicrotask(r))
+    await new Promise<void>((r) => queueMicrotask(() => r()))
     expect(fetchMock).toHaveBeenCalledTimes(2)
 
     vi.useRealTimers()

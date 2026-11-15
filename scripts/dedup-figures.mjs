@@ -13,7 +13,7 @@
  * Usage: node scripts/dedup-figures.mjs   (or npm run dedup:figures)
  */
 
-import { readFile, writeFile } from 'node:fs'
+import { readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 

@@ -1,11 +1,20 @@
 import { describe, it, expect } from 'vitest'
-import { figures, findBySlug, filterFigures, toBillboard, toSummary, sampleRandom } from '../lib/data.js'
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
+import { figures, findBySlug, filterFigures, toBillboard, toSummary, sampleRandom, figuresVersion, ROOT } from '../lib/data.js'
 
 describe('data.ts', () => {
   describe('figures', () => {
     it('is non-empty (catalogue scaled to 100+ figures)', () => {
       expect(figures.length).toBeGreaterThanOrEqual(100)
       expect(figures.length).toBeGreaterThan(0)
+    })
+
+    it('data changelog exists and tracks dataVersion (issue #64)', async () => {
+      expect(figuresVersion).toBe('1.2.0')
+      const changelog = await readFile(path.join(ROOT, 'data/CHANGELOG.md'), 'utf8')
+      expect(changelog).toContain('## [1.2.0]')
+      expect(changelog).toContain('figures.json')
     })
 
     it('every figure has a valid era', () => {

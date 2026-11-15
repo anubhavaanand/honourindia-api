@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { Hono } from 'hono'
 import { etag } from 'hono/etag'
-import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary, ROOT } from '../lib/data.js'
+import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary, figuresVersion, ROOT } from '../lib/data.js'
 import type { FigureFilter } from '../lib/data.js'
 import type { Env } from '../lib/auth.js'
 
@@ -60,6 +60,7 @@ api.get('/meta', (c) =>
   c.json({
     name: 'Honour India',
     version: 'v1',
+    dataVersion: figuresVersion,
     figures: figures.length,
     living: figures.filter((f) => f.died === null).length,
     dataLicense: 'Facts are not copyrightable; summaries compiled by contributors (see repository).',

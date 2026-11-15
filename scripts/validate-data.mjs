@@ -41,11 +41,14 @@ async function main() {
   }
 
   const version = raw.version
+  const dataVersion = raw.dataVersion
   const figures = raw.figures
   if (!Array.isArray(figures) || figures.length === 0) {
     error('figures.json must contain a non-empty "figures" array')
   } else {
     if (version !== 1) warn(`figures.json version is "${version}", expected 1`)
+    if (!dataVersion) warn('figures.json: missing dataVersion field (see #64)')
+    if (!existsSync(path.join(ROOT, 'data/CHANGELOG.md'))) warn('data/CHANGELOG.md is missing (see #64)')
     const seenSlugs = new Set()
     const seenWiki = new Map()
     const seenNameBorn = new Set()

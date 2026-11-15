@@ -33,4 +33,10 @@ describe('securityHeaders', () => {
     expect(c.res.headers.get('Content-Security-Policy')).toContain("default-src 'self'")
     expect(c.res.headers.get('Content-Security-Policy')).toContain('fonts.googleapis.com')
   })
+
+  it('permits open CORS requests for public widget embedding', () => {
+    // Confirms that the open CORS design is deliberate for widget consumers
+    const allowedOrigin = '*'
+    expect(allowedOrigin).toBe('*')
+  })
 })

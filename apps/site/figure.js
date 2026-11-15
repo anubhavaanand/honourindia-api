@@ -64,6 +64,32 @@
       .toUpperCase() || '?'
   }
 
+  function updateJsonLd(f) {
+    var schema = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      'name': f.name,
+      'description': f.summary || f.tagline || undefined,
+      'jobTitle': f.field || undefined,
+      'sameAs': f.link || f.wikipedia || undefined,
+    }
+
+    if (f.born) schema.birthDate = String(f.born)
+    if (f.died) schema.deathDate = String(f.died)
+    if (f.image && f.image.url) {
+      schema.image = new URL(f.image.url, API_BASE).toString()
+    }
+
+    var script = document.getElementById('figureJsonLd')
+    if (!script) {
+      script = document.createElement('script')
+      script.id = 'figureJsonLd'
+      script.type = 'application/ld+json'
+      document.head.appendChild(script)
+    }
+    script.textContent = JSON.stringify(schema, null, 2)
+  }
+
   function render(f) {
     document.title = (f.name || 'Figure') + ' · Honour India'
     if (notFoundEl) notFoundEl.hidden = true
@@ -114,6 +140,8 @@
     } else {
       creditEl.hidden = true
     }
+
+    updateJsonLd(f)
   }
 
   if (loadingEl) loadingEl.hidden = false

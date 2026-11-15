@@ -1,5 +1,5 @@
 import type { Context, Next } from 'hono'
-import type { Env } from './auth.js'
+import { clientIp, type Env } from './auth.js'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -200,12 +200,4 @@ export function prune(hits: Map<string, number[]>, now: number, windowMs: number
     const entry = byOldest[i]
     if (entry) hits.delete(entry[0])
   }
-}
-
-function clientIp(c: Context<Env>): string {
-  return (
-    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ||
-    c.req.header('x-real-ip') ||
-    'local'
-  )
 }

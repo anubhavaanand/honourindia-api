@@ -136,6 +136,62 @@ function safeEqual(a: string, b: string): boolean {
   return ba.length === bb.length && timingSafeEqual(ba, bb)
 }
 
+/** The caller's IP, used to group rate limits and failed key attempts. */
+export function clientIp(c: Context<Env>): string {
+  return (
+    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ||
+    c.req.header('x-real-ip') ||
+    'local'
+  )
+}
+
+// Failed key attempts per client. The keys are 32 random bytes, so guessing
+// one is hopeless anyway — but an unthrottled endpoint still burns CPU on
+// every attempt and tells the attacker how the server reacts.
+const MAX_KEY_FAILURES = 10
+const KEY_FAILURE_WINDOW_MS = 15 * 60_000
+const MAX_FAILURE_ENTRIES = 10_000
+
+const keyFailures = new Map<string, { count: number; firstAt: number }>()
+
+function pruneKeyFailures(now: number): void {
+  for (const [identity, entry] of keyFailures) {
+    if (now - entry.firstAt > KEY_FAILURE_WINDOW_MS) keyFailures.delete(identity)
+  }
+  if (keyFailures.size <= MAX_FAILURE_ENTRIES) return
+
+  // Keep the map bounded even if many addresses fail at once.
+  const byOldest = [...keyFailures.entries()].sort((a, b) => a[1].firstAt - b[1].firstAt)
+  for (let i = 0; i < keyFailures.size - MAX_FAILURE_ENTRIES; i++) {
+    const entry = byOldest[i]
+    if (entry) keyFailures.delete(entry[0])
+  }
+}
+
+function recordKeyFailure(identity: string, now: number): number {
+  const entry = keyFailures.get(identity)
+  if (!entry || now - entry.firstAt > KEY_FAILURE_WINDOW_MS) {
+    keyFailures.set(identity, { count: 1, firstAt: now })
+    pruneKeyFailures(now)
+    return 1
+  }
+  entry.count++
+  return entry.count
+}
+
+/** Seconds until the caller may try an API key again, or 0 if it may. */
+export function keyFailureRetryAfter(identity: string, now = Date.now()): number {
+  const entry = keyFailures.get(identity)
+  if (!entry || entry.count <= MAX_KEY_FAILURES) return 0
+  const remaining = entry.firstAt + KEY_FAILURE_WINDOW_MS - now
+  return remaining > 0 ? Math.ceil(remaining / 1000) : 0
+}
+
+/** Forget the failed attempts of a client — it authenticated successfully. */
+export function clearKeyFailures(identity: string): void {
+  keyFailures.delete(identity)
+}
+
 /** Middleware: identifies the caller. No key → anonymous (fine). Bad key → 401. */
 export function auth() {
   return async (c: Context<Env>, next: Next) => {
@@ -161,10 +217,30 @@ export function auth() {
     if (!raw) {
       c.set('authKey', null)
     } else {
+      const identity = clientIp(c)
+      const retryAfter = keyFailureRetryAfter(identity)
+      if (retryAfter > 0) {
+        return c.json(
+          { error: 'Too many failed API key attempts. Try again later.' },
+          429,
+          { 'Retry-After': String(retryAfter) },
+        )
+      }
+
       const record = getKeyRecord(hashKey(raw))
       if (!record || !safeEqual(hashKey(raw), record.hash)) {
+        const failures = recordKeyFailure(identity, Date.now())
+        if (failures > MAX_KEY_FAILURES) {
+          const retryAfter = keyFailureRetryAfter(identity)
+          return c.json(
+            { error: 'Too many failed API key attempts. Try again later.' },
+            429,
+            { 'Retry-After': String(retryAfter) },
+          )
+        }
         return c.json({ error: 'Unknown API key. Omit the key for anonymous access, or get one from the project maintainers.' }, 401)
       }
+      clearKeyFailures(identity)
       c.set('authKey', { id: record.id, name: record.name })
     }
     await next()

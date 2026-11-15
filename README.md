@@ -193,6 +193,10 @@ can pass `data-key="hi_…"` on the billboard container to use a key from the
 widget — the widget sends it to the API as an `Authorization` header. Restart
 the server after issuing keys.
 
+Ten wrong keys from the same address earn a fifteen-minute lockout — the
+response is a `429` with a `Retry-After` header. Anonymous requests are never
+counted against it.
+
 Example billboard:
 
 ```json

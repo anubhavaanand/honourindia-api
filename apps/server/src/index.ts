@@ -12,6 +12,7 @@ import { api } from './routes/api.js'
 import { auth, type Env } from './lib/auth.js'
 import { rateLimit } from './lib/ratelimit.js'
 import { securityHeaders } from './lib/security.js'
+import { log, requestLogger } from './lib/logger.js'
 import { ROOT } from './lib/data.js'
 import { requestId } from './lib/request-id.js'
 
@@ -77,6 +78,7 @@ export const app = new Hono<Env>()
 
 app.use('*', securityHeaders())
 app.use('*', requestId())
+app.use('*', requestLogger())
 
 // Public API: compression, ETag, open CORS, optional-key auth, key-aware rate limiting.
 // CORS runs first so that even the short-circuit responses (401 from auth, 429 from
@@ -189,10 +191,13 @@ const isProd = process.env.NODE_ENV === 'production'
 if (process.env.NODE_ENV !== 'test' && !process.env.VITEST) {
   const port = Number(process.env.PORT ?? 3000)
   const server = serve({ fetch: app.fetch, port }, (info) => {
-    console.log(`सम्मान · Honour India — serving on http://localhost:${info.port}`)
-    console.log(`  demo & docs : http://localhost:${info.port}/`)
-    console.log(`  api         : http://localhost:${info.port}/api/v1`)
-    console.log(`  embed       : http://localhost:${info.port}/embed.js`)
+    log('info', 'server started', {
+      message: `सम्मान · Honour India — serving on http://localhost:${info.port}`,
+      port: info.port,
+      demo: `http://localhost:${info.port}/`,
+      api: `http://localhost:${info.port}/api/v1`,
+      embed: `http://localhost:${info.port}/embed.js`,
+    })
   })
 
   // Stop accepting new connections and let in-flight requests finish before exit.
@@ -200,7 +205,7 @@ if (process.env.NODE_ENV !== 'test' && !process.env.VITEST) {
   function shutdown(signal: NodeJS.Signals): void {
     if (shuttingDown) return
     shuttingDown = true
-    console.log(`${signal} received — draining connections`)
+    log('info', 'shutdown started', { signal })
     server.close(() => process.exit(0))
     // Do not hang forever on keep-alive sockets or a stuck response.
     setTimeout(() => process.exit(1), 10_000).unref()

@@ -3,6 +3,7 @@ import { existsSync, readFileSync, statSync, watch, type FSWatcher } from 'node:
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Context, Next } from 'hono'
+import { log } from './logger.js'
 
 /**
  * Optional API-key authentication.
@@ -64,7 +65,10 @@ export function loadKeys(filePath = currentKeyFile): Map<string, KeyRecord> {
       if (k.enabled !== false) map.set(k.hash, k)
     }
   } catch (err) {
-    console.warn('[auth] could not parse keys file — running keyless:', (err as Error).message)
+    log('warn', 'could not parse the keys file — running keyless', {
+      file: filePath,
+      error: (err as Error).message,
+    })
   }
   return map
 }

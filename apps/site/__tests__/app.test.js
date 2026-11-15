@@ -156,4 +156,81 @@ describe('site app.js', () => {
     expect(cards.length).toBe(1)
     expect(cards[0].getAttribute('href')).toBe('https://user.github.io/my-subpath/figures/aryabhata')
   })
+
+  it('retries preview mounting when embed.js loads asynchronously (issue #99)', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+      <script src="http://localhost/embed.js" async></script>
+    `
+
+    // Ensure window.HonourIndia is initially not loaded
+    // @ts-expect-error test harness mock
+    delete window.HonourIndia
+
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ count: 0, figures: [] }) }),
+    )
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+
+    const previewMount = document.getElementById('previewMount')
+    expect(previewMount.textContent).toContain('Loading billboard widget…')
+
+    // Simulate async load of embed.js
+    const mountMock = vi.fn(() => ({ destroy: vi.fn() }))
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: mountMock }
+
+    const embedScriptEl = document.querySelector('script[src*="embed.js"]')
+    embedScriptEl?.dispatchEvent(new Event('load'))
+
+    expect(mountMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('displays error message when embed.js fails to load (issue #99)', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+      <script src="http://localhost/embed.js" async></script>
+    `
+
+    // @ts-expect-error test harness mock
+    delete window.HonourIndia
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ count: 0, figures: [] }) }),
+    )
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+
+    const embedScriptEl = document.querySelector('script[src*="embed.js"]')
+    embedScriptEl?.dispatchEvent(new Event('error'))
+
+    const previewMount = document.getElementById('previewMount')
+    expect(previewMount.textContent).toContain('Could not load the Honour India widget')
+  })
 })

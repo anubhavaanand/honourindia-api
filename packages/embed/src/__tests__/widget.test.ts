@@ -36,7 +36,6 @@ describe('widget (packages/embed)', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
     fetchMock = vi.fn()
-    // @ts-expect-error test harness mock
     globalThis.fetch = fetchMock
     // jsdom lacks matchMedia; the widget constructor calls it
     // @ts-expect-error test harness mock
@@ -85,7 +84,7 @@ describe('widget (packages/embed)', () => {
     expect(['C. V. Raman', 'Srinivasa Ramanujan']).toContain(name)
     expect(active.querySelector('.hi-tag')!.textContent).toBeTruthy()
 
-    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost/api/v1/billboards/random?count=14')
+    expect(fetchMock.mock.calls[0]![0]).toBe('http://localhost/api/v1/billboards/random?count=14')
     handle.destroy()
   })
 
@@ -100,17 +99,17 @@ describe('widget (packages/embed)', () => {
     window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
 
     // flush the microtask from the rejected fetch so the catch renders the error box
-    await new Promise((r) => queueMicrotask(r))
+    await new Promise<void>((r) => queueMicrotask(() => r()))
 
     const errorBox = host.shadowRoot!.querySelector('.hi-error')!
     expect(errorBox).toBeTruthy()
-    expect(errorBox.style.display).toBe('flex')
+    expect((errorBox as HTMLElement).style.display).toBe('flex')
     expect(fetchMock).toHaveBeenCalledTimes(1)
 
     // the internal loop retries after the 5s backoff
     vi.advanceTimersByTime(6000)
     // the resolved setTimeout schedules the fetch retry as a microtask
-    await new Promise((r) => queueMicrotask(r))
+    await new Promise<void>((r) => queueMicrotask(() => r()))
     expect(fetchMock).toHaveBeenCalledTimes(2)
 
     vi.useRealTimers()

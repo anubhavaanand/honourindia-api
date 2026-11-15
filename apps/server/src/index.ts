@@ -1,10 +1,11 @@
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { Hono, type Context } from 'hono'
 import { cors } from 'hono/cors'
 import { compress } from 'hono/compress'
 import { etag } from 'hono/etag'
+import { bodyLimit } from 'hono/body-limit'
 import { api } from './routes/api.js'
 import { auth, type Env } from './lib/auth.js'
 import { rateLimit } from './lib/ratelimit.js'
@@ -15,6 +16,13 @@ import { requestId } from './lib/request-id.js'
 const IMAGES_DIR = path.join(ROOT, 'public/images')
 const SITE_DIR = path.join(ROOT, 'apps/site')
 const EMBED_JS = path.join(ROOT, 'packages/embed/dist/embed.js')
+
+/** Largest request body the API accepts, in bytes. */
+const MAX_BODY_BYTES = 64 * 1024
+
+function bodyTooLarge(c: Context) {
+  return c.json({ error: 'Request body is too large. The limit is 64 KB.' }, 413)
+}
 
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -74,6 +82,10 @@ app.use(
 )
 app.use('/api/*', auth())
 app.use('/api/*', rateLimit())
+// Cap the request body before any handler reads it. A figure submission is a
+// few kilobytes of JSON; without a cap a single request could ask the server
+// to buffer an arbitrarily large body.
+app.use('/api/*', bodyLimit({ maxSize: MAX_BODY_BYTES, onError: bodyTooLarge }))
 app.route('/api/v1', api)
 
 // Rate limiting for non-API endpoints (/embed.js, /images/*, /figures/*, and site routes).

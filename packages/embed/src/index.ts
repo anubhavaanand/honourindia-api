@@ -527,11 +527,9 @@ class BillboardWidget {
         if (res.status === 429) {
           retries++
           const waitMs = parseRetryAfter(res.headers?.get?.('Retry-After'))
-          if (this.index < 0) {
-            this.dom.errorBox.style.display = 'flex'
-            this.dom.card.style.visibility = 'hidden'
-            this.dom.loading.classList.add('hi-loading-hidden')
-          }
+          this.dom.errorBox.style.display = 'flex'
+          this.dom.card.style.visibility = 'hidden'
+          this.dom.loading.classList.add('hi-loading-hidden')
           if (retries >= MAX_FETCH_RETRIES) {
             const sub = this.dom.errorBox.querySelector('.hi-error-sub')
             if (sub) sub.textContent = 'Could not reach the Honour India API. Maximum retries exceeded.'
@@ -558,11 +556,9 @@ class BillboardWidget {
         return
       } catch {
         retries++
-        if (this.index < 0) {
-          this.dom.errorBox.style.display = 'flex'
-          this.dom.card.style.visibility = 'hidden'
-          this.dom.loading.classList.add('hi-loading-hidden')
-        }
+        this.dom.errorBox.style.display = 'flex'
+        this.dom.card.style.visibility = 'hidden'
+        this.dom.loading.classList.add('hi-loading-hidden')
         if (retries >= MAX_FETCH_RETRIES) {
           const sub = this.dom.errorBox.querySelector('.hi-error-sub')
           if (sub) sub.textContent = 'Could not reach the Honour India API. Maximum retries exceeded.'

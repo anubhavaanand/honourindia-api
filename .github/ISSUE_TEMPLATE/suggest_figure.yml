@@ -1,0 +1,56 @@
+name: Suggest a Figure
+description: Suggest an Indian scientist, mathematician, doctor, or engineer for the catalogue
+title: "[Figure Suggestion]: "
+labels: ["data", "submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a figure to honour! Please provide the details below so maintainers can review and include them in the catalogue.
+  - type: input
+    id: name
+    attributes:
+      label: Full Name
+      description: The name of the scientist, scholar, or innovator.
+      placeholder: e.g. Vikram Sarabhai
+    validations:
+      required: true
+  - type: input
+    id: years
+    attributes:
+      label: Birth and Death Year
+      description: Born year (and death year if deceased; leave died blank if living).
+      placeholder: e.g. 1919–1971 or b. 1963
+    validations:
+      required: true
+  - type: input
+    id: field
+    attributes:
+      label: Primary Field
+      description: Physics, Mathematics, Aerospace, Medicine, etc.
+      placeholder: e.g. Space Physics
+    validations:
+      required: true
+  - type: textarea
+    id: tagline
+    attributes:
+      label: Tagline (Billboard Headline)
+      description: One impactful line describing their lasting contribution.
+      placeholder: e.g. Father of the Indian space programme who founded ISRO and established India's satellite communication.
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: 2-3 sentences providing biographical context and major discoveries.
+    validations:
+      required: true
+  - type: input
+    id: wiki
+    attributes:
+      label: Wikipedia Article Title
+      description: Exact English Wikipedia article title for source attribution and portrait lookups.
+      placeholder: e.g. Vikram Sarabhai
+    validations:
+      required: true

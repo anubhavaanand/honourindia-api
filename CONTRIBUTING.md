@@ -68,7 +68,13 @@ Add or update tests for behavior changes:
 Run `npm test` before opening a pull request. If a change is hard to unit test,
 describe how you verified it manually in the PR description.
 
-## Adding a figure
+## Suggesting a figure
+
+You can submit new figures for inclusion in the catalogue either via:
+1. **API Endpoint**: `POST /api/v1/figures/submit` with JSON body containing `name`, `born`, `field`, `tagline`, `summary`, and `wiki` (and optional `died`, `quote`, `submitterName`, `submitterEmail`). All submissions enter the moderation queue as pending review.
+2. **GitHub Issue**: Use the [Figure Suggestion template](.github/ISSUE_TEMPLATE/suggest_figure.yml) to submit recommendations directly through GitHub issues.
+
+## Adding a figure manually
 
 1. Add an entry to `data/figures.json` under `figures`:
 

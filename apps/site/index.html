@@ -146,6 +146,22 @@
     <section id="figures" class="wrap section">
       <h2><span class="num">03</span> The figures</h2>
       <p class="section-lede" id="figuresCount">Loading…</p>
+      <div class="figure-filters" id="figureFilters">
+        <label class="filter-group filter-search">
+          <span class="sr-only">Search figures</span>
+          <input type="search" id="figureSearch" placeholder="Search figures by name, achievement…" />
+        </label>
+        <label class="filter-group">
+          <span class="sr-only">Filter by field</span>
+          <select id="figureField">
+            <option value="">All fields</option>
+          </select>
+        </label>
+        <label class="filter-group filter-checkbox">
+          <input type="checkbox" id="figureEnduring" />
+          <span>Enduring achievement only</span>
+        </label>
+      </div>
       <div class="figure-grid" id="figureGrid"></div>
     </section>
 

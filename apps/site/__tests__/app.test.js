@@ -302,4 +302,110 @@ describe('site app.js', () => {
     expect(snippetCode.textContent).toContain('data-api="https://custom-api.example.com/api/v1"')
     expect(snippetCode.textContent).toContain('data-key="my-test-key"')
   })
+
+  it('supports search, field filter, and enduring toggle for figures (issue #21)', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresFilters">
+        <input type="search" id="figureSearch" value="" />
+        <select id="figureField"><option value="">All fields</option></select>
+        <input type="checkbox" id="figureEnduring" />
+      </div>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+    `
+
+    Object.defineProperty(window, 'location', {
+      value: { href: 'http://localhost/' },
+      configurable: true,
+    })
+
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: vi.fn(() => ({ destroy: vi.fn() })) }
+
+    const initialFigures = [
+      {
+        slug: 'cv-raman',
+        name: 'C. V. Raman',
+        field: 'Physics',
+        years: '1888–1970',
+        era: 'colonial',
+        link: 'https://en.wikipedia.org/wiki/C._V._Raman',
+        image: null,
+      },
+      {
+        slug: 'aryabhata',
+        name: 'Aryabhata',
+        field: 'Mathematics',
+        years: '476–550',
+        era: 'classical',
+        link: 'https://en.wikipedia.org/wiki/Aryabhata',
+        image: null,
+      },
+    ]
+
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn((url) => {
+      const u = new URL(url.toString())
+      const search = u.searchParams.get('search')
+      const field = u.searchParams.get('field')
+      const enduring = u.searchParams.get('enduring')
+
+      let res = [...initialFigures]
+      if (search) res = res.filter((f) => f.name.toLowerCase().includes(search.toLowerCase()))
+      if (field) res = res.filter((f) => f.field === field)
+      if (enduring === 'true') res = []
+
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ count: res.length, total: initialFigures.length, figures: res }),
+      })
+    })
+
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+    await new Promise((r) => setTimeout(r, 0))
+
+    // Check field dropdown was populated
+    const fieldSelect = document.getElementById('figureField')
+    expect(fieldSelect.options.length).toBe(3) // "All fields", "Mathematics", "Physics"
+    expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(2)
+
+    // Trigger search filter
+    const searchInput = document.getElementById('figureSearch')
+    searchInput.value = 'Raman'
+    searchInput.dispatchEvent(new Event('input'))
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(1)
+    expect(document.querySelector('#figureGrid .figure-name').textContent).toBe('C. V. Raman')
+
+    // Trigger field filter
+    searchInput.value = ''
+    fieldSelect.value = 'Mathematics'
+    fieldSelect.dispatchEvent(new Event('change'))
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(1)
+    expect(document.querySelector('#figureGrid .figure-name').textContent).toBe('Aryabhata')
+
+    // Trigger enduring filter resulting in empty state
+    const enduringCheckbox = document.getElementById('figureEnduring')
+    enduringCheckbox.checked = true
+    enduringCheckbox.dispatchEvent(new Event('change'))
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(0)
+    expect(document.querySelector('#figureGrid .figure-empty')).toBeTruthy()
+  })
 })

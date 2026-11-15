@@ -12,7 +12,7 @@
  * Usage: npm run seed:images
  */
 
-import { mkdir, readFile, writeFile, access } from 'node:fs/promises'
+import { mkdir, readFile, writeFile, access, unlink } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -148,7 +148,20 @@ async function exists(p) {
 }
 
 async function main() {
-  const figures = JSON.parse(await readFile(DATA_FILE, 'utf8')).figures
+  const slugArgIdx = process.argv.indexOf('--slug')
+  const targetSlug = slugArgIdx !== -1 ? process.argv[slugArgIdx + 1] : null
+  const limitArgIdx = process.argv.indexOf('--limit')
+  const limit = limitArgIdx !== -1 ? parseInt(process.argv[limitArgIdx + 1], 10) : Infinity
+
+  let figures = JSON.parse(await readFile(DATA_FILE, 'utf8')).figures
+  if (targetSlug) {
+    figures = figures.filter((f) => f.slug === targetSlug)
+    if (!figures.length) {
+      console.error(`Target slug "${targetSlug}" not found in figures.json`)
+      process.exit(1)
+    }
+  }
+
   const figureSlugs = new Set(figures.map((f) => f.slug))
   await mkdir(IMAGES_DIR, { recursive: true })
 
@@ -160,7 +173,7 @@ async function main() {
   // Prune any orphan entries from existing whose figure was removed from figures.json (fixes #31)
   let cleaned = 0
   for (const slug of Object.keys(existing)) {
-    if (!figureSlugs.has(slug)) {
+    if (!targetSlug && !figureSlugs.has(slug)) {
       delete existing[slug]
       cleaned++
     }
@@ -174,8 +187,11 @@ async function main() {
   let ok = 0
   let skipped = 0
   let failed = []
+  let processed = 0
 
   for (const f of figures) {
+    if (processed >= limit) break
+
     const prev = existing[f.slug]
     if (prev && (await exists(path.join(IMAGES_DIR, prev.file)))) {
       results[f.slug] = prev
@@ -183,6 +199,7 @@ async function main() {
       continue
     }
 
+    processed++
     try {
       let thumb, file, preset
       if (f.commonsFile) {
@@ -207,6 +224,12 @@ async function main() {
       const license = preset
         ? { credit: preset.credit, license: preset.license, source: preset.source }
         : await getLicense(file)
+
+      if (license.license && /fair/i.test(license.license)) {
+        await unlink(dest).catch(() => {})
+        throw new Error(`license "${license.license}" is Fair use — must not be served (see #95)`)
+      }
+
       results[f.slug] = { file: name, ...license }
       ok++
       console.log(`  ✓ ${f.slug} (${name}, ${license.license ?? 'license unknown'})`)
@@ -215,17 +238,17 @@ async function main() {
       console.error(`  ✗ ${f.slug}: ${err.message}`)
     }
 
-    // be polite to the APIs
-    await new Promise((r) => setTimeout(r, 500))
+    // be polite to the APIs (1200ms delay to prevent HTTP 429)
+    await new Promise((r) => setTimeout(r, 1200))
 
     // persist progress after every figure so the script is resumable
     // across interruptions (network blips, timeouts, rate limits)
     await writeFile(OUT_FILE, JSON.stringify(results, null, 2) + '\n')
   }
 
-  console.log(`\nDone: ${ok} downloaded, ${skipped} already present, ${failed.length} failed.`)
+  console.log(`\nDone: ${ok} downloaded, ${skipped} already present, ${failed.length} failed/skipped.`)
   if (failed.length) {
-    console.log(`Failed (widget will show initials fallback): ${failed.join(', ')}`)
+    console.log(`Fallback (widget displays initial monograms): ${failed.join(', ')}`)
   }
 }
 

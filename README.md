@@ -266,6 +266,17 @@ plain JavaScript. Put Cloudflare in front for TLS and extra caching — the
 heavy cache headers already live on `/embed.js`, `/images/*`, and the
 catalogue endpoints.
 
+**Docker:**
+
+```bash
+docker build -t honourindia .
+docker run -p 3000:3000 honourindia
+```
+
+The image is multi-stage: it builds the widget and the server, then runs the
+compiled server with plain Node as the unprivileged `node` user, on port 3000.
+The health check hits `/healthz`.
+
 **GitHub Pages edition (free static hosting):** `npm run deploy:pages` builds
 a fully static mirror into `dist-pages/` and force-publishes it to the
 `gh-pages` branch. Because the dataset itself is static, the mirror serves

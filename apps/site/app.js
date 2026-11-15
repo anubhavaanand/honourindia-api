@@ -116,11 +116,17 @@
   renderPreview()
   attachEmbedListeners()
 
-  /* ---------- figures grid & filters (issue #21) ---------- */
+  /* ---------- figures grid & filters (issue #21, #89) ---------- */
 
   var figureSearch = document.getElementById('figureSearch')
   var figureField = document.getElementById('figureField')
   var figureEnduring = document.getElementById('figureEnduring')
+  var loadMoreBtn = document.getElementById('loadMoreFigures')
+
+  var PAGE_SIZE = 24
+  var currentOffset = 0
+  var isLoading = false
+  var hasMore = false
 
   var fieldsPopulated = false
   function populateFieldOptions(figures) {
@@ -141,7 +147,56 @@
 
   var fetchSeq = 0
 
-  function fetchAndRenderFigures() {
+  function renderCard(f) {
+    var a = document.createElement('a')
+    a.className = 'figure-card'
+    a.href = new URL('figures/' + encodeURIComponent(f.slug), PAGE_DIR).toString()
+    a.rel = 'noopener noreferrer'
+
+    var thumb = document.createElement('div')
+    thumb.className = 'figure-thumb'
+    if (f.image) thumb.style.backgroundImage = 'url("' + new URL(f.image.url, API_BASE) + '")'
+
+    var body = document.createElement('div')
+    body.className = 'figure-body'
+    var fieldRow = document.createElement('div')
+    fieldRow.className = 'figure-field-row'
+    var fieldEl = document.createElement('div')
+    fieldEl.className = 'figure-field'
+    fieldEl.textContent = f.field
+    fieldRow.appendChild(fieldEl)
+
+    if (f.era) {
+      var era = document.createElement('span')
+      era.className = 'figure-era-badge'
+      era.textContent = f.era.charAt(0).toUpperCase() + f.era.slice(1)
+      fieldRow.appendChild(era)
+    }
+
+    var name = document.createElement('h3')
+    name.className = 'figure-name'
+    name.textContent = f.name
+    var years = document.createElement('div')
+    years.className = 'figure-years'
+    years.textContent = f.years || ''
+
+    body.append(fieldRow, name, years)
+    a.append(thumb, body)
+    return a
+  }
+
+  function fetchAndRenderFigures(append) {
+    if (isLoading && append) return
+    isLoading = true
+    if (loadMoreBtn && append) {
+      loadMoreBtn.disabled = true
+      loadMoreBtn.textContent = 'Loading more…'
+    }
+
+    if (!append) {
+      currentOffset = 0
+    }
+
     var seq = ++fetchSeq
     var url = new URL('figures', API_BASE)
     var search = figureSearch ? figureSearch.value.trim() : ''
@@ -151,19 +206,29 @@
     if (search) url.searchParams.set('search', search)
     if (field) url.searchParams.set('field', field)
     if (enduring) url.searchParams.set('enduring', 'true')
+    url.searchParams.set('limit', String(PAGE_SIZE))
+    url.searchParams.set('offset', String(currentOffset))
 
     var hasFilters = Boolean(search || field || enduring)
 
     fetch(url)
       .then(function (r) { return r.json() })
       .then(function (data) {
+        isLoading = false
         if (seq !== fetchSeq) return
         var count = document.getElementById('figuresCount')
         var grid = document.getElementById('figureGrid')
         if (!grid) return
-        grid.innerHTML = ''
 
-        if (!data.figures || data.figures.length === 0) {
+        if (!append) {
+          grid.innerHTML = ''
+        }
+
+        var list = data.figures || []
+
+        if (!append && list.length === 0) {
+          hasMore = false
+          if (loadMoreBtn) loadMoreBtn.hidden = true
           if (hasFilters) {
             if (count) count.textContent = 'No figures found matching your filter criteria.'
             var emptyFilter = document.createElement('p')
@@ -180,76 +245,72 @@
           return
         }
 
+        currentOffset += list.length
+        hasMore = list.length === PAGE_SIZE
+
+        if (loadMoreBtn) {
+          loadMoreBtn.hidden = !hasMore
+          loadMoreBtn.disabled = false
+          loadMoreBtn.textContent = 'Load more minds'
+        }
+
         if (!hasFilters) {
-          populateFieldOptions(data.figures)
+          if (!append) populateFieldOptions(list)
           if (count) {
             count.textContent =
-              'The seed catalogue — ' + data.count + ' minds from Raman\'s generation to ISRO\'s. ' +
+              'The seed catalogue — ' + (data.total || data.count) + ' minds from Raman\'s generation to ISRO\'s. ' +
               'Suggest more via the repository.'
           }
         } else {
           if (count) {
             count.textContent =
-              'Showing ' + data.count + ' of ' + (data.total != null ? data.total : data.count) + ' minds.'
+              'Showing ' + currentOffset + ' of ' + (data.total != null ? data.total : currentOffset) + ' minds.'
           }
         }
 
-        data.figures.forEach(function (f) {
-          var a = document.createElement('a')
-          a.className = 'figure-card'
-          a.href = new URL('figures/' + encodeURIComponent(f.slug), PAGE_DIR).toString()
-          a.rel = 'noopener noreferrer'
-
-          var thumb = document.createElement('div')
-          thumb.className = 'figure-thumb'
-          if (f.image) thumb.style.backgroundImage = 'url("' + new URL(f.image.url, API_BASE) + '")'
-
-          var body = document.createElement('div')
-          body.className = 'figure-body'
-          var fieldRow = document.createElement('div')
-          fieldRow.className = 'figure-field-row'
-          var fieldEl = document.createElement('div')
-          fieldEl.className = 'figure-field'
-          fieldEl.textContent = f.field
-          fieldRow.appendChild(fieldEl)
-
-          if (f.era) {
-            var era = document.createElement('span')
-            era.className = 'figure-era-badge'
-            era.textContent = f.era.charAt(0).toUpperCase() + f.era.slice(1)
-            fieldRow.appendChild(era)
-          }
-
-          var name = document.createElement('h3')
-          name.className = 'figure-name'
-          name.textContent = f.name
-          var years = document.createElement('div')
-          years.className = 'figure-years'
-          years.textContent = f.years || ''
-
-          body.append(fieldRow, name, years)
-          a.append(thumb, body)
-          grid.appendChild(a)
+        list.forEach(function (f) {
+          grid.appendChild(renderCard(f))
         })
       })
       .catch(function () {
+        isLoading = false
         if (seq !== fetchSeq) return
+        if (loadMoreBtn && append) {
+          loadMoreBtn.disabled = false
+          loadMoreBtn.textContent = 'Load more minds'
+        }
         var count = document.getElementById('figuresCount')
-        if (count) {
+        if (count && !append) {
           count.textContent = 'Could not load the catalogue — is the API running?'
         }
       })
   }
 
   if (figureSearch) {
-    figureSearch.addEventListener('input', fetchAndRenderFigures)
+    figureSearch.addEventListener('input', function () { fetchAndRenderFigures(false) })
   }
   if (figureField) {
-    figureField.addEventListener('change', fetchAndRenderFigures)
+    figureField.addEventListener('change', function () { fetchAndRenderFigures(false) })
   }
   if (figureEnduring) {
-    figureEnduring.addEventListener('change', fetchAndRenderFigures)
+    figureEnduring.addEventListener('change', function () { fetchAndRenderFigures(false) })
+  }
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function () {
+      if (!isLoading && hasMore) fetchAndRenderFigures(true)
+    })
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !isLoading && hasMore && !loadMoreBtn.hidden) {
+            fetchAndRenderFigures(true)
+          }
+        })
+      }, { rootMargin: '200px' })
+      observer.observe(loadMoreBtn)
+    }
   }
 
-  fetchAndRenderFigures()
+  fetchAndRenderFigures(false)
 })()

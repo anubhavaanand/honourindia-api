@@ -3,7 +3,7 @@ import { auth } from '../lib/auth.js'
 
 function makeContext(authHeader?: string) {
   const headers: Record<string, string> = {}
-  let captured: { body: unknown; status: number; httpHeaders: Record<string, string> } | null = null
+  let captured: { body: any; status: number; httpHeaders: Record<string, string> } | null = null
   const c: any = {
     req: {
       header: (name: string) => {

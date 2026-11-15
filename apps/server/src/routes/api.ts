@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { Hono } from 'hono'
+import { etag } from 'hono/etag'
 import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary, ROOT } from '../lib/data.js'
 import type { FigureFilter } from '../lib/data.js'
 import type { Env } from '../lib/auth.js'
@@ -22,6 +23,8 @@ function loadOpenApi(): unknown {
 }
 
 export const api = new Hono<Env>()
+
+api.use('*', etag())
 
 api.get('/', (c) =>
   c.json({

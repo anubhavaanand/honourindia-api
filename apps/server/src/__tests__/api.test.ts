@@ -53,3 +53,23 @@ describe('GET /openapi', () => {
     expect(text).toContain('openapi: 3.1.0')
   })
 })
+
+describe('ETag and conditional requests', () => {
+  it('returns ETag header on API responses', async () => {
+    const res = await api.request('/figures')
+    expect(res.status).toBe(200)
+    const etag = res.headers.get('ETag')
+    expect(etag).toBeTruthy()
+  })
+
+  it('returns 304 Not Modified when If-None-Match matches ETag', async () => {
+    const first = await api.request('/figures')
+    const etag = first.headers.get('ETag')!
+    expect(etag).toBeTruthy()
+
+    const second = await api.request('/figures', {
+      headers: { 'If-None-Match': etag },
+    })
+    expect(second.status).toBe(304)
+  })
+})

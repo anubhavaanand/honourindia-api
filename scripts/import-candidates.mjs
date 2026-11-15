@@ -56,6 +56,7 @@ function truncateWords(value, maxChars = 180) {
 }
 
 async function main() {
+  const dryRun = process.argv.includes('--dry-run')
   const candidates = JSON.parse(await readFile(CANDIDATES_FILE, 'utf8'))
   const existing = JSON.parse(await readFile(DATA_FILE, 'utf8'))
 
@@ -87,6 +88,13 @@ async function main() {
       stillUsed: null,
       commonsFile: c.commonsFile,
     })
+  }
+
+  if (dryRun) {
+    console.log(`Dry run: would write ${newCandidates.length} new candidates to ${OUT_FILE}`)
+    console.log(`Candidates in wikidata-candidates.json: ${candidates.length}`)
+    console.log(`Already in figures.json (skipped):    ${skipped}`)
+    return
   }
 
   await new Promise((resolve, reject) => {

@@ -30,6 +30,8 @@ const MIME: Record<string, string> = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
 }
 
 async function serveFile(filePath: string, cacheControl: string): Promise<Response> {
@@ -86,6 +88,8 @@ app.get('/admin', (c) => serveFile(path.join(SITE_DIR, 'admin.html'), 'no-cache'
 app.get('/admin.js', (c) => serveFile(path.join(SITE_DIR, 'admin.js'), isProd ? 'public, max-age=600' : 'no-cache'))
 app.get('/favicon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
 app.get('/apple-touch-icon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
+app.get('/robots.txt', (c) => serveFile(path.join(SITE_DIR, 'robots.txt'), 'public, max-age=86400'))
+app.get('/sitemap.xml', (c) => serveFile(path.join(SITE_DIR, 'sitemap.xml'), 'public, max-age=86400'))
 
 app.get('/healthz', (c) => c.json({ ok: true }))
 

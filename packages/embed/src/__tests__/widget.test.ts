@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Load the widget so window.HonourIndia is defined
-import { parseRetryAfter, MAX_FETCH_RETRIES, MAX_IMAGE_RETRIES, preload, DEFAULT_PRELOAD_TIMEOUT } from '../index'
+import { parseRetryAfter, MAX_FETCH_RETRIES, MAX_IMAGE_RETRIES, preload, DEFAULT_PRELOAD_TIMEOUT, mountAll, setupObserver } from '../index'
 
 const billboards = [
   {
@@ -473,5 +473,59 @@ describe('widget (packages/embed)', () => {
     expect(fetchMock.mock.calls[initialCalls]![0]).toContain('http://localhost/api/v2/billboards/random')
 
     handle.destroy()
+  })
+
+  describe('mountAll and MutationObserver (issue #9)', () => {
+    it('mountAll finds and mounts all unmounted [data-honourindia] elements', async () => {
+      fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+      const div1 = document.createElement('div')
+      div1.setAttribute('data-honourindia', '')
+      div1.setAttribute('data-theme', 'light')
+      const div2 = document.createElement('div')
+      div2.setAttribute('data-honourindia', '')
+      document.body.append(div1, div2)
+
+      const handles = mountAll()
+      expect(handles).toHaveLength(2)
+      expect(div1.getAttribute('data-honourindia-mounted')).toBe('1')
+      expect(div2.getAttribute('data-honourindia-mounted')).toBe('1')
+      expect(div1.shadowRoot).toBeTruthy()
+      expect(div2.shadowRoot).toBeTruthy()
+
+      // Calling mountAll again ignores already mounted elements
+      const emptyHandles = mountAll()
+      expect(emptyHandles).toHaveLength(0)
+
+      handles.forEach((h) => h.destroy())
+    })
+
+    it('MutationObserver mounts dynamically added [data-honourindia] elements', async () => {
+      fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+      const observer = setupObserver()
+      expect(observer).toBeTruthy()
+
+      const dynamicEl = document.createElement('div')
+      dynamicEl.setAttribute('data-honourindia', '')
+      dynamicEl.setAttribute('data-theme', 'dark')
+
+      const container = document.createElement('section')
+      const nestedEl = document.createElement('div')
+      nestedEl.setAttribute('data-honourindia', '')
+      container.appendChild(nestedEl)
+
+      document.body.append(dynamicEl, container)
+
+      // Wait for MutationObserver callback
+      await new Promise<void>((r) => setTimeout(r, 10))
+
+      expect(dynamicEl.getAttribute('data-honourindia-mounted')).toBe('1')
+      expect(dynamicEl.shadowRoot).toBeTruthy()
+      expect(nestedEl.getAttribute('data-honourindia-mounted')).toBe('1')
+      expect(nestedEl.shadowRoot).toBeTruthy()
+
+      observer?.disconnect()
+    })
   })
 })

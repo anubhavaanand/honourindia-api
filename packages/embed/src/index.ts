@@ -160,6 +160,12 @@ const CSS = `
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
 
+/* RTL support: names/taglines/kickers auto-detect text direction so
+   Devanagari, Latin, Arabic, Urdu, etc. all render correctly. */
+.hi-name, .hi-tag, .hi-field, .hi-nameplate-sub {
+  direction: auto;
+}
+
 /* ---- split layout (leaderboard): slim image column + text column ---- */
 .hi-body { position: relative; display: flex; flex: 1; min-height: 0; }
 

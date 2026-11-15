@@ -29,8 +29,9 @@ describe('figure detail page (apps/site/figure.js)', () => {
   `
 
   function setLocation(href) {
+    const url = new URL(href)
     Object.defineProperty(window, 'location', {
-      value: { href, pathname: new URL(href).pathname },
+      value: { href, pathname: url.pathname, origin: url.origin, search: url.search },
       configurable: true,
     })
   }
@@ -104,5 +105,31 @@ describe('figure detail page (apps/site/figure.js)', () => {
     expect(document.getElementById('figureLoading').hidden).toBe(true)
     expect(document.getElementById('figureNotFound').hidden).toBe(false)
     expect(document.querySelector('.figure-detail').hidden).toBe(true)
+  })
+
+  it('fetches /api/v1/figures/:slug when page is at /figures/:slug on domain root (issue #94)', async () => {
+    setLocation('http://localhost:3000/figures/cv-raman')
+    stubFetch()
+    vi.resetModules()
+
+    // @ts-expect-error test harness mock
+    await import('../figure.js')
+
+    expect(globalThis.fetch).toHaveBeenCalled()
+    const url = globalThis.fetch.mock.calls[0][0].toString()
+    expect(url).toBe('http://localhost:3000/api/v1/figures/cv-raman')
+  })
+
+  it('fetches /subpath/api/v1/figures/:slug when page is deployed on a subpath (issue #94)', async () => {
+    setLocation('https://user.github.io/my-project/figures/cv-raman')
+    stubFetch()
+    vi.resetModules()
+
+    // @ts-expect-error test harness mock
+    await import('../figure.js')
+
+    expect(globalThis.fetch).toHaveBeenCalled()
+    const url = globalThis.fetch.mock.calls[0][0].toString()
+    expect(url).toBe('https://user.github.io/my-project/api/v1/figures/cv-raman')
   })
 })

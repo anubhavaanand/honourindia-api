@@ -5,11 +5,17 @@
 (function () {
   'use strict'
 
-  // Work relative to the page URL so this works at a domain root and under a subpath.
-  var API_BASE = new URL('api/v1/', new URL('.', location.href))
+  // Work relative to the site root so this works at a domain root (/figures/:slug)
+  // and under a subpath (/repo/figures/:slug).
+  var pathname = location.pathname || ''
+  var figuresIdx = pathname.indexOf('/figures')
+  var rootPath = figuresIdx !== -1 ? pathname.slice(0, figuresIdx) + '/' : '.'
+  var SITE_ROOT = new URL(rootPath, location.href)
+  var API_BASE = new URL('api/v1/', SITE_ROOT)
 
-  var segments = location.pathname.split('/').filter(Boolean)
-  var slug = segments[segments.length - 1] || ''
+  var segments = pathname.split('/').filter(Boolean)
+  var lastSegment = segments[segments.length - 1] || ''
+  var slug = (new URLSearchParams(location.search).get('slug') || lastSegment).replace(/\.html$/, '')
 
   var portrait = document.getElementById('figurePortrait')
   var monogram = document.getElementById('figureMonogram')

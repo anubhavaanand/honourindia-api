@@ -73,12 +73,12 @@
   }
 
   function attachEmbedListeners() {
+    if (window.HonourIndia) return
     var el = embedScript()
     if (!el) return
     var ready = el.readyState === 'loaded' || el.readyState === 'complete'
     el.addEventListener('load', function () {
-  attachEmbedListeners()
-  renderPreview()
+      renderPreview()
     })
     el.addEventListener('error', function () {
       previewMount.innerHTML = ''
@@ -102,6 +102,7 @@
   })
 
   renderPreview()
+  attachEmbedListeners()
 
   /* ---------- figures grid ---------- */
 

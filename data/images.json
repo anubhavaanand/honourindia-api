@@ -327,12 +327,6 @@
     "license": "CC BY-SA 2.0 de",
     "source": "Wikimedia Commons"
   },
-  "m-r-srinivasan": {
-    "file": "m-r-srinivasan.jpg",
-    "credit": "Ministry of Science and Technology",
-    "license": "GODL-India",
-    "source": "This file or its source was published by Press Information Bureau on behalf of Ministry of Science & Technology, Government of India under the ID 37820 and CNR 40783. (direct link) This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing. العربية ∙ বাংলা ∙ Deutsch ∙ English ∙ हिन्दी ∙ 日本語 ∙ македонски ∙ മലയാളം ∙ polski ∙ தமிழ் ∙ ತುಳು ∙ 中文 ∙ 中文（简体） ∙ 中文（繁體） ∙ +/−"
-  },
   "c-n-r-rao": {
     "file": "c-n-r-rao.jpg",
     "credit": "Biswarup Ganguly",
@@ -344,12 +338,6 @@
     "credit": "Kasinathuni Nageswara Rao",
     "license": "Public domain",
     "source": "Wikimedia Commons"
-  },
-  "v-k-sarat-babu": {
-    "file": "v-k-sarat-babu.jpg",
-    "credit": "Biswarup Ganguly",
-    "license": "CC BY 3.0",
-    "source": "Own work"
   },
   "d-s-koothan": {
     "file": "d-s-koothan.jpg",
@@ -390,5 +378,17 @@
     "credit": "Unknown | Recovered from Himalayan Art Resources",
     "license": "Public domain",
     "source": "Cropped from File:Nagarjuna with 84 mahasiddha.jpg"
+  },
+  "m-s-srinivasan": {
+    "file": "m-s-srinivasan.jpg",
+    "credit": "Ministry of Science and Technology",
+    "license": "GODL-India",
+    "source": "This file or its source was published by Press Information Bureau on behalf of Ministry of Science & Technology, Government of India under the ID 37820 and CNR 40783. (direct link) This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing. العربية ∙ বাংলা ∙ Deutsch ∙ English ∙ हिन्दी ∙ 日本語 ∙ македонски ∙ മലയാളം ∙ polski ∙ தமிழ் ∙ ತುಳು ∙ 中文 ∙ 中文（简体） ∙ 中文（繁體） ∙ +/−"
+  },
+  "v-k-saraswat": {
+    "file": "v-k-saraswat.jpg",
+    "credit": "Biswarup Ganguly",
+    "license": "CC BY 3.0",
+    "source": "Own work"
   }
 }

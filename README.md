@@ -86,6 +86,10 @@ Open CORS on everything, JSON only, cache-friendly, light rate limiting
 | `GET /embed.js` | The widget script itself. |
 | `GET /healthz` | Liveness probe. |
 
+`count` on the random endpoint must be an integer from 1 to 24 (default 8);
+anything else — including non-integers such as `2.5` and out-of-range values —
+is rejected with HTTP 400 rather than silently clamped.
+
 ### API keys (optional)
 
 The API is **keyless by default** — the embed works for anyone, forever. Keys

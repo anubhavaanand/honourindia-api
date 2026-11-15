@@ -11,7 +11,12 @@ export interface RateLimitStore {
   /**
    * Record a hit timestamp for an identity, pruning old entries if exceeding maxEntries.
    */
-  recordHit(identity: string, now: number, windowMs: number, maxEntries: number): Promise<void> | void
+  recordHit(
+    identity: string,
+    now: number,
+    windowMs: number,
+    maxEntries: number,
+  ): Promise<void> | void
   /**
    * Reset hits for a specific identity or all identities.
    */
@@ -168,7 +173,11 @@ export function rateLimit({
           headers,
         )
       }
-      return c.text('Too many requests. Slow down — the scientists are not going anywhere.', 429, headers)
+      return c.text(
+        'Too many requests. Slow down — the scientists are not going anywhere.',
+        429,
+        headers,
+      )
     }
 
     await activeStore.recordHit(identity, now, windowMs, maxEntries)
@@ -183,7 +192,12 @@ function lastHit(times: number[]): number {
   return times.length > 0 ? times[times.length - 1]! : 0
 }
 
-export function prune(hits: Map<string, number[]>, now: number, windowMs: number, maxEntries: number): void {
+export function prune(
+  hits: Map<string, number[]>,
+  now: number,
+  windowMs: number,
+  maxEntries: number,
+): void {
   for (const [identity, times] of hits) {
     const fresh = times.filter((t) => now - t < windowMs)
     if (fresh.length === 0) {

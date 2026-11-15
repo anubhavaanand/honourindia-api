@@ -22,7 +22,9 @@
     statusMessage.style.display = 'block'
     statusMessage.style.background = isError ? 'rgba(239, 68, 68, 0.2)' : 'rgba(53, 181, 98, 0.2)'
     statusMessage.style.color = isError ? '#f87171' : '#5ce68b'
-    statusMessage.style.border = isError ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid rgba(53, 181, 98, 0.4)'
+    statusMessage.style.border = isError
+      ? '1px solid rgba(239, 68, 68, 0.4)'
+      : '1px solid rgba(53, 181, 98, 0.4)'
     setTimeout(() => {
       statusMessage.style.display = 'none'
     }, 4000)
@@ -88,7 +90,8 @@
       : allSubmissions
 
     if (filtered.length === 0) {
-      submissionsList.innerHTML = '<div class="empty-state">No submissions found in this state.</div>'
+      submissionsList.innerHTML =
+        '<div class="empty-state">No submissions found in this state.</div>'
       return
     }
 

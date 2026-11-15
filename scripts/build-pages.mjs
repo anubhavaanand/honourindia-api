@@ -28,7 +28,8 @@ const img = (slug) => {
   const m = images[slug]
   return m ? { url: `../../images/${m.file}`, credit: m.credit, license: m.license } : null
 }
-const years = (f) => (f.died !== null && f.died !== undefined ? `${f.born}–${f.died}` : `b. ${f.born}`)
+const years = (f) =>
+  f.died !== null && f.died !== undefined ? `${f.born}–${f.died}` : `b. ${f.born}`
 const wikiLink = (w) => `https://en.wikipedia.org/wiki/${encodeURIComponent(w.replace(/ /g, '_'))}`
 
 const billboards = figures.map((f) => ({

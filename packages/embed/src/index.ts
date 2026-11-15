@@ -325,7 +325,20 @@ const CSS = `
 }
 `
 
-function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTMLElement; card: HTMLAnchorElement; layers: [HTMLElement, HTMLElement]; navPrev: HTMLButtonElement; navNext: HTMLButtonElement; errorBox: HTMLElement; loading: HTMLElement; liveRegion: HTMLElement } {
+function buildDom(
+  size: Size,
+  theme: Theme,
+): {
+  root: HTMLElement
+  progress: HTMLElement
+  card: HTMLAnchorElement
+  layers: [HTMLElement, HTMLElement]
+  navPrev: HTMLButtonElement
+  navNext: HTMLButtonElement
+  errorBox: HTMLElement
+  loading: HTMLElement
+  liveRegion: HTMLElement
+} {
   const root = document.createElement('div')
   root.className = `hi hi--${size} hi--${theme}`
   root.setAttribute('role', 'region')
@@ -353,8 +366,8 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
     } else if (size === 'leaderboard') {
       layer.innerHTML =
         '<div class="hi-body">' +
-          '<div class="hi-media"></div>' +
-          '<div class="hi-panel"><div class="hi-field"></div><h3 class="hi-name"></h3><p class="hi-tag"></p></div>' +
+        '<div class="hi-media"></div>' +
+        '<div class="hi-panel"><div class="hi-field"></div><h3 class="hi-name"></h3><p class="hi-tag"></p></div>' +
         '</div>' +
         '<div class="hi-foot"><span class="hi-attr"></span><span class="hi-brand">सम्मान · Honour India</span></div>'
     } else {
@@ -403,7 +416,17 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
   liveRegion.setAttribute('aria-atomic', 'true')
 
   root.append(progress, card, navPrev, navNext, errorBox, loading, liveRegion)
-  return { root, progress, card, layers: [layers[0]!, layers[1]!], navPrev, navNext, errorBox, loading, liveRegion }
+  return {
+    root,
+    progress,
+    card,
+    layers: [layers[0]!, layers[1]!],
+    navPrev,
+    navNext,
+    errorBox,
+    loading,
+    liveRegion,
+  }
 }
 
 function initials(name: string): string {
@@ -481,7 +504,11 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string, lazy = tru
   attr.textContent = `Photo: ${credit}${license ? ` · ${license}` : ''}`
 }
 
-export function preload(b: Billboard, baseUrl: string, timeoutMs: number = DEFAULT_PRELOAD_TIMEOUT): Promise<void> {
+export function preload(
+  b: Billboard,
+  baseUrl: string,
+  timeoutMs: number = DEFAULT_PRELOAD_TIMEOUT,
+): Promise<void> {
   const image = b.image
   if (!image) return Promise.resolve()
   return new Promise((resolve) => {
@@ -539,7 +566,8 @@ class BillboardWidget {
     this.lazyLoad = opts.lazyLoad !== false
     const interval = clamp(opts.interval ?? DEFAULT_INTERVAL, MIN_INTERVAL, MAX_INTERVAL)
     this.intervalMs = interval * 1000
-    this.preloadTimeout = opts.preloadTimeout !== undefined ? Math.max(0, opts.preloadTimeout) : DEFAULT_PRELOAD_TIMEOUT
+    this.preloadTimeout =
+      opts.preloadTimeout !== undefined ? Math.max(0, opts.preloadTimeout) : DEFAULT_PRELOAD_TIMEOUT
     this.auto = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (typeof IntersectionObserver !== 'undefined') {
@@ -591,9 +619,17 @@ class BillboardWidget {
 
   private attachDomEvents(): void {
     this.dom.root.addEventListener('keydown', this.onKeydown)
-    this.dom.navPrev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(-1) })
-    this.dom.navNext.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(1) })
-    var retryBtn = this.dom.errorBox.querySelector('.hi-retry')
+    this.dom.navPrev.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      this.step(-1)
+    })
+    this.dom.navNext.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      this.step(1)
+    })
+    const retryBtn = this.dom.errorBox.querySelector('.hi-retry')
     if (retryBtn) {
       retryBtn.addEventListener('click', () => {
         const sub = this.dom.errorBox.querySelector('.hi-error-sub')
@@ -694,7 +730,8 @@ class BillboardWidget {
           this.dom.loading.classList.add('hi-loading-hidden')
           if (retries >= MAX_FETCH_RETRIES) {
             const sub = this.dom.errorBox.querySelector('.hi-error-sub')
-            if (sub) sub.textContent = 'Could not reach the Honour India API. Maximum retries exceeded.'
+            if (sub)
+              sub.textContent = 'Could not reach the Honour India API. Maximum retries exceeded.'
             break
           }
           await new Promise((r) => setTimeout(r, waitMs))
@@ -723,7 +760,8 @@ class BillboardWidget {
         this.dom.loading.classList.add('hi-loading-hidden')
         if (retries >= MAX_FETCH_RETRIES) {
           const sub = this.dom.errorBox.querySelector('.hi-error-sub')
-          if (sub) sub.textContent = 'Could not reach the Honour India API. Maximum retries exceeded.'
+          if (sub)
+            sub.textContent = 'Could not reach the Honour India API. Maximum retries exceeded.'
           break
         }
         await new Promise((r) => setTimeout(r, retryMs))
@@ -748,7 +786,8 @@ class BillboardWidget {
     if (this.queue.length === 0) return
     this.index = ((index % this.queue.length) + this.queue.length) % this.queue.length
     const b = this.queue[this.index]!
-    if (!resumeOnly && (this.inView || !this.lazyLoad)) await preload(b, this.api, this.preloadTimeout)
+    if (!resumeOnly && (this.inView || !this.lazyLoad))
+      await preload(b, this.api, this.preloadTimeout)
 
     if (this.destroyed) return
     const incoming = this.dom.layers[this.active === 0 ? 1 : 0]!
@@ -823,7 +862,9 @@ function readDataset(el: Element): MountOptions {
   return {
     api: ds.api,
     theme: ds.theme === 'light' ? 'light' : ds.theme === 'dark' ? 'dark' : undefined,
-    size: ['rectangle', 'leaderboard', 'poster'].includes(ds.size ?? '') ? (ds.size as Size) : undefined,
+    size: ['rectangle', 'leaderboard', 'poster'].includes(ds.size ?? '')
+      ? (ds.size as Size)
+      : undefined,
     interval: Number.isFinite(interval) ? interval : undefined,
     key: ds.key,
     preloadTimeout: Number.isFinite(preloadTimeout) ? preloadTimeout : undefined,
@@ -859,7 +900,10 @@ function setupObserver(): MutationObserver | null {
         const node = mutation.addedNodes[i]!
         if (node.nodeType === 1) {
           const el = node as Element
-          if (el.hasAttribute('data-honourindia') && el.getAttribute('data-honourindia-mounted') !== '1') {
+          if (
+            el.hasAttribute('data-honourindia') &&
+            el.getAttribute('data-honourindia-mounted') !== '1'
+          ) {
             el.setAttribute('data-honourindia-mounted', '1')
             mount(el, readDataset(el))
           }

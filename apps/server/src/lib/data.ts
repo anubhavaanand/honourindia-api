@@ -93,7 +93,9 @@ function validateFigure(f: unknown, index: number): void {
 
   const requiredString = (key: string) => {
     if (typeof fig[key] !== 'string' || (fig[key] as string).trim() === '') {
-      throw new Error(`figures[${index}] (slug=${fig['slug']}): "${key}" must be a non-empty string`)
+      throw new Error(
+        `figures[${index}] (slug=${fig['slug']}): "${key}" must be a non-empty string`,
+      )
     }
   }
   const requiredNumber = (key: string) => {
@@ -117,7 +119,7 @@ function validateFigure(f: unknown, index: number): void {
 
   if (!VALID_ERAS.has(fig['era'] as string)) {
     throw new Error(
-      `figures[${index}] (slug=${fig['slug']}): "era" must be one of ${[...VALID_ERAS].join(', ')} — got ${JSON.stringify(fig['era'])}`
+      `figures[${index}] (slug=${fig['slug']}): "era" must be one of ${[...VALID_ERAS].join(', ')} — got ${JSON.stringify(fig['era'])}`,
     )
   }
 
@@ -128,17 +130,23 @@ function validateFigure(f: unknown, index: number): void {
   if (fig['quote'] !== null && fig['quote'] !== undefined) {
     const q = fig['quote'] as Record<string, unknown>
     if (typeof q['text'] !== 'string' || q['text'].trim() === '') {
-      throw new Error(`figures[${index}] (slug=${fig['slug']}): "quote.text" must be a non-empty string`)
+      throw new Error(
+        `figures[${index}] (slug=${fig['slug']}): "quote.text" must be a non-empty string`,
+      )
     }
   }
 
   if (fig['attribution'] !== null && fig['attribution'] !== undefined) {
     const attr = fig['attribution'] as Record<string, unknown>
     if (typeof attr['source'] !== 'string' || (attr['source'] as string).trim() === '') {
-      throw new Error(`figures[${index}] (slug=${fig['slug']}): "attribution.source" must be a non-empty string`)
+      throw new Error(
+        `figures[${index}] (slug=${fig['slug']}): "attribution.source" must be a non-empty string`,
+      )
     }
     if (typeof attr['url'] !== 'string' || (attr['url'] as string).trim() === '') {
-      throw new Error(`figures[${index}] (slug=${fig['slug']}): "attribution.url" must be a non-empty string`)
+      throw new Error(
+        `figures[${index}] (slug=${fig['slug']}): "attribution.url" must be a non-empty string`,
+      )
     }
   }
 }
@@ -159,7 +167,10 @@ function loadFigures(): FigureRecord[] {
   const images = loadImages()
   return raw.figures.map((f) => {
     const img = images[f.slug]
-    return { ...f, image: img ? { file: img.file, credit: img.credit, license: img.license } : null }
+    return {
+      ...f,
+      image: img ? { file: img.file, credit: img.credit, license: img.license } : null,
+    }
   })
 }
 
@@ -183,7 +194,9 @@ export function toBillboard(f: FigureRecord): Billboard {
     enduring: f.enduring,
     stillUsed: f.stillUsed,
     quote: f.quote,
-    image: f.image ? { url: `/images/${f.image.file}`, credit: f.image.credit, license: f.image.license } : null,
+    image: f.image
+      ? { url: `/images/${f.image.file}`, credit: f.image.credit, license: f.image.license }
+      : null,
     link: wikiLink(f.wiki),
     attribution: f.attribution ?? {
       source: 'Wikipedia',
@@ -226,10 +239,11 @@ export function filterFigures(opts: FigureFilter): FigureRecord[] {
   }
   if (opts.search) {
     const q = opts.search.toLowerCase()
-    out = out.filter((f) =>
-      f.name.toLowerCase().includes(q) ||
-      f.tagline.toLowerCase().includes(q) ||
-      f.summary.toLowerCase().includes(q)
+    out = out.filter(
+      (f) =>
+        f.name.toLowerCase().includes(q) ||
+        f.tagline.toLowerCase().includes(q) ||
+        f.summary.toLowerCase().includes(q),
     )
   }
   if (opts.enduring !== undefined) {

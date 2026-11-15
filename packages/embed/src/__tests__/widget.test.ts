@@ -1,7 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Load the widget so window.HonourIndia is defined
-import { parseRetryAfter, MAX_FETCH_RETRIES, MAX_IMAGE_RETRIES, preload, DEFAULT_PRELOAD_TIMEOUT, mountAll, setupObserver } from '../index'
+import {
+  parseRetryAfter,
+  MAX_FETCH_RETRIES,
+  preload,
+  DEFAULT_PRELOAD_TIMEOUT,
+  mountAll,
+  setupObserver,
+} from '../index'
 
 const billboards = [
   {
@@ -407,7 +414,10 @@ describe('widget (packages/embed)', () => {
     document.body.appendChild(host)
 
     // @ts-expect-error global set by widget bundle
-    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1', preloadTimeout: 500 })
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      preloadTimeout: 500,
+    })
 
     // Let fetch resolve, then advance preload timer (500ms)
     await new Promise<void>((r) => queueMicrotask(() => r()))
@@ -415,9 +425,8 @@ describe('widget (packages/embed)', () => {
 
     const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
     const media = active.querySelector('.hi-media')!
-    let img = media.querySelector('img') as HTMLImageElement
+    const img = media.querySelector('img') as HTMLImageElement
     expect(img).toBeTruthy()
-    const originalSrc = img.src
 
     // 1st error: should not immediately show monogram, schedules retry
     img.dispatchEvent(new Event('error'))
@@ -516,7 +525,9 @@ describe('widget (packages/embed)', () => {
     handle.update({ api: 'http://localhost/api/v2' })
     await new Promise<void>((r) => queueMicrotask(() => r()))
     expect(fetchMock).toHaveBeenCalledTimes(initialCalls + 1)
-    expect(fetchMock.mock.calls[initialCalls]![0]).toContain('http://localhost/api/v2/billboards/random')
+    expect(fetchMock.mock.calls[initialCalls]![0]).toContain(
+      'http://localhost/api/v2/billboards/random',
+    )
 
     handle.destroy()
   })
@@ -595,7 +606,7 @@ describe('widget (packages/embed)', () => {
     expect(liveRegion.textContent).toBeTruthy()
     const activeText = liveRegion.textContent
     expect(
-      activeText === 'C. V. Raman, Physics' || activeText === 'Srinivasa Ramanujan, Mathematics'
+      activeText === 'C. V. Raman, Physics' || activeText === 'Srinivasa Ramanujan, Mathematics',
     ).toBe(true)
 
     // Step to the next figure
@@ -605,7 +616,7 @@ describe('widget (packages/embed)', () => {
 
     const updatedText = liveRegion.textContent
     expect(
-      updatedText === 'C. V. Raman, Physics' || updatedText === 'Srinivasa Ramanujan, Mathematics'
+      updatedText === 'C. V. Raman, Physics' || updatedText === 'Srinivasa Ramanujan, Mathematics',
     ).toBe(true)
 
     handle.destroy()
@@ -658,7 +669,9 @@ describe('widget (packages/embed)', () => {
     await vi.waitFor(() => {
       expect(eagerHost.shadowRoot!.querySelector('.hi-layer.is-active img')).toBeTruthy()
     })
-    const eagerImg = eagerHost.shadowRoot!.querySelector('.hi-layer.is-active img') as HTMLImageElement
+    const eagerImg = eagerHost.shadowRoot!.querySelector(
+      '.hi-layer.is-active img',
+    ) as HTMLImageElement
     expect(eagerImg.loading).toBe('eager')
 
     handle.destroy()

@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { rateLimit, FileRateLimitStore, MemoryRateLimitStore, type RateLimitStore } from '../lib/ratelimit.js'
+import { rateLimit, FileRateLimitStore, type RateLimitStore } from '../lib/ratelimit.js'
 
 type AuthKey = { id: string; name: string }
 

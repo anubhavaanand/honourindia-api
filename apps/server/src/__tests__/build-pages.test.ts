@@ -42,7 +42,9 @@ describe('build-pages static payloads', () => {
 
     const { figures } = JSON.parse(await readFile(path.join(ROOT, 'data/figures.json'), 'utf8'))
     for (const f of figures.slice(0, 5)) {
-      expect(sitemap).toContain(`<loc>https://honourindia.org/figures/${encodeURIComponent(f.slug)}</loc>`)
+      expect(sitemap).toContain(
+        `<loc>https://honourindia.org/figures/${encodeURIComponent(f.slug)}</loc>`,
+      )
     }
   })
 })

@@ -1,0 +1,12 @@
+# Tooling and generated files that are not ours to reformat.
+.prowl/
+.prowl-setup.lock
+
+# Single-line mirror of the OpenAPI spec, generated from docs/openapi.yaml.
+docs/openapi.json
+
+# Local state.
+node_modules/
+dist/
+dist-pages/
+public/images/

@@ -22,27 +22,30 @@ const IMAGES_DIR = path.join(ROOT, 'public/images')
 const DATA_FILE = path.join(ROOT, 'data/figures.json')
 const OUT_FILE = path.join(ROOT, 'data/images.json')
 
-const UA = 'HonourIndia-seed/0.1 (billboard project honouring Indian scientists; contact via repository)'
+const UA =
+  'HonourIndia-seed/0.1 (billboard project honouring Indian scientists; contact via repository)'
 const THUMB_SIZE = 640
 
 const ENWIKI = 'https://en.wikipedia.org/w/api.php'
 const COMMONS = 'https://commons.wikimedia.org/w/api.php'
 
 function decodeEntities(s) {
-  return s
-    .replace(/<[^>]*>/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#039;|&apos;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-    // Commons templates sometimes emit the same segment twice (e.g. "Unknown authorUnknown author")
-    .replace(/(Unknown author|Unknown|Not mentioned)(\s*\1)+/gi, '$1')
-    // some Artist fields hold a bare URL — unusable as on-billboard credit
-    .replace(/^https?:\/\/\S+$/i, 'Wikimedia Commons')
-    .replace(/\s+/g, ' ')
-    .trim()
+  return (
+    s
+      .replace(/<[^>]*>/g, '')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;|&apos;/g, "'")
+      .replace(/&nbsp;/g, ' ')
+      // Commons templates sometimes emit the same segment twice (e.g. "Unknown authorUnknown author")
+      .replace(/(Unknown author|Unknown|Not mentioned)(\s*\1)+/gi, '$1')
+      // some Artist fields hold a bare URL — unusable as on-billboard credit
+      .replace(/^https?:\/\/\S+$/i, 'Wikimedia Commons')
+      .replace(/\s+/g, ' ')
+      .trim()
+  )
 }
 
 async function apiGet(url) {
@@ -107,7 +110,9 @@ async function getCommonsFile(fileName) {
       thumb: info.thumburl ?? info.url ?? null,
       file: fileName,
       credit: meta.Artist?.value ? decodeEntities(meta.Artist.value) : undefined,
-      license: meta.LicenseShortName?.value ? decodeEntities(meta.LicenseShortName.value) : undefined,
+      license: meta.LicenseShortName?.value
+        ? decodeEntities(meta.LicenseShortName.value)
+        : undefined,
       source: meta.Credit?.value ? decodeEntities(meta.Credit.value) : undefined,
     }
   }
@@ -130,7 +135,9 @@ async function getLicense(fileName) {
     if (!meta) return {}
     return {
       credit: meta.Artist?.value ? decodeEntities(meta.Artist.value) : undefined,
-      license: meta.LicenseShortName?.value ? decodeEntities(meta.LicenseShortName.value) : undefined,
+      license: meta.LicenseShortName?.value
+        ? decodeEntities(meta.LicenseShortName.value)
+        : undefined,
       source: meta.Credit?.value ? decodeEntities(meta.Credit.value) : undefined,
     }
   } catch {
@@ -246,7 +253,9 @@ async function main() {
     await writeFile(OUT_FILE, JSON.stringify(results, null, 2) + '\n')
   }
 
-  console.log(`\nDone: ${ok} downloaded, ${skipped} already present, ${failed.length} failed/skipped.`)
+  console.log(
+    `\nDone: ${ok} downloaded, ${skipped} already present, ${failed.length} failed/skipped.`,
+  )
   if (failed.length) {
     console.log(`Fallback (widget displays initial monograms): ${failed.join(', ')}`)
   }

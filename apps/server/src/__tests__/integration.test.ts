@@ -80,8 +80,10 @@ describe('API integration', () => {
       }
       if (billboard.image) {
         expect(billboard.image.url).toBeTruthy()
-        if (billboard.image.credit !== undefined) expect(typeof billboard.image.credit).toBe('string')
-        if (billboard.image.license !== undefined) expect(typeof billboard.image.license).toBe('string')
+        if (billboard.image.credit !== undefined)
+          expect(typeof billboard.image.credit).toBe('string')
+        if (billboard.image.license !== undefined)
+          expect(typeof billboard.image.license).toBe('string')
       }
     }
   })
@@ -183,7 +185,11 @@ describe('figure submission and moderation journey', () => {
     const reviewed = await app.request(`/api/v1/admin/submissions/${id}`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json', 'x-admin-key': ADMIN_KEY },
-      body: JSON.stringify({ status: 'approved', reviewNote: 'Looks good', reviewer: 'integration' }),
+      body: JSON.stringify({
+        status: 'approved',
+        reviewNote: 'Looks good',
+        reviewer: 'integration',
+      }),
     })
     expect(reviewed.status).toBe(200)
     const reviewedBody: any = await reviewed.json()

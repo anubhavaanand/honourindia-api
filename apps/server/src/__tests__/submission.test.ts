@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, afterEach } from 'vitest'
 import { api } from '../routes/api.js'
 import { loadSubmissions, saveSubmissions, getSubmissionById } from '../lib/submissions.js'
 
@@ -17,7 +17,8 @@ describe('Figure submission API (issue #62)', () => {
       died: 2001,
       field: 'Meteorology',
       tagline: 'Pioneered meteorological instrumentation and solar radiation measurement in India.',
-      summary: 'Anna Mani was an Indian physicist and meteorologist who served as Deputy Director General of the IMD.',
+      summary:
+        'Anna Mani was an Indian physicist and meteorologist who served as Deputy Director General of the IMD.',
       wiki: 'Anna Mani',
       submitterName: 'Contributor',
       submitterEmail: 'contributor@example.com',

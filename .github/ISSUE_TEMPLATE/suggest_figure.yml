@@ -1,7 +1,7 @@
 name: Suggest a Figure
 description: Suggest an Indian scientist, mathematician, doctor, or engineer for the catalogue
-title: "[Figure Suggestion]: "
-labels: ["data", "submission"]
+title: '[Figure Suggestion]: '
+labels: ['data', 'submission']
 body:
   - type: markdown
     attributes:

@@ -17,7 +17,9 @@ describe('CORS preflight for keyed cross-origin embeds (issue #44)', () => {
 
     expect(res.status).toBe(204)
     expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*')
-    expect(res.headers.get('Access-Control-Allow-Headers')?.toLowerCase()).toContain('authorization')
+    expect(res.headers.get('Access-Control-Allow-Headers')?.toLowerCase()).toContain(
+      'authorization',
+    )
     // Browsers cache the preflight, so a keyed widget does not preflight every fetch.
     expect(res.headers.get('Access-Control-Max-Age')).toBe('600')
   })

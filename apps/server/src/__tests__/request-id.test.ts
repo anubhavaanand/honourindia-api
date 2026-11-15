@@ -4,7 +4,10 @@ import { requestId } from '../lib/request-id.js'
 function makeContext(path: string) {
   const headers: Record<string, string> = {}
   const c: any = {
-    req: { path, header: (name: string) => (name === 'x-request-id' ? headers['x-request-id'] : undefined) },
+    req: {
+      path,
+      header: (name: string) => (name === 'x-request-id' ? headers['x-request-id'] : undefined),
+    },
     res: { headers: new Headers() },
     header: () => {},
   }

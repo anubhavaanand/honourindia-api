@@ -65,7 +65,10 @@ export function listSubmissions(options?: { status?: SubmissionStatus }): Figure
 }
 
 export function createSubmission(
-  input: Omit<FigureSubmission, 'id' | 'status' | 'submittedAt' | 'reviewedAt' | 'reviewNote' | 'reviewedBy'>,
+  input: Omit<
+    FigureSubmission,
+    'id' | 'status' | 'submittedAt' | 'reviewedAt' | 'reviewNote' | 'reviewedBy'
+  >,
 ): FigureSubmission {
   const id = `sub_${Date.now()}_${randomBytes(4).toString('hex')}`
   const submission: FigureSubmission = {
@@ -101,8 +104,8 @@ export function updateSubmissionStatus(
     ...current[idx]!,
     status,
     reviewedAt: new Date().toISOString(),
-    reviewNote: reviewNote !== undefined ? reviewNote : current[idx]!.reviewNote ?? null,
-    reviewedBy: reviewedBy !== undefined ? reviewedBy : current[idx]!.reviewedBy ?? null,
+    reviewNote: reviewNote !== undefined ? reviewNote : (current[idx]!.reviewNote ?? null),
+    reviewedBy: reviewedBy !== undefined ? reviewedBy : (current[idx]!.reviewedBy ?? null),
   }
   current[idx] = updated
   saveSubmissions(current)

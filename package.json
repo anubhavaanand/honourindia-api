@@ -27,12 +27,20 @@
     "validate:data": "node scripts/validate-data.mjs",
     "validate:data:fix": "node scripts/validate-data.mjs --fix",
     "check:size": "node scripts/check-bundle-size.mjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{ts,js,mjs,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,mjs,json,md,yml,yaml}\"",
     "import:candidates": "node scripts/import-candidates.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^3.0.0",
-    "jsdom": "^25.0.0"
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
+    "jsdom": "^25.0.0",
+    "prettier": "^3.10.1",
+    "typescript-eslint": "^8.72.2",
+    "vitest": "^3.0.0"
   }
 }

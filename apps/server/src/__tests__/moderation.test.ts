@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { api } from '../routes/api.js'
-import { createSubmission, loadSubmissions, saveSubmissions, getSubmissionById } from '../lib/submissions.js'
+import { loadSubmissions, saveSubmissions, getSubmissionById } from '../lib/submissions.js'
 import { getExpectedAdminKey } from '../lib/admin-auth.js'
 
 describe('Figure moderation workflow (issue #83)', () => {

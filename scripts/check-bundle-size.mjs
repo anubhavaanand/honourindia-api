@@ -29,11 +29,15 @@ function format(bytes) {
 const raw = await readFile(BUNDLE)
 const gzipped = gzipSync(raw)
 
-console.log(`embed.js: ${format(raw.length)} raw · ${format(gzipped.length)} gzipped · budget ${format(BUDGET_BYTES)}`)
+console.log(
+  `embed.js: ${format(raw.length)} raw · ${format(gzipped.length)} gzipped · budget ${format(BUDGET_BYTES)}`,
+)
 
 if (raw.length > BUDGET_BYTES) {
   console.error(`✗ embed.js is ${format(raw.length - BUDGET_BYTES)} over budget.`)
-  console.error('  Trim the widget, or raise BUDGET_BYTES in scripts/check-bundle-size.mjs on purpose.')
+  console.error(
+    '  Trim the widget, or raise BUDGET_BYTES in scripts/check-bundle-size.mjs on purpose.',
+  )
   process.exit(1)
 }
 

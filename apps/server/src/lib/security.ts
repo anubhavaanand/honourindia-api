@@ -29,6 +29,9 @@ export function securityHeaders() {
       'Permissions-Policy',
       'camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), interest-cohort=()',
     )
-    c.res.headers.set('Content-Security-Policy', c.req.path.startsWith('/api/') ? API_CSP : SITE_CSP)
+    c.res.headers.set(
+      'Content-Security-Policy',
+      c.req.path.startsWith('/api/') ? API_CSP : SITE_CSP,
+    )
   }
 }

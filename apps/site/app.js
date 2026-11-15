@@ -1,5 +1,5 @@
 /* Honour India — demo site glue: origin placeholders, snippet playground, figures grid. */
-(function () {
+;(function () {
   'use strict'
 
   // Work relative to the page URL so the bundle works at a domain root
@@ -54,8 +54,13 @@
     if (cfg.api) attrs += ' data-api="' + cfg.api + '"'
     if (cfg.key) attrs += ' data-key="' + cfg.key + '"'
     return (
-      '<div data-honourindia' + attrs + '></div>\n' +
-      '<script src="' + EMBED_ORIGIN + '/embed.js" async><' + '/script>'
+      '<div data-honourindia' +
+      attrs +
+      '></div>\n' +
+      '<script src="' +
+      EMBED_ORIGIN +
+      '/embed.js" async><' +
+      '/script>'
     )
   }
 
@@ -93,7 +98,8 @@
     el.addEventListener('error', function () {
       previewMount.innerHTML = ''
       var msg = document.createElement('div')
-      msg.textContent = 'Could not load the Honour India widget (embed.js). Check your connection or host.'
+      msg.textContent =
+        'Could not load the Honour India widget (embed.js). Check your connection or host.'
       msg.style.color = '#b00020'
       previewMount.appendChild(msg)
     })
@@ -109,7 +115,9 @@
   copyBtn.addEventListener('click', function () {
     navigator.clipboard.writeText(snippetFor(currentConfig())).then(function () {
       copyBtn.textContent = 'Copied!'
-      setTimeout(function () { copyBtn.textContent = 'Copy' }, 1500)
+      setTimeout(function () {
+        copyBtn.textContent = 'Copy'
+      }, 1500)
     })
   })
 
@@ -212,7 +220,9 @@
     var hasFilters = Boolean(search || field || enduring)
 
     fetch(url)
-      .then(function (r) { return r.json() })
+      .then(function (r) {
+        return r.json()
+      })
       .then(function (data) {
         isLoading = false
         if (seq !== fetchSeq) return
@@ -233,7 +243,8 @@
             if (count) count.textContent = 'No figures found matching your filter criteria.'
             var emptyFilter = document.createElement('p')
             emptyFilter.className = 'figure-empty'
-            emptyFilter.textContent = 'No figures match the selected filters. Try clearing your search.'
+            emptyFilter.textContent =
+              'No figures match the selected filters. Try clearing your search.'
             grid.appendChild(emptyFilter)
           } else {
             if (count) count.textContent = 'The seed catalogue — no figures to show yet.'
@@ -258,13 +269,19 @@
           if (!append) populateFieldOptions(list)
           if (count) {
             count.textContent =
-              'The seed catalogue — ' + (data.total || data.count) + ' minds from Raman\'s generation to ISRO\'s. ' +
+              'The seed catalogue — ' +
+              (data.total || data.count) +
+              " minds from Raman's generation to ISRO's. " +
               'Suggest more via the repository.'
           }
         } else {
           if (count) {
             count.textContent =
-              'Showing ' + currentOffset + ' of ' + (data.total != null ? data.total : currentOffset) + ' minds.'
+              'Showing ' +
+              currentOffset +
+              ' of ' +
+              (data.total != null ? data.total : currentOffset) +
+              ' minds.'
           }
         }
 
@@ -287,13 +304,19 @@
   }
 
   if (figureSearch) {
-    figureSearch.addEventListener('input', function () { fetchAndRenderFigures(false) })
+    figureSearch.addEventListener('input', function () {
+      fetchAndRenderFigures(false)
+    })
   }
   if (figureField) {
-    figureField.addEventListener('change', function () { fetchAndRenderFigures(false) })
+    figureField.addEventListener('change', function () {
+      fetchAndRenderFigures(false)
+    })
   }
   if (figureEnduring) {
-    figureEnduring.addEventListener('change', function () { fetchAndRenderFigures(false) })
+    figureEnduring.addEventListener('change', function () {
+      fetchAndRenderFigures(false)
+    })
   }
   if (loadMoreBtn) {
     loadMoreBtn.addEventListener('click', function () {
@@ -301,13 +324,16 @@
     })
 
     if (typeof IntersectionObserver !== 'undefined') {
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting && !isLoading && hasMore && !loadMoreBtn.hidden) {
-            fetchAndRenderFigures(true)
-          }
-        })
-      }, { rootMargin: '200px' })
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && !isLoading && hasMore && !loadMoreBtn.hidden) {
+              fetchAndRenderFigures(true)
+            }
+          })
+        },
+        { rootMargin: '200px' },
+      )
       observer.observe(loadMoreBtn)
     }
   }

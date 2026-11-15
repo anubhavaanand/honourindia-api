@@ -130,7 +130,7 @@ app.use('/admin.js', staticRateLimit)
 
 // The embeddable widget script — usable from any origin. Uncached outside
 // production so local iteration isn't bitten by the browser cache.
-app.get('/embed.js', (c) =>
+app.get('/embed.js', () =>
   serveFile(EMBED_JS, isProd ? 'public, max-age=600, stale-while-revalidate=3600' : 'no-cache'),
 )
 
@@ -158,24 +158,41 @@ app.get('/images/*', (c) => {
     return c.text('Not found', 404)
   }
 
-  return serveFile(
-    target,
-    'public, max-age=86400, stale-while-revalidate=604800',
-  )
+  return serveFile(target, 'public, max-age=86400, stale-while-revalidate=604800')
 })
 
 // Demo + docs site. Assets uncached outside production for fast iteration.
-app.get('/', (c) => serveFile(path.join(SITE_DIR, 'index.html'), 'no-cache'))
-app.get('/styles.css', (c) => serveFile(path.join(SITE_DIR, 'styles.css'), isProd ? 'public, max-age=600' : 'no-cache'))
-app.get('/app.js', (c) => serveFile(path.join(SITE_DIR, 'app.js'), isProd ? 'public, max-age=600' : 'no-cache'))
-app.get('/figure.js', (c) => serveFile(path.join(SITE_DIR, 'figure.js'), isProd ? 'public, max-age=600' : 'no-cache'))
-app.get('/figures/:slug', (c) => serveFile(path.join(SITE_DIR, 'figure.html'), 'no-cache'))
-app.get('/admin', (c) => serveFile(path.join(SITE_DIR, 'admin.html'), 'no-cache'))
-app.get('/admin.js', (c) => serveFile(path.join(SITE_DIR, 'admin.js'), isProd ? 'public, max-age=600' : 'no-cache'))
-app.get('/favicon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
-app.get('/apple-touch-icon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
-app.get('/robots.txt', (c) => serveFile(path.join(SITE_DIR, 'robots.txt'), 'public, max-age=86400'))
-app.get('/sitemap.xml', (c) => serveFile(path.join(SITE_DIR, 'sitemap.xml'), 'public, max-age=86400'))
+app.get('/', () => serveFile(path.join(SITE_DIR, 'index.html'), 'no-cache'))
+app.get('/styles.css', () =>
+  serveFile(path.join(SITE_DIR, 'styles.css'), isProd ? 'public, max-age=600' : 'no-cache'),
+)
+app.get('/app.js', () =>
+  serveFile(path.join(SITE_DIR, 'app.js'), isProd ? 'public, max-age=600' : 'no-cache'),
+)
+app.get('/figure.js', () =>
+  serveFile(path.join(SITE_DIR, 'figure.js'), isProd ? 'public, max-age=600' : 'no-cache'),
+)
+app.get('/figures/:slug', () => serveFile(path.join(SITE_DIR, 'figure.html'), 'no-cache'))
+app.get('/admin', () => serveFile(path.join(SITE_DIR, 'admin.html'), 'no-cache'))
+app.get('/admin.js', () =>
+  serveFile(path.join(SITE_DIR, 'admin.js'), isProd ? 'public, max-age=600' : 'no-cache'),
+)
+app.get('/favicon.svg', () =>
+  serveFile(
+    path.join(SITE_DIR, 'favicon.svg'),
+    'public, max-age=86400, stale-while-revalidate=604800',
+  ),
+)
+app.get('/apple-touch-icon.svg', () =>
+  serveFile(
+    path.join(SITE_DIR, 'favicon.svg'),
+    'public, max-age=86400, stale-while-revalidate=604800',
+  ),
+)
+app.get('/robots.txt', () => serveFile(path.join(SITE_DIR, 'robots.txt'), 'public, max-age=86400'))
+app.get('/sitemap.xml', () =>
+  serveFile(path.join(SITE_DIR, 'sitemap.xml'), 'public, max-age=86400'),
+)
 
 app.get('/healthz', (c) => c.json({ ok: true }))
 

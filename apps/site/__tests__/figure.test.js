@@ -39,7 +39,12 @@ describe('figure detail page (apps/site/figure.js)', () => {
   function stubFetch() {
     let resolveFetch
     // @ts-expect-error test harness mock
-    globalThis.fetch = vi.fn(() => new Promise((resolve) => { resolveFetch = resolve }))
+    globalThis.fetch = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+    )
     return { resolve: (payload) => resolveFetch(payload) }
   }
 
@@ -164,7 +169,12 @@ describe('figure detail page (apps/site/figure.js)', () => {
   it('distinguishes network failure from 404 (issue #23)', async () => {
     let rejectFetch
     // @ts-expect-error test harness mock
-    globalThis.fetch = vi.fn(() => new Promise((_, reject) => { rejectFetch = reject }))
+    globalThis.fetch = vi.fn(
+      () =>
+        new Promise((_, reject) => {
+          rejectFetch = reject
+        }),
+    )
     vi.resetModules()
 
     // @ts-expect-error test harness mock

@@ -2,10 +2,24 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { Hono } from 'hono'
 import { etag } from 'hono/etag'
-import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary, figuresVersion, ROOT } from '../lib/data.js'
-import type { FigureFilter } from '../lib/data.js'
+import {
+  figures,
+  findBySlug,
+  filterFigures,
+  sampleRandom,
+  toBillboard,
+  toSummary,
+  figuresVersion,
+  ROOT,
+} from '../lib/data.js'
 import type { Env } from '../lib/auth.js'
-import { createSubmission, listSubmissions, getSubmissionById, updateSubmissionStatus, type SubmissionStatus } from '../lib/submissions.js'
+import {
+  createSubmission,
+  listSubmissions,
+  getSubmissionById,
+  updateSubmissionStatus,
+  type SubmissionStatus,
+} from '../lib/submissions.js'
 import { adminAuth } from '../lib/admin-auth.js'
 
 const OPENAPI_JSON = path.join(ROOT, 'docs/openapi.json')
@@ -36,15 +50,20 @@ api.get('/', (c) =>
     figures: figures.length,
     auth: 'Keyless for everyone. Optional keys (Authorization: Bearer) unlock higher rate limits.',
     endpoints: {
-      'GET /api/v1/billboards/random?count=8': 'Random billboards for the embed widget (count 1–24).',
+      'GET /api/v1/billboards/random?count=8':
+        'Random billboards for the embed widget (count 1–24).',
       'GET /api/v1/figures': 'The full catalogue of honoured figures.',
       'GET /api/v1/figures/:slug': 'Full record for one figure.',
-      'POST /api/v1/figures/submit': 'Submit a new figure for moderation and inclusion in the catalogue.',
-      'GET /api/v1/admin/submissions': 'Admin: List candidate submissions with optional ?status= filter.',
-      'PATCH /api/v1/admin/submissions/:id': 'Admin: Update moderation status (approve/reject/pending).',
+      'POST /api/v1/figures/submit':
+        'Submit a new figure for moderation and inclusion in the catalogue.',
+      'GET /api/v1/admin/submissions':
+        'Admin: List candidate submissions with optional ?status= filter.',
+      'PATCH /api/v1/admin/submissions/:id':
+        'Admin: Update moderation status (approve/reject/pending).',
       'GET /api/v1/whoami': 'Shows your tier (anonymous/keyed) and rate-limit budget.',
       'GET /api/v1/meta': 'Dataset and licensing metadata.',
-      'GET /api/v1/openapi': 'OpenAPI 3.1 specification (also available as /openapi.json or /openapi.yaml).',
+      'GET /api/v1/openapi':
+        'OpenAPI 3.1 specification (also available as /openapi.json or /openapi.yaml).',
     },
     docs: '/',
   }),
@@ -68,8 +87,10 @@ api.get('/meta', (c) =>
     dataVersion: figuresVersion,
     figures: figures.length,
     living: figures.filter((f) => f.died === null).length,
-    dataLicense: 'Facts are not copyrightable; summaries compiled by contributors (see repository).',
-    imagesLicense: 'Portraits come from Wikipedia/Wikimedia Commons; per-image credit and license are returned with each billboard and must be preserved.',
+    dataLicense:
+      'Facts are not copyrightable; summaries compiled by contributors (see repository).',
+    imagesLicense:
+      'Portraits come from Wikipedia/Wikimedia Commons; per-image credit and license are returned with each billboard and must be preserved.',
     source: 'https://en.wikipedia.org/',
   }),
 )
@@ -78,7 +99,8 @@ api.get('/billboards/random', (c) => {
   const raw = c.req.query('count')
   let count = 8
   if (raw !== undefined) {
-    if (!/^\d+$/.test(raw)) return c.json({ error: 'count must be an integer between 1 and 24' }, 400)
+    if (!/^\d+$/.test(raw))
+      return c.json({ error: 'count must be an integer between 1 and 24' }, 400)
     const n = Number(raw)
     if (!Number.isInteger(n) || n < 1 || n > 24) {
       return c.json({ error: 'count must be an integer between 1 and 24' }, 400)
@@ -130,7 +152,8 @@ api.get('/figures', (c) => {
 
 api.get('/figures/:slug', (c) => {
   const f = findBySlug(c.req.param('slug'))
-  if (!f) return c.json({ error: 'Unknown figure. Try GET /api/v1/figures for the catalogue.' }, 404)
+  if (!f)
+    return c.json({ error: 'Unknown figure. Try GET /api/v1/figures for the catalogue.' }, 404)
   c.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400')
   return c.json({
     ...toBillboard(f),
@@ -153,7 +176,8 @@ api.post('/figures/submit', async (c) => {
     return c.json({ error: 'Request body must be an object' }, 400)
   }
 
-  const { name, born, died, field, tagline, summary, wiki, quote, submitterName, submitterEmail } = body
+  const { name, born, died, field, tagline, summary, wiki, quote, submitterName, submitterEmail } =
+    body
 
   if (!name || typeof name !== 'string' || name.trim() === '') {
     return c.json({ error: 'Field "name" is required and must be a non-empty string' }, 400)
@@ -185,7 +209,8 @@ api.post('/figures/submit', async (c) => {
     tagline: tagline.trim(),
     summary: summary.trim(),
     wiki: wiki.trim(),
-    quote: quote && typeof quote.text === 'string' ? { text: quote.text, source: quote.source } : null,
+    quote:
+      quote && typeof quote.text === 'string' ? { text: quote.text, source: quote.source } : null,
     submitterName: typeof submitterName === 'string' ? submitterName.trim() : null,
     submitterEmail: typeof submitterEmail === 'string' ? submitterEmail.trim() : null,
   })
@@ -205,9 +230,14 @@ api.use('/admin/*', adminAuth())
 api.get('/admin/submissions', (c) => {
   const statusParam = c.req.query('status')
   if (statusParam && !['pending', 'approved', 'rejected'].includes(statusParam)) {
-    return c.json({ error: 'Invalid status filter. Must be "pending", "approved", or "rejected"' }, 400)
+    return c.json(
+      { error: 'Invalid status filter. Must be "pending", "approved", or "rejected"' },
+      400,
+    )
   }
-  const submissions = listSubmissions(statusParam ? { status: statusParam as SubmissionStatus } : undefined)
+  const submissions = listSubmissions(
+    statusParam ? { status: statusParam as SubmissionStatus } : undefined,
+  )
   return c.json({
     total: submissions.length,
     submissions,
@@ -238,7 +268,10 @@ api.patch('/admin/submissions/:id', async (c) => {
 
   const { status, reviewNote, reviewer } = body
   if (!status || !['pending', 'approved', 'rejected'].includes(status)) {
-    return c.json({ error: 'Field "status" is required and must be "pending", "approved", or "rejected"' }, 400)
+    return c.json(
+      { error: 'Field "status" is required and must be "pending", "approved", or "rejected"' },
+      400,
+    )
   }
 
   const updated = updateSubmissionStatus(id, status as SubmissionStatus, reviewNote, reviewer)

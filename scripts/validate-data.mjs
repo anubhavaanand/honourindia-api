@@ -25,10 +25,18 @@ const VALID_ERAS = new Set(['ancient', 'medieval', 'colonial', 'modern', 'living
 const errors = []
 const warnings = []
 
-function error(msg) { errors.push(msg); console.error(`✗ ${msg}`) }
-function warn(msg) { warnings.push(msg); console.warn(`⚠ ${msg}`) }
+function error(msg) {
+  errors.push(msg)
+  console.error(`✗ ${msg}`)
+}
+function warn(msg) {
+  warnings.push(msg)
+  console.warn(`⚠ ${msg}`)
+}
 
-function slugOk(s) { return /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(s) }
+function slugOk(s) {
+  return /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(s)
+}
 
 async function main() {
   let raw
@@ -48,7 +56,8 @@ async function main() {
   } else {
     if (version !== 1) warn(`figures.json version is "${version}", expected 1`)
     if (!dataVersion) warn('figures.json: missing dataVersion field (see #64)')
-    if (!existsSync(path.join(ROOT, 'data/CHANGELOG.md'))) warn('data/CHANGELOG.md is missing (see #64)')
+    if (!existsSync(path.join(ROOT, 'data/CHANGELOG.md')))
+      warn('data/CHANGELOG.md is missing (see #64)')
     const seenSlugs = new Set()
     const seenWiki = new Map()
     const seenNameBorn = new Set()
@@ -62,7 +71,8 @@ async function main() {
       }
       if (typeof f.name !== 'string' || !f.name) error(`${where}: name missing`)
       if (typeof f.born !== 'number') error(`${where}: born missing or not a number`)
-      if (f.died !== null && typeof f.died !== 'number') error(`${where}: died must be a number or null`)
+      if (f.died !== null && typeof f.died !== 'number')
+        error(`${where}: died must be a number or null`)
       if (typeof f.field !== 'string' || !f.field) error(`${where}: field missing`)
       if (typeof f.tagline !== 'string' || !f.tagline) error(`${where}: tagline missing`)
       if (typeof f.summary !== 'string' || !f.summary) error(`${where}: summary missing`)
@@ -77,8 +87,10 @@ async function main() {
       if (f.attribution !== null && f.attribution !== undefined) {
         if (typeof f.attribution !== 'object') error(`${where}: attribution must be an object`)
         else {
-          if (typeof f.attribution.source !== 'string' || !f.attribution.source) error(`${where}: attribution.source missing or not a string`)
-          if (typeof f.attribution.url !== 'string' || !f.attribution.url) error(`${where}: attribution.url missing or not a string`)
+          if (typeof f.attribution.source !== 'string' || !f.attribution.source)
+            error(`${where}: attribution.source missing or not a string`)
+          if (typeof f.attribution.url !== 'string' || !f.attribution.url)
+            error(`${where}: attribution.url missing or not a string`)
         }
       }
       if (f.wiki) {
@@ -107,12 +119,16 @@ async function main() {
       if (FIX) {
         orphanSlugs.push(slug)
       } else {
-        error(`images.json: orphan entry for unknown slug "${slug}" (pass --fix to clean up, or run npm run clean:orphan-images --delete)`)
+        error(
+          `images.json: orphan entry for unknown slug "${slug}" (pass --fix to clean up, or run npm run clean:orphan-images --delete)`,
+        )
       }
     }
     if (!img.license) warn(`images.json: ${slug} has no license`)
-    else if (/fair/i.test(img.license)) warn(`images.json: ${slug} is "Fair use" — must not be served (see #95)`)
-    if (img.file && !existsSync(path.join(IMAGES_DIR, img.file))) error(`images.json: ${slug} references missing file "${img.file}"`)
+    else if (/fair/i.test(img.license))
+      warn(`images.json: ${slug} is "Fair use" — must not be served (see #95)`)
+    if (img.file && !existsSync(path.join(IMAGES_DIR, img.file)))
+      error(`images.json: ${slug} references missing file "${img.file}"`)
   }
 
   if (FIX && orphanSlugs.length > 0) {
@@ -124,7 +140,9 @@ async function main() {
     console.log(`✓ Cleaned up ${orphanSlugs.length} orphan images.json entry/entries`)
   }
 
-  console.log(`\nValidated ${figures?.length ?? 0} figures and ${Object.keys(images ?? {}).length} image entries`)
+  console.log(
+    `\nValidated ${figures?.length ?? 0} figures and ${Object.keys(images ?? {}).length} image entries`,
+  )
   console.log(`${errors.length} error(s), ${warnings.length} warning(s)`)
   if (errors.length) {
     console.log('Fix the errors above, then re-run: npm run validate:data')

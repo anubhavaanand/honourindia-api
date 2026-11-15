@@ -3,7 +3,12 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
 const ENDPOINT = 'https://query.wikidata.org/sparql'
-const OUTPUT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data', 'wikidata-figures.json')
+const OUTPUT = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'data',
+  'wikidata-figures.json',
+)
 
 const SPARQL = `
 SELECT ?person ?personLabel ?birth ?death ?occupation ?occupationLabel ?sitelink ?commonsFile ?description
@@ -69,7 +74,10 @@ async function main() {
       body: `query=${encodeURIComponent(SPARQL)}`,
     })
   } catch (err) {
-    console.error('ERROR: Could not reach Wikidata SPARQL endpoint. Is network access available?', err)
+    console.error(
+      'ERROR: Could not reach Wikidata SPARQL endpoint. Is network access available?',
+      err,
+    )
     process.exit(1)
   }
 
@@ -85,7 +93,9 @@ async function main() {
     const get = (key) => (b[key] || {}).value
     const born = get('birth') ? new Date(get('birth')).getFullYear() : null
     const died = get('death') ? new Date(get('death')).getFullYear() : null
-    const wiki = get('sitelink') ? get('sitelink').replace('https://en.wikipedia.org/wiki/', '').replace(/_/g, ' ') : get('personLabel')
+    const wiki = get('sitelink')
+      ? get('sitelink').replace('https://en.wikipedia.org/wiki/', '').replace(/_/g, ' ')
+      : get('personLabel')
     return {
       name: get('personLabel'),
       born,

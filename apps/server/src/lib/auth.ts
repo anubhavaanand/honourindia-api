@@ -44,7 +44,10 @@ interface KeysFile {
   keys: KeyRecord[]
 }
 
-export const DEFAULT_KEY_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../data/keys.json')
+export const DEFAULT_KEY_FILE = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../../../data/keys.json',
+)
 
 let currentKeyFile = DEFAULT_KEY_FILE
 let lastMtimeMs = 0
@@ -107,7 +110,11 @@ export function resetKeyFile(): void {
 
 export function setupKeyWatcher(): void {
   if (fileWatcher) {
-    try { fileWatcher.close() } catch { /* ignore */ }
+    try {
+      fileWatcher.close()
+    } catch {
+      /* ignore */
+    }
     fileWatcher = null
   }
   try {
@@ -124,7 +131,11 @@ export function setupKeyWatcher(): void {
 
 export function closeKeyWatcher(): void {
   if (fileWatcher) {
-    try { fileWatcher.close() } catch { /* ignore */ }
+    try {
+      fileWatcher.close()
+    } catch {
+      /* ignore */
+    }
     fileWatcher = null
   }
 }
@@ -146,9 +157,7 @@ function safeEqual(a: string, b: string): boolean {
 /** The caller's IP, used to group rate limits and failed key attempts. */
 export function clientIp(c: Context<Env>): string {
   return (
-    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ||
-    c.req.header('x-real-ip') ||
-    'local'
+    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() || c.req.header('x-real-ip') || 'local'
   )
 }
 
@@ -227,11 +236,9 @@ export function auth() {
       const identity = clientIp(c)
       const retryAfter = keyFailureRetryAfter(identity)
       if (retryAfter > 0) {
-        return c.json(
-          { error: 'Too many failed API key attempts. Try again later.' },
-          429,
-          { 'Retry-After': String(retryAfter) },
-        )
+        return c.json({ error: 'Too many failed API key attempts. Try again later.' }, 429, {
+          'Retry-After': String(retryAfter),
+        })
       }
 
       const record = getKeyRecord(hashKey(raw))
@@ -239,13 +246,17 @@ export function auth() {
         const failures = recordKeyFailure(identity, Date.now())
         if (failures > MAX_KEY_FAILURES) {
           const retryAfter = keyFailureRetryAfter(identity)
-          return c.json(
-            { error: 'Too many failed API key attempts. Try again later.' },
-            429,
-            { 'Retry-After': String(retryAfter) },
-          )
+          return c.json({ error: 'Too many failed API key attempts. Try again later.' }, 429, {
+            'Retry-After': String(retryAfter),
+          })
         }
-        return c.json({ error: 'Unknown API key. Omit the key for anonymous access, or get one from the project maintainers.' }, 401)
+        return c.json(
+          {
+            error:
+              'Unknown API key. Omit the key for anonymous access, or get one from the project maintainers.',
+          },
+          401,
+        )
       }
       clearKeyFailures(identity)
       c.set('authKey', { id: record.id, name: record.name })

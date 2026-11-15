@@ -50,13 +50,24 @@ for the logs. See [.env.example](.env.example).
 
 - TypeScript strict mode is on for both workspaces; keep it that way.
 - Existing code uses two-space indentation, single quotes, no semicolons, and
-  `const`/`let` only where reassignment is needed.
+  `const`/`let` only where reassignment is needed. Prettier encodes this in
+  [.prettierrc](.prettierrc).
 - Keep the widget dependency-free and small. It is bundled to
   `packages/embed/dist/embed.js`; avoid adding runtime dependencies.
 - Public API responses are JSON only and open CORS by design. Preserve the
   cache headers and attribution fields when changing API code.
 - Prefer small, focused pull requests with a clear title in conventional-commit
   form (`fix:`, `feat:`, `docs:`, `test:`, `chore:`).
+
+Before opening a pull request, run:
+
+```bash
+npm run lint           # eslint, must report no errors
+npm run format:check   # prettier, must report nothing to change
+```
+
+`npm run lint:fix` and `npm run format` apply the fixes for you. CI runs all
+three checks, so a pull request that fails them will not merge.
 
 ## Tests
 
@@ -72,6 +83,7 @@ describe how you verified it manually in the PR description.
 ## Suggesting a figure
 
 You can submit new figures for inclusion in the catalogue either via:
+
 1. **API Endpoint**: `POST /api/v1/figures/submit` with JSON body containing `name`, `born`, `field`, `tagline`, `summary`, and `wiki` (and optional `died`, `quote`, `submitterName`, `submitterEmail`). All submissions enter the moderation queue as pending review.
 2. **GitHub Issue**: Use the [Figure Suggestion template](.github/ISSUE_TEMPLATE/suggest_figure.yml) to submit recommendations directly through GitHub issues.
 

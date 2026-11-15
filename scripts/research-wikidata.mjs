@@ -19,7 +19,8 @@ const ROOT = path.resolve(__dirname, '..')
 const OUT_FILE = path.join(ROOT, 'data', 'wikidata-candidates.json')
 const ENDPOINT = 'https://query.wikidata.org/sparql'
 
-const UA = 'HonourIndia-research/1.0 (billboard project honouring Indian scientists; contact via repository)'
+const UA =
+  'HonourIndia-research/1.0 (billboard project honouring Indian scientists; contact via repository)'
 
 const PAGE_LIMIT = 1000
 const MAX_PAGES = 5 // ~5,000 rows; enough for the 3,000 figure target after filtering
@@ -119,7 +120,10 @@ LIMIT __LIMIT__ OFFSET __OFFSET__
 `
 
 function sparqlPage(offset) {
-  return SPARQL_TEMPLATE.replace('__LIMIT__', String(PAGE_LIMIT)).replace('__OFFSET__', String(offset))
+  return SPARQL_TEMPLATE.replace('__LIMIT__', String(PAGE_LIMIT)).replace(
+    '__OFFSET__',
+    String(offset),
+  )
 }
 
 function binding(b, key) {
@@ -188,7 +192,9 @@ async function main() {
         born: yearOf(binding(b, 'birth')),
         died: yearOf(binding(b, 'death')),
         field: binding(b, 'fields'),
-        wiki: binding(b, 'sitelink') ? decodeURIComponent(binding(b, 'sitelink').replace(/_/g, ' ')) : null,
+        wiki: binding(b, 'sitelink')
+          ? decodeURIComponent(binding(b, 'sitelink').replace(/_/g, ' '))
+          : null,
         commonsFile: binding(b, 'commonsFile'),
         description: binding(b, 'description'),
       })

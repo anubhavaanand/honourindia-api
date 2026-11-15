@@ -42,14 +42,19 @@ export async function findOrphanImages({
   const missingFiles = []
   for (const [slug, img] of Object.entries(images)) {
     if (!figureSlugs.has(slug)) orphanEntries.push(slug)
-    if (img.file && !existsSync(path.join(imagesDir, img.file))) missingFiles.push(`${slug} (${img.file})`)
+    if (img.file && !existsSync(path.join(imagesDir, img.file)))
+      missingFiles.push(`${slug} (${img.file})`)
   }
 
   let diskFiles = []
   if (existsSync(imagesDir)) {
     diskFiles = await readdir(imagesDir)
   }
-  const referencedFiles = new Set(Object.values(images).map((img) => img.file).filter(Boolean))
+  const referencedFiles = new Set(
+    Object.values(images)
+      .map((img) => img.file)
+      .filter(Boolean),
+  )
   const orphanFiles = diskFiles.filter((f) => !referencedFiles.has(f))
 
   return { orphanEntries, missingFiles, orphanFiles, images }
@@ -97,7 +102,9 @@ async function main() {
   for (const f of result.orphanFiles) console.log(`    - public/images/${f}`)
 
   if (DELETE) {
-    console.log(`\nDeleted ${result.deletedEntries} images.json entr(y/ies) and ${result.deletedFiles} file(s).`)
+    console.log(
+      `\nDeleted ${result.deletedEntries} images.json entr(y/ies) and ${result.deletedFiles} file(s).`,
+    )
   } else if (result.orphanEntries.length || result.orphanFiles.length) {
     console.log('\nPass --delete to remove the orphans above.')
   }

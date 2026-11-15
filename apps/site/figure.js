@@ -2,7 +2,7 @@
    Reads the slug from the page URL, fetches the full figure record from the API,
    and renders the detail page. Falls back to a monogram when there's no portrait.
 */
-(function () {
+;(function () {
   'use strict'
 
   // Work relative to the site root so this works at a domain root (/figures/:slug)
@@ -15,7 +15,10 @@
 
   var segments = pathname.split('/').filter(Boolean)
   var lastSegment = segments[segments.length - 1] || ''
-  var slug = (new URLSearchParams(location.search).get('slug') || lastSegment).replace(/\.html$/, '')
+  var slug = (new URLSearchParams(location.search).get('slug') || lastSegment).replace(
+    /\.html$/,
+    '',
+  )
 
   var portrait = document.getElementById('figurePortrait')
   var monogram = document.getElementById('figureMonogram')
@@ -55,23 +58,27 @@
   }
 
   function initials(name) {
-    return (name || '')
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map(function (w) { return w.charAt(0) })
-      .join('')
-      .toUpperCase() || '?'
+    return (
+      (name || '')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(function (w) {
+          return w.charAt(0)
+        })
+        .join('')
+        .toUpperCase() || '?'
+    )
   }
 
   function updateJsonLd(f) {
     var schema = {
       '@context': 'https://schema.org',
       '@type': 'Person',
-      'name': f.name,
-      'description': f.summary || f.tagline || undefined,
-      'jobTitle': f.field || undefined,
-      'sameAs': f.link || f.wikipedia || undefined,
+      name: f.name,
+      description: f.summary || f.tagline || undefined,
+      jobTitle: f.field || undefined,
+      sameAs: f.link || f.wikipedia || undefined,
     }
 
     if (f.born) schema.birthDate = String(f.born)
@@ -117,7 +124,11 @@
     if (f.quote) {
       quoteEl.hidden = false
       quoteEl.innerHTML =
-        '<p>' + escapeHtml(f.quote.text) + '</p><cite>' + escapeHtml(f.quote.source || '') + '</cite>'
+        '<p>' +
+        escapeHtml(f.quote.text) +
+        '</p><cite>' +
+        escapeHtml(f.quote.source || '') +
+        '</cite>'
     } else {
       quoteEl.hidden = true
     }
@@ -136,7 +147,10 @@
     if (f.image) {
       creditEl.hidden = false
       creditEl.textContent =
-        'Photo: ' + (f.image.credit || 'Unknown credit') + ' · ' + (f.image.license || 'All rights reserved')
+        'Photo: ' +
+        (f.image.credit || 'Unknown credit') +
+        ' · ' +
+        (f.image.license || 'All rights reserved')
     } else {
       creditEl.hidden = true
     }
@@ -169,9 +183,15 @@
       if (err && err.status === 404) {
         showNotFound()
       } else if (err && err.status) {
-        showError('Could not load figure (server error ' + err.status + '). Please try again later.', 'Error loading figure')
+        showError(
+          'Could not load figure (server error ' + err.status + '). Please try again later.',
+          'Error loading figure',
+        )
       } else {
-        showError('Could not load figure. Please check your connection and try again.', 'Error loading figure')
+        showError(
+          'Could not load figure. Please check your connection and try again.',
+          'Error loading figure',
+        )
       }
     })
 })()

@@ -25,14 +25,11 @@ describe('GET /billboards/random count validation', () => {
     expect(max.body.billboards).toHaveLength(24)
   })
 
-  it.each(['0', '25', '-1', '2.5', '8abc', ' 8', ''])(
-    'rejects %p with 400',
-    async (count) => {
-      const { status, body } = await get(`/billboards/random?count=${encodeURIComponent(count)}`)
-      expect(status).toBe(400)
-      expect(body.error).toBe('count must be an integer between 1 and 24')
-    },
-  )
+  it.each(['0', '25', '-1', '2.5', '8abc', ' 8', ''])('rejects %p with 400', async (count) => {
+    const { status, body } = await get(`/billboards/random?count=${encodeURIComponent(count)}`)
+    expect(status).toBe(400)
+    expect(body.error).toBe('count must be an integer between 1 and 24')
+  })
 })
 
 describe('GET /openapi', () => {

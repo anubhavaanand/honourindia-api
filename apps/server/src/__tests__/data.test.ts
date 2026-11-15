@@ -1,7 +1,16 @@
 import { describe, it, expect } from 'vitest'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { figures, findBySlug, filterFigures, toBillboard, toSummary, sampleRandom, figuresVersion, ROOT } from '../lib/data.js'
+import {
+  figures,
+  findBySlug,
+  filterFigures,
+  toBillboard,
+  toSummary,
+  sampleRandom,
+  figuresVersion,
+  ROOT,
+} from '../lib/data.js'
 
 describe('data.ts', () => {
   describe('figures', () => {
@@ -93,7 +102,11 @@ describe('data.ts', () => {
         url: 'https://en.wikipedia.org/wiki/C._V._Raman',
         license: 'CC BY-SA 4.0',
       })
-      expect(b.image).toMatchObject({ url: expect.any(String), credit: expect.any(String), license: expect.any(String) })
+      expect(b.image).toMatchObject({
+        url: expect.any(String),
+        credit: expect.any(String),
+        license: expect.any(String),
+      })
     })
 
     it('years for a living figure (died null) shows b. <born>', () => {
@@ -189,7 +202,9 @@ describe('data.ts', () => {
     it('combined filters work', () => {
       const out = filterFigures({ field: 'mathematics', enduring: true, limit: 10, offset: 0 })
       expect(out.length).toBeLessThanOrEqual(10)
-      expect(out.every((f) => f.field.toLowerCase().includes('mathematics') && f.enduring === true)).toBe(true)
+      expect(
+        out.every((f) => f.field.toLowerCase().includes('mathematics') && f.enduring === true),
+      ).toBe(true)
     })
   })
 })

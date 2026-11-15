@@ -39,7 +39,11 @@ describe('import-candidates script (issue #34)', () => {
 
   describe('isLikelyEnduring heuristics', () => {
     it('marks ancient figures as enduring', () => {
-      const candidate = { name: 'Aryabhata', born: 476, description: 'Ancient Indian mathematician' }
+      const candidate = {
+        name: 'Aryabhata',
+        born: 476,
+        description: 'Ancient Indian mathematician',
+      }
       expect(mod.isLikelyEnduring(candidate, 'ancient')).toBe(true)
     })
 

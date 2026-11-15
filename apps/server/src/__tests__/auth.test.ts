@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { hashKey, setKeyFile, resetKeyFile, getKeyRecord, reloadKeys, closeKeyWatcher } from '../lib/auth.js'
+import { hashKey, setKeyFile, resetKeyFile, getKeyRecord, closeKeyWatcher } from '../lib/auth.js'
 
 describe('auth.ts', () => {
   afterEach(() => {
@@ -33,7 +33,13 @@ describe('auth.ts', () => {
       const hash1 = hashKey(key1)
       const initialData = {
         keys: [
-          { id: 'partner-1', name: 'Partner One', hash: hash1, createdAt: '2026-01-01', enabled: true },
+          {
+            id: 'partner-1',
+            name: 'Partner One',
+            hash: hash1,
+            createdAt: '2026-01-01',
+            enabled: true,
+          },
         ],
       }
       fs.writeFileSync(tempKeyFile, JSON.stringify(initialData), 'utf8')
@@ -56,7 +62,13 @@ describe('auth.ts', () => {
       const updatedData = {
         keys: [
           ...initialData.keys,
-          { id: 'partner-2', name: 'Partner Two', hash: hash2, createdAt: '2026-01-02', enabled: true },
+          {
+            id: 'partner-2',
+            name: 'Partner Two',
+            hash: hash2,
+            createdAt: '2026-01-02',
+            enabled: true,
+          },
         ],
       }
       fs.writeFileSync(tempKeyFile, JSON.stringify(updatedData), 'utf8')

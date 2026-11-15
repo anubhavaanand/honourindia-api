@@ -50,7 +50,9 @@ describe('site app.js', () => {
     // embed snippet generated
     const snippetCode = document.querySelector('#snippet code')
     expect(snippetCode.textContent).toContain('<div data-honourindia></div>')
-    expect(snippetCode.textContent).toContain('<script src="http://localhost/embed.js" async></script>')
+    expect(snippetCode.textContent).toContain(
+      '<script src="http://localhost/embed.js" async></script>',
+    )
     expect(snippetCode.innerHTML).toContain('data-honourindia')
     expect(snippetCode.innerHTML).toContain('http://localhost/embed.js')
     expect(snippetCode.innerHTML).not.toContain('data-theme=') // dark is default
@@ -160,7 +162,9 @@ describe('site app.js', () => {
 
     const cards = document.querySelectorAll('#figureGrid .figure-card')
     expect(cards.length).toBe(1)
-    expect(cards[0].getAttribute('href')).toBe('https://user.github.io/my-subpath/figures/aryabhata')
+    expect(cards[0].getAttribute('href')).toBe(
+      'https://user.github.io/my-subpath/figures/aryabhata',
+    )
   })
 
   it('retries preview mounting when embed.js loads asynchronously (issue #99)', async () => {
@@ -366,7 +370,8 @@ describe('site app.js', () => {
 
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ count: res.length, total: initialFigures.length, figures: res }),
+        json: () =>
+          Promise.resolve({ count: res.length, total: initialFigures.length, figures: res }),
       })
     })
 

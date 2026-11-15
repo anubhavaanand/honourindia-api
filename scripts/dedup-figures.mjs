@@ -56,7 +56,9 @@ async function main() {
       }
     }
 
-    const key = `${String(f.name ?? '').trim().toLowerCase()}|${f.born ?? ''}`
+    const key = `${String(f.name ?? '')
+      .trim()
+      .toLowerCase()}|${f.born ?? ''}`
     if (nameBornSeen.has(key)) {
       dupNameBorn.push({ name: f.name, born: f.born, firstSeenAs: nameBornSeen.get(key) })
     } else {
@@ -87,7 +89,9 @@ async function main() {
     console.log(`  - "${d.name}" born ${d.born} (first seen as "${d.firstSeenAs}")`)
   }
   const total = dupSlugs.length + dupWiki.length + dupNameBorn.length
-  console.log(`\n${total} potential duplicate group(s) flagged. No records were changed. Review ${REPORT_FILE} before merging.`)
+  console.log(
+    `\n${total} potential duplicate group(s) flagged. No records were changed. Review ${REPORT_FILE} before merging.`,
+  )
 
   await writeFile(REPORT_FILE, JSON.stringify(report, null, 2) + '\n')
 }

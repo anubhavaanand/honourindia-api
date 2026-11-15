@@ -33,11 +33,18 @@
   var detailEl = document.querySelector('.figure-detail')
   var loadingEl = document.getElementById('figureLoading')
 
-  function showNotFound() {
-    if (notFoundEl) notFoundEl.hidden = false
+  function showError(msg, title) {
+    if (notFoundEl) {
+      notFoundEl.hidden = false
+      notFoundEl.textContent = msg
+    }
     if (detailEl) detailEl.hidden = true
     if (loadingEl) loadingEl.hidden = true
-    document.title = 'Figure not found · Honour India'
+    document.title = (title || 'Error') + ' · Honour India'
+  }
+
+  function showNotFound() {
+    showError('Figure not found', 'Figure not found')
   }
 
   function escapeHtml(s) {
@@ -114,12 +121,29 @@
 
   fetch(new URL('figures/' + encodeURIComponent(slug), API_BASE))
     .then(function (r) {
-      if (!r.ok) throw new Error('Figure not found')
+      if (r.status === 404) {
+        var notFoundErr = new Error('not_found')
+        notFoundErr.status = 404
+        throw notFoundErr
+      }
+      if (!r.ok) {
+        var serverErr = new Error('server_error')
+        serverErr.status = r.status
+        throw serverErr
+      }
       return r.json()
     })
     .then(function (f) {
       if (loadingEl) loadingEl.hidden = true
       render(f)
     })
-    .catch(showNotFound)
+    .catch(function (err) {
+      if (err && err.status === 404) {
+        showNotFound()
+      } else if (err && err.status) {
+        showError('Could not load figure (server error ' + err.status + '). Please try again later.', 'Error loading figure')
+      } else {
+        showError('Could not load figure. Please check your connection and try again.', 'Error loading figure')
+      }
+    })
 })()

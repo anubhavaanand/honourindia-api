@@ -92,7 +92,7 @@ describe('figure detail page (apps/site/figure.js)', () => {
     expect(document.getElementById('figureNotFound').hidden).toBe(true)
   })
 
-  it('shows not-found when the fetch fails', async () => {
+  it('shows not-found when the figure returns 404 (issue #23)', async () => {
     const { resolve } = stubFetch()
     vi.resetModules()
 
@@ -103,7 +103,48 @@ describe('figure detail page (apps/site/figure.js)', () => {
     await new Promise((r) => setTimeout(r, 0))
 
     expect(document.getElementById('figureLoading').hidden).toBe(true)
-    expect(document.getElementById('figureNotFound').hidden).toBe(false)
+    const notFoundEl = document.getElementById('figureNotFound')
+    expect(notFoundEl.hidden).toBe(false)
+    expect(notFoundEl.textContent).toBe('Figure not found')
+    expect(document.title).toContain('Figure not found')
+    expect(document.querySelector('.figure-detail').hidden).toBe(true)
+  })
+
+  it('distinguishes server error (500) from 404 (issue #23)', async () => {
+    const { resolve } = stubFetch()
+    vi.resetModules()
+
+    // @ts-expect-error test harness mock
+    await import('../figure.js')
+
+    resolve({ ok: false, status: 500 })
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(document.getElementById('figureLoading').hidden).toBe(true)
+    const notFoundEl = document.getElementById('figureNotFound')
+    expect(notFoundEl.hidden).toBe(false)
+    expect(notFoundEl.textContent).toContain('server error 500')
+    expect(document.title).toContain('Error loading figure')
+    expect(document.querySelector('.figure-detail').hidden).toBe(true)
+  })
+
+  it('distinguishes network failure from 404 (issue #23)', async () => {
+    let rejectFetch
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() => new Promise((_, reject) => { rejectFetch = reject }))
+    vi.resetModules()
+
+    // @ts-expect-error test harness mock
+    await import('../figure.js')
+
+    rejectFetch(new TypeError('Failed to fetch'))
+    await new Promise((r) => setTimeout(r, 0))
+
+    expect(document.getElementById('figureLoading').hidden).toBe(true)
+    const notFoundEl = document.getElementById('figureNotFound')
+    expect(notFoundEl.hidden).toBe(false)
+    expect(notFoundEl.textContent).toContain('check your connection')
+    expect(document.title).toContain('Error loading figure')
     expect(document.querySelector('.figure-detail').hidden).toBe(true)
   })
 

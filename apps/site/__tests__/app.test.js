@@ -30,6 +30,7 @@ describe('site app.js', () => {
         name: 'C. V. Raman',
         field: 'Physics',
         years: '1888–1970',
+        era: 'colonial',
         link: 'https://en.wikipedia.org/wiki/C._V._Raman',
         image: null,
       },
@@ -64,6 +65,9 @@ describe('site app.js', () => {
     expect(document.getElementById('figuresCount').textContent).toContain('28')
     const cards = document.querySelectorAll('#figureGrid .figure-card')
     expect(cards.length).toBe(figures.length)
+    const eraBadge = document.querySelector('#figureGrid .figure-card .figure-era-badge')
+    expect(eraBadge).toBeTruthy()
+    expect(eraBadge.textContent).toBe('Colonial')
 
     // switching themes re-renders the preview (calls mount again)
     document.getElementById('optTheme').value = 'light'

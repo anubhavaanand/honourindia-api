@@ -26,6 +26,7 @@
     "clean:orphan-images:delete": "node scripts/clean-orphan-images.mjs --delete",
     "validate:data": "node scripts/validate-data.mjs",
     "validate:data:fix": "node scripts/validate-data.mjs --fix",
+    "check:size": "node scripts/check-bundle-size.mjs",
     "import:candidates": "node scripts/import-candidates.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run"

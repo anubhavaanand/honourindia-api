@@ -528,4 +528,40 @@ describe('widget (packages/embed)', () => {
       observer?.disconnect()
     })
   })
+
+  it('provides ARIA live region that announces figure changes (issue #10)', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by widget bundle
+    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
+
+    const liveRegion = host.shadowRoot!.querySelector('.hi-sr-only[aria-live="polite"]')!
+    expect(liveRegion).toBeTruthy()
+    expect(liveRegion.getAttribute('aria-atomic')).toBe('true')
+
+    // Let the fetch + show cycle flush
+    await new Promise((r) => setTimeout(r, 0))
+
+    // Should announce the active figure
+    expect(liveRegion.textContent).toBeTruthy()
+    const activeText = liveRegion.textContent
+    expect(
+      activeText === 'C. V. Raman, Physics' || activeText === 'Srinivasa Ramanujan, Mathematics'
+    ).toBe(true)
+
+    // Step to the next figure
+    const nextBtn = host.shadowRoot!.querySelector('.hi-next') as HTMLButtonElement
+    nextBtn.click()
+    await new Promise((r) => setTimeout(r, 0))
+
+    const updatedText = liveRegion.textContent
+    expect(
+      updatedText === 'C. V. Raman, Physics' || updatedText === 'Srinivasa Ramanujan, Mathematics'
+    ).toBe(true)
+
+    handle.destroy()
+  })
 })

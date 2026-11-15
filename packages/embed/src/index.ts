@@ -304,9 +304,14 @@ const CSS = `
 @media (prefers-reduced-motion: reduce) {
   .hi-layer { transition: none; }
 }
+
+.hi-sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
 `
 
-function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTMLElement; card: HTMLAnchorElement; layers: [HTMLElement, HTMLElement]; navPrev: HTMLButtonElement; navNext: HTMLButtonElement; errorBox: HTMLElement; loading: HTMLElement } {
+function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTMLElement; card: HTMLAnchorElement; layers: [HTMLElement, HTMLElement]; navPrev: HTMLButtonElement; navNext: HTMLButtonElement; errorBox: HTMLElement; loading: HTMLElement; liveRegion: HTMLElement } {
   const root = document.createElement('div')
   root.className = `hi hi--${size} hi--${theme}`
   root.setAttribute('role', 'region')
@@ -375,8 +380,13 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
     '<div class="hi-loading-brand">सम्मान · Honour India</div>' +
     '<div class="hi-loading-pulse"></div>'
 
-  root.append(progress, card, navPrev, navNext, errorBox, loading)
-  return { root, progress, card, layers: [layers[0]!, layers[1]!], navPrev, navNext, errorBox, loading }
+  const liveRegion = document.createElement('div')
+  liveRegion.className = 'hi-sr-only'
+  liveRegion.setAttribute('aria-live', 'polite')
+  liveRegion.setAttribute('aria-atomic', 'true')
+
+  root.append(progress, card, navPrev, navNext, errorBox, loading, liveRegion)
+  return { root, progress, card, layers: [layers[0]!, layers[1]!], navPrev, navNext, errorBox, loading, liveRegion }
 }
 
 function initials(name: string): string {
@@ -688,6 +698,7 @@ class BillboardWidget {
     outgoing.classList.remove('is-active')
     outgoing.setAttribute('aria-hidden', 'true')
     this.active = this.active === 0 ? 1 : 0
+    this.dom.liveRegion.textContent = `${b.name}, ${b.field}`
 
     // refresh near the end of the queue so rotation never stalls
     if (this.queue.length - this.index <= 3) void this.fetchBatch()

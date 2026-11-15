@@ -87,12 +87,32 @@ app.get('/embed.js', (c) =>
   serveFile(EMBED_JS, isProd ? 'public, max-age=600, stale-while-revalidate=3600' : 'no-cache'),
 )
 
+const ALLOWED_IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif', '.ico'])
+
 // Portraits (seeded from Wikimedia Commons; per-image license in data/images.json).
 app.get('/images/*', (c) => {
-  const rel = c.req.path.replace(/^\/images\//, '')
-  const safe = path.normalize(rel).replace(/^(\.\.[/\\])+/, '')
+  let rel: string
+  try {
+    rel = decodeURIComponent(c.req.path.replace(/^\/images\//, ''))
+  } catch {
+    return c.text('Bad request', 400)
+  }
+
+  const target = path.resolve(IMAGES_DIR, rel)
+  const relToImages = path.relative(IMAGES_DIR, target)
+
+  // Disallow paths escaping IMAGES_DIR (e.g. ../, absolute paths, or self)
+  if (relToImages.startsWith('..') || path.isAbsolute(relToImages) || relToImages === '') {
+    return c.text('Forbidden: invalid image path', 403)
+  }
+
+  const ext = path.extname(target).toLowerCase()
+  if (!ALLOWED_IMAGE_EXTS.has(ext)) {
+    return c.text('Not found', 404)
+  }
+
   return serveFile(
-    path.join(IMAGES_DIR, safe),
+    target,
     'public, max-age=86400, stale-while-revalidate=604800',
   )
 })

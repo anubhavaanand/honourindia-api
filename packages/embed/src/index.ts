@@ -164,7 +164,7 @@ const CSS = `
   color: #ffb454; margin-bottom: 4px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.hi--light .hi-field { color: #b05e00; }
+.hi--light .hi-field { color: #995100; }
 .hi-name {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 700; line-height: 1.12;
@@ -288,7 +288,7 @@ const CSS = `
   letter-spacing: .08em; text-transform: uppercase; font-size: .72rem; opacity: .75;
 }
 .hi--dark .hi-loading-brand { color: #ffb454; }
-.hi--light .hi-loading-brand { color: #b05e00; }
+.hi--light .hi-loading-brand { color: #995100; }
 .hi-loading-pulse {
   width: 24px; height: 24px; border: 2px solid currentColor; border-bottom-color: transparent;
   border-radius: 50%; animation: hi-pulse .7s linear infinite;

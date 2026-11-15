@@ -203,6 +203,10 @@ components:
       type: apiKey
       in: query
       name: key
+      deprecated: true
+      description: >-
+        Deprecated. Query strings leak into access logs, browser history and
+        Referer headers — use the Authorization: Bearer header instead.
   schemas:
     ImageMeta:
       type: object

@@ -52,14 +52,28 @@ app.use('*', securityHeaders())
 app.use('*', requestId())
 
 // Public API: compression, ETag, open CORS, optional-key auth, key-aware rate limiting.
+// CORS runs first so that even the short-circuit responses (401 from auth, 429 from
+// the rate limiter) carry the CORS headers — without them a browser embedder sees an
+// opaque network error instead of the status code.
 app.use('/api/*', compress())
 app.use('/api/*', etag())
-app.use('/api/*', auth())
-app.use('/api/*', rateLimit())
 // Public API CORS: Wildcard origin ('*') is intentional and required by design
 // because Honour India is a public embeddable billboard network. Restricting origins
 // would break third-party website integrations. No user credentials/cookies are accepted.
-app.use('/api/*', cors({ origin: '*' }))
+// The widget sends its API key as an Authorization header, so that header is allowed
+// explicitly; maxAge lets browsers cache the preflight instead of sending one per
+// fetch; exposeHeaders lets embedders read the deprecation notice from JavaScript.
+app.use(
+  '/api/*',
+  cors({
+    origin: '*',
+    allowHeaders: ['Authorization', 'Content-Type'],
+    exposeHeaders: ['Deprecation', 'Warning'],
+    maxAge: 600,
+  }),
+)
+app.use('/api/*', auth())
+app.use('/api/*', rateLimit())
 app.route('/api/v1', api)
 
 // Rate limiting for non-API endpoints (/embed.js, /images/*, /figures/*, and site routes).

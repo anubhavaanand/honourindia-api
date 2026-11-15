@@ -520,7 +520,7 @@ class BillboardWidget {
   private intervalMs: number
   private preloadTimeout: number
   private api: string
-  private keyQuery: string
+  private apiKey: string
   private theme: Theme
   private size: Size
   private lazyLoad: boolean
@@ -533,7 +533,7 @@ class BillboardWidget {
   constructor(host: Element, opts: MountOptions) {
     this.host = host
     this.api = opts.api ?? defaultApi()
-    this.keyQuery = opts.key ? `&key=${encodeURIComponent(opts.key)}` : ''
+    this.apiKey = opts.key ?? ''
     this.theme = opts.theme ?? 'dark'
     this.size = opts.size ?? 'rectangle'
     this.lazyLoad = opts.lazyLoad !== false
@@ -645,9 +645,9 @@ class BillboardWidget {
       refetchNeeded = true
     }
     if (opts.key !== undefined) {
-      const newKeyQuery = opts.key ? `&key=${encodeURIComponent(opts.key)}` : ''
-      if (newKeyQuery !== this.keyQuery) {
-        this.keyQuery = newKeyQuery
+      const newKey = opts.key
+      if (newKey !== this.apiKey) {
+        this.apiKey = newKey
         refetchNeeded = true
       }
     }
@@ -680,7 +680,12 @@ class BillboardWidget {
         return
       }
       try {
-        const res = await fetch(`${this.api}/billboards/random?count=${BATCH_SIZE}${this.keyQuery}`)
+        // The API key travels in the Authorization header, never in the query
+        // string: query strings end up in access logs, browser history and
+        // Referer headers.
+        const res = await fetch(`${this.api}/billboards/random?count=${BATCH_SIZE}`, {
+          headers: this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {},
+        })
         if (res.status === 429) {
           retries++
           const waitMs = parseRetryAfter(res.headers?.get?.('Retry-After'))

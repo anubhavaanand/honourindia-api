@@ -176,13 +176,22 @@ exist for partners and heavy consumers:
 ```bash
 npm run issue-key -- --name "Partner App"   # prints the key ONCE
 curl -H "Authorization: Bearer hi_…" https://host/api/v1/whoami
-curl "https://host/api/v1/billboards/random?count=8&key=hi_…"   # also accepted
+```
+
+Pass the key in the `Authorization: Bearer` header. The `?key=` query
+parameter is **deprecated** — it still works, but the response carries
+`Deprecation: true` and a `Warning` header, because query strings leak into
+access logs, browser history and `Referer` headers:
+
+```bash
+curl "https://host/api/v1/billboards/random?count=8&key=hi_…"   # deprecated
 ```
 
 Keys are stored **only as sha-256 hashes** in `data/keys.json` (safe to
 commit — the plaintext is shown once at issuance and never stored). Embedders
 can pass `data-key="hi_…"` on the billboard container to use a key from the
-widget. Restart the server after issuing keys.
+widget — the widget sends it to the API as an `Authorization` header. Restart
+the server after issuing keys.
 
 Example billboard:
 

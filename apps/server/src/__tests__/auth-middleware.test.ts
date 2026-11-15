@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { auth } from '../lib/auth.js'
+import { app } from '../index.js'
 
-function makeContext(authHeader?: string) {
+function makeContext(authHeader?: string, queryKey?: string) {
   const headers: Record<string, string> = {}
   let captured: { body: any; status: number; httpHeaders: Record<string, string> } | null = null
   const c: any = {
@@ -10,7 +11,7 @@ function makeContext(authHeader?: string) {
         if (name === 'authorization') return authHeader
         return undefined
       },
-      query: () => undefined,
+      query: (name: string) => (name === 'key' ? queryKey : undefined),
     },
     get: (name: string) => (name === 'authKey' ? c.authKey : undefined),
     set: (name: string, value: unknown) => {
@@ -69,5 +70,53 @@ describe('auth middleware', () => {
     expect(res).toBeUndefined()
     expect(nextCalled).toBe(true)
     expect(c.authKey).toBeNull()
+  })
+
+  it('sets Deprecation and Warning headers when API key is passed via query string', async () => {
+    const { c, headers } = makeContext(undefined, 'some-key')
+    await auth()(c, () => Promise.resolve())
+    expect(headers()['Deprecation']).toBe('true')
+    expect(headers()['Warning']).toContain('query parameter is deprecated')
+  })
+
+  it('does not mark the Authorization header as deprecated', async () => {
+    const { c, headers } = makeContext('Bearer some-key')
+    await auth()(c, () => Promise.resolve())
+    expect(headers()['Deprecation']).toBeUndefined()
+    expect(headers()['Warning']).toBeUndefined()
+  })
+
+  it('announces the deprecation whenever the key appears in the URL', async () => {
+    const { c, headers } = makeContext('Bearer header-key', 'query-key')
+    await auth()(c, () => Promise.resolve())
+    // The key is in the URL either way — that is what leaks.
+    expect(headers()['Deprecation']).toBe('true')
+    expect(headers()['Warning']).toContain('query parameter is deprecated')
+  })
+
+  it('prefers the Authorization header over a query-string key', async () => {
+    const { c, headers } = makeContext('Bearer wrong-key', 'some-key')
+    const res = await auth()(c, () => Promise.resolve())
+    // The header key is the one that counts — and it is invalid.
+    expect(res!.status).toBe(401)
+    expect(headers()['Deprecation']).toBe('true')
+  })
+})
+
+describe('query-string key deprecation (issue #44)', () => {
+  it('announces the deprecation on a real API response', async () => {
+    const res = await app.request('/api/v1/whoami?key=hi_not_a_real_key')
+    expect(res.status).toBe(401)
+    expect(res.headers.get('Deprecation')).toBe('true')
+    expect(res.headers.get('Warning')).toContain('query parameter is deprecated')
+  })
+
+  it('leaves header-authenticated requests unflagged', async () => {
+    const res = await app.request('/api/v1/whoami', {
+      headers: { Authorization: 'Bearer hi_not_a_real_key' },
+    })
+    expect(res.status).toBe(401)
+    expect(res.headers.get('Deprecation')).toBeNull()
+    expect(res.headers.get('Warning')).toBeNull()
   })
 })

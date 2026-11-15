@@ -70,6 +70,8 @@ app.get('/styles.css', (c) => serveFile(path.join(SITE_DIR, 'styles.css'), isPro
 app.get('/app.js', (c) => serveFile(path.join(SITE_DIR, 'app.js'), isProd ? 'public, max-age=600' : 'no-cache'))
 app.get('/figure.js', (c) => serveFile(path.join(SITE_DIR, 'figure.js'), isProd ? 'public, max-age=600' : 'no-cache'))
 app.get('/figures/:slug', (c) => serveFile(path.join(SITE_DIR, 'figure.html'), 'no-cache'))
+app.get('/favicon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
+app.get('/apple-touch-icon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
 
 app.get('/healthz', (c) => c.json({ ok: true }))
 

@@ -564,4 +564,54 @@ describe('widget (packages/embed)', () => {
 
     handle.destroy()
   })
+
+  it('sets loading="lazy" on portrait images by default and respects lazyLoad option (issue #12)', async () => {
+    const figuresWithImg = [
+      {
+        slug: 'cv-raman',
+        name: 'C. V. Raman',
+        years: '1888–1970',
+        field: 'Physics',
+        tagline: 'Discovered Raman effect.',
+        quote: null,
+        image: { url: '/images/portraits/cv-raman.webp' },
+        link: 'https://en.wikipedia.org/wiki/C._V._Raman',
+      },
+    ]
+
+    fetchMock.mockReturnValue(jsonResponse({ billboards: figuresWithImg }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      size: 'poster',
+      preloadTimeout: 10,
+    })
+
+    await new Promise((r) => setTimeout(r, 20))
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    const img = active.querySelector('img') as HTMLImageElement
+    expect(img).toBeTruthy()
+    // loading attribute should be "lazy" by default
+    expect(img.loading).toBe('lazy')
+
+    // Disabling lazyLoad sets loading to eager
+    const eagerHost = document.createElement('div')
+    document.body.appendChild(eagerHost)
+    const handleEager = window.HonourIndia!.mount(eagerHost, {
+      api: 'http://localhost/api/v1',
+      lazyLoad: false,
+      preloadTimeout: 10,
+    })
+    await new Promise((r) => setTimeout(r, 20))
+    const eagerImg = eagerHost.shadowRoot!.querySelector('.hi-layer.is-active img') as HTMLImageElement
+    expect(eagerImg.loading).toBe('eager')
+
+    handle.destroy()
+    handleEager.destroy()
+  })
 })

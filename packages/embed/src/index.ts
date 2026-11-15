@@ -40,6 +40,8 @@ interface MountOptions {
   key?: string
   /** Optional image preload timeout in ms, default 8000 (0 to disable timeout and wait for load) */
   preloadTimeout?: number
+  /** Optional lazy loading for portrait images (default true) */
+  lazyLoad?: boolean
 }
 
 interface MountHandle {
@@ -398,7 +400,7 @@ function initials(name: string): string {
     .join('')
 }
 
-function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string): void {
+function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string, lazy = true): void {
   const media = layer.querySelector<HTMLElement>('.hi-media')!
   const field = layer.querySelector<HTMLElement>('.hi-field')!
   const name = layer.querySelector<HTMLElement>('.hi-name')!
@@ -430,7 +432,7 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string): void {
   if (b.image) {
     const img = document.createElement('img')
     img.alt = `Portrait of ${b.name}`
-    img.loading = 'eager'
+    img.loading = lazy ? 'lazy' : 'eager'
     img.decoding = 'async'
     const fullUrl = new URL(b.image.url, baseUrl).toString()
     img.src = fullUrl
@@ -506,6 +508,9 @@ class BillboardWidget {
   private keyQuery: string
   private theme: Theme
   private size: Size
+  private lazyLoad: boolean
+  private inView = true
+  private observer: IntersectionObserver | null = null
   private dom: ReturnType<typeof buildDom>
   private shadow: ShadowRoot
   private host: Element
@@ -516,10 +521,31 @@ class BillboardWidget {
     this.keyQuery = opts.key ? `&key=${encodeURIComponent(opts.key)}` : ''
     this.theme = opts.theme ?? 'dark'
     this.size = opts.size ?? 'rectangle'
+    this.lazyLoad = opts.lazyLoad !== false
     const interval = clamp(opts.interval ?? DEFAULT_INTERVAL, MIN_INTERVAL, MAX_INTERVAL)
     this.intervalMs = interval * 1000
     this.preloadTimeout = opts.preloadTimeout !== undefined ? Math.max(0, opts.preloadTimeout) : DEFAULT_PRELOAD_TIMEOUT
     this.auto = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      this.inView = false
+      this.observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const wasInView = this.inView
+            this.inView = true
+            if (!wasInView && !this.destroyed && this.queue.length > 0) {
+              if (this.index < 0) void this.show(0)
+              else this.schedule()
+            }
+          } else {
+            this.inView = false
+            this.pause()
+          }
+        }
+      })
+      this.observer.observe(this.host)
+    }
 
     this.shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' })
     this.shadow.innerHTML = ''
@@ -580,6 +606,10 @@ class BillboardWidget {
 
     if (opts.preloadTimeout !== undefined) {
       this.preloadTimeout = Math.max(0, opts.preloadTimeout)
+    }
+
+    if (opts.lazyLoad !== undefined) {
+      this.lazyLoad = opts.lazyLoad
     }
 
     let refetchNeeded = false
@@ -686,12 +716,12 @@ class BillboardWidget {
     if (this.queue.length === 0) return
     this.index = ((index % this.queue.length) + this.queue.length) % this.queue.length
     const b = this.queue[this.index]!
-    if (!resumeOnly) await preload(b, this.api, this.preloadTimeout)
+    if (!resumeOnly && (this.inView || !this.lazyLoad)) await preload(b, this.api, this.preloadTimeout)
 
     if (this.destroyed) return
     const incoming = this.dom.layers[this.active === 0 ? 1 : 0]!
     const outgoing = this.dom.layers[this.active]!
-    fillLayer(incoming, b, this.api)
+    fillLayer(incoming, b, this.api, this.lazyLoad)
     this.dom.card.href = b.link
     incoming.classList.add('is-active')
     incoming.setAttribute('aria-hidden', 'false')
@@ -733,6 +763,10 @@ class BillboardWidget {
   destroy(): void {
     this.destroyed = true
     this.clearTimer()
+    if (this.observer) {
+      this.observer.disconnect()
+      this.observer = null
+    }
     document.removeEventListener('visibilitychange', this.onVisibility)
     this.shadow.innerHTML = ''
   }
@@ -752,6 +786,7 @@ function readDataset(el: Element): MountOptions {
   const ds = (el as HTMLElement).dataset
   const interval = ds.interval !== undefined ? Number(ds.interval) : undefined
   const preloadTimeout = ds.preloadTimeout !== undefined ? Number(ds.preloadTimeout) : undefined
+  const lazyLoad = ds.lazyLoad !== undefined ? ds.lazyLoad !== 'false' : undefined
   return {
     api: ds.api,
     theme: ds.theme === 'light' ? 'light' : ds.theme === 'dark' ? 'dark' : undefined,
@@ -759,6 +794,7 @@ function readDataset(el: Element): MountOptions {
     interval: Number.isFinite(interval) ? interval : undefined,
     key: ds.key,
     preloadTimeout: Number.isFinite(preloadTimeout) ? preloadTimeout : undefined,
+    lazyLoad,
   }
 }
 

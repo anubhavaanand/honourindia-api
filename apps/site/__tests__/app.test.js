@@ -239,4 +239,67 @@ describe('site app.js', () => {
     const previewMount = document.getElementById('previewMount')
     expect(previewMount.textContent).toContain('Could not load the Honour India widget')
   })
+
+  it('supports data-api and data-key options in embed playground (issue #26)', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <input id="optApi" type="url" value="" />
+      <input id="optKey" type="text" value="" />
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+    `
+
+    Object.defineProperty(window, 'location', {
+      value: { href: 'http://localhost/' },
+      configurable: true,
+    })
+
+    const mountMock = vi.fn(() => ({ destroy: vi.fn() }))
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: mountMock }
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ count: 0, figures: [] }) }),
+    )
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+
+    const optApi = document.getElementById('optApi')
+    const optKey = document.getElementById('optKey')
+
+    optApi.value = 'https://custom-api.example.com/api/v1'
+    optApi.dispatchEvent(new Event('input'))
+
+    expect(mountMock).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({ api: 'https://custom-api.example.com/api/v1' }),
+    )
+    let snippetCode = document.querySelector('#snippet code')
+    expect(snippetCode.textContent).toContain('data-api="https://custom-api.example.com/api/v1"')
+    expect(snippetCode.textContent).not.toContain('data-key=')
+
+    optKey.value = 'my-test-key'
+    optKey.dispatchEvent(new Event('input'))
+
+    expect(mountMock).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        api: 'https://custom-api.example.com/api/v1',
+        key: 'my-test-key',
+      }),
+    )
+    snippetCode = document.querySelector('#snippet code')
+    expect(snippetCode.textContent).toContain('data-api="https://custom-api.example.com/api/v1"')
+    expect(snippetCode.textContent).toContain('data-key="my-test-key"')
+  })
 })

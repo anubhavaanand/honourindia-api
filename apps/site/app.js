@@ -27,14 +27,23 @@
   var optSize = required('optSize')
   var optInterval = required('optInterval')
   var optIntervalOut = required('optIntervalOut')
+  var optApi = document.getElementById('optApi')
+  var optKey = document.getElementById('optKey')
   var copyBtn = required('copySnippet')
 
   function currentConfig() {
-    return {
+    var cfg = {
       theme: optTheme.value,
       size: optSize.value,
       interval: Number(optInterval.value),
     }
+    if (optApi && optApi.value.trim()) {
+      cfg.api = optApi.value.trim()
+    }
+    if (optKey && optKey.value.trim()) {
+      cfg.key = optKey.value.trim()
+    }
+    return cfg
   }
 
   function snippetFor(cfg) {
@@ -42,6 +51,8 @@
     if (cfg.theme !== 'dark') attrs += ' data-theme="' + cfg.theme + '"'
     if (cfg.size !== 'rectangle') attrs += ' data-size="' + cfg.size + '"'
     if (cfg.interval !== 8) attrs += ' data-interval="' + cfg.interval + '"'
+    if (cfg.api) attrs += ' data-api="' + cfg.api + '"'
+    if (cfg.key) attrs += ' data-key="' + cfg.key + '"'
     return (
       '<div data-honourindia' + attrs + '></div>\n' +
       '<script src="' + EMBED_ORIGIN + '/embed.js" async><' + '/script>'
@@ -92,6 +103,8 @@
   optTheme.addEventListener('change', renderPreview)
   optSize.addEventListener('change', renderPreview)
   optInterval.addEventListener('input', renderPreview)
+  if (optApi) optApi.addEventListener('input', renderPreview)
+  if (optKey) optKey.addEventListener('input', renderPreview)
 
   copyBtn.addEventListener('click', function () {
     navigator.clipboard.writeText(snippetFor(currentConfig())).then(function () {

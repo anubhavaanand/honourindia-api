@@ -52,6 +52,15 @@ describe('GET /openapi', () => {
     const text = await res.text()
     expect(text).toContain('openapi: 3.1.0')
   })
+
+  it('GET /meta returns metadata with dataVersion (issue #64)', async () => {
+    const res = await api.request('/meta')
+    expect(res.status).toBe(200)
+    const body = (await res.json()) as any
+    expect(body.name).toBe('Honour India')
+    expect(body.dataVersion).toBe('1.2.0')
+    expect(body.figures).toBeGreaterThan(0)
+  })
 })
 
 describe('ETag and conditional requests', () => {

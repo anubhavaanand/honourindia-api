@@ -41,6 +41,8 @@ interface ImageMeta {
 
 interface FiguresFile {
   version: number
+  dataVersion?: string
+  updatedAt?: string
   figures: Array<Omit<FigureRecord, 'image'>>
 }
 
@@ -141,8 +143,13 @@ function validateFigure(f: unknown, index: number): void {
   }
 }
 
+export let figuresVersion = '1.0.0'
+
 function loadFigures(): FigureRecord[] {
   const raw = JSON.parse(readFileSync(path.join(DATA_DIR, 'figures.json'), 'utf8')) as FiguresFile
+  if (raw.dataVersion) {
+    figuresVersion = raw.dataVersion
+  }
 
   if (!Array.isArray(raw.figures)) {
     throw new Error('figures.json: top-level "figures" key must be an array')

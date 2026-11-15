@@ -225,9 +225,10 @@ pre {
 .figure-card:hover { transform: translateY(-3px); border-color: var(--line-strong); text-decoration: none; }
 .figure-thumb { aspect-ratio: 1 / 1; background-size: cover; background-position: 50% 20%; background-color: var(--bg-raise); }
 .figure-body { padding: 12px 14px 14px; }
+.figure-field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; gap: 8px; }
 .figure-field {
   text-transform: uppercase; letter-spacing: .14em; font-size: .6rem;
-  color: var(--saffron); font-weight: 600; margin-bottom: 5px;
+  color: var(--saffron); font-weight: 600; margin-bottom: 0;
 }
 .figure-name { font-family: var(--serif); font-weight: 600; font-size: 1.02rem; margin: 0 0 4px; letter-spacing: .002em; }
 .figure-years { color: var(--ink-faint); font-size: .73rem; }

@@ -138,9 +138,20 @@
 
         var body = document.createElement('div')
         body.className = 'figure-body'
+        var fieldRow = document.createElement('div')
+        fieldRow.className = 'figure-field-row'
         var field = document.createElement('div')
         field.className = 'figure-field'
         field.textContent = f.field
+        fieldRow.appendChild(field)
+
+        if (f.era) {
+          var era = document.createElement('span')
+          era.className = 'figure-era-badge'
+          era.textContent = f.era.charAt(0).toUpperCase() + f.era.slice(1)
+          fieldRow.appendChild(era)
+        }
+
         var name = document.createElement('h3')
         name.className = 'figure-name'
         name.textContent = f.name
@@ -148,7 +159,7 @@
         years.className = 'figure-years'
         years.textContent = f.years || ''
 
-        body.append(field, name, years)
+        body.append(fieldRow, name, years)
         a.append(thumb, body)
         grid.appendChild(a)
       })

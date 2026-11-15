@@ -4,7 +4,18 @@ import { fileURLToPath } from 'node:url'
 import { randomBytes } from 'node:crypto'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const SUBMISSIONS_FILE = path.resolve(__dirname, '../../../../data/submissions.json')
+const DEFAULT_SUBMISSIONS_FILE = path.resolve(__dirname, '../../../../data/submissions.json')
+
+let submissionsFile = DEFAULT_SUBMISSIONS_FILE
+
+/** Point the store at another file — used by the tests to stay out of the way. */
+export function setSubmissionsFile(filePath: string): void {
+  submissionsFile = filePath
+}
+
+export function resetSubmissionsFile(): void {
+  submissionsFile = DEFAULT_SUBMISSIONS_FILE
+}
 
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected'
 
@@ -32,9 +43,9 @@ export interface SubmissionsFile {
 }
 
 export function loadSubmissions(): FigureSubmission[] {
-  if (!existsSync(SUBMISSIONS_FILE)) return []
+  if (!existsSync(submissionsFile)) return []
   try {
-    const raw = JSON.parse(readFileSync(SUBMISSIONS_FILE, 'utf8')) as SubmissionsFile
+    const raw = JSON.parse(readFileSync(submissionsFile, 'utf8')) as SubmissionsFile
     return Array.isArray(raw.submissions) ? raw.submissions : []
   } catch {
     return []
@@ -42,7 +53,7 @@ export function loadSubmissions(): FigureSubmission[] {
 }
 
 export function saveSubmissions(list: FigureSubmission[]): void {
-  writeFileSync(SUBMISSIONS_FILE, JSON.stringify({ submissions: list }, null, 2) + '\n', 'utf8')
+  writeFileSync(submissionsFile, JSON.stringify({ submissions: list }, null, 2) + '\n', 'utf8')
 }
 
 export function listSubmissions(options?: { status?: SubmissionStatus }): FigureSubmission[] {

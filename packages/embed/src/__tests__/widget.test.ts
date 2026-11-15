@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Load the widget so window.HonourIndia is defined
-import { parseRetryAfter, MAX_FETCH_RETRIES, MAX_IMAGE_RETRIES } from '../index'
+import { parseRetryAfter, MAX_FETCH_RETRIES, MAX_IMAGE_RETRIES, preload, DEFAULT_PRELOAD_TIMEOUT } from '../index'
 
 const billboards = [
   {
@@ -361,11 +361,11 @@ describe('widget (packages/embed)', () => {
     document.body.appendChild(host)
 
     // @ts-expect-error global set by widget bundle
-    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
+    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1', preloadTimeout: 500 })
 
-    // Let fetch resolve, then advance preload timer (2000ms)
+    // Let fetch resolve, then advance preload timer (500ms)
     await new Promise<void>((r) => queueMicrotask(() => r()))
-    await vi.advanceTimersByTimeAsync(2500)
+    await vi.advanceTimersByTimeAsync(600)
 
     const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
     const media = active.querySelector('.hi-media')!
@@ -398,5 +398,39 @@ describe('widget (packages/embed)', () => {
     handle.destroy()
     vi.useRealTimers()
     vi.clearAllTimers()
+  })
+
+  describe('preload (issue #7)', () => {
+    it('resolves immediately when billboard has no image', async () => {
+      const b = { ...billboards[0]!, image: null }
+      await expect(preload(b, 'http://localhost')).resolves.toBeUndefined()
+    })
+
+    it('resolves on timeout when image takes too long, respecting custom timeoutMs', async () => {
+      vi.useFakeTimers()
+      const b = {
+        ...billboards[0]!,
+        image: { url: '/images/portraits/test.webp' },
+      }
+
+      let resolved = false
+      const p = preload(b, 'http://localhost', 3000).then(() => {
+        resolved = true
+      })
+
+      await vi.advanceTimersByTimeAsync(2000)
+      expect(resolved).toBe(false)
+
+      await vi.advanceTimersByTimeAsync(1100)
+      expect(resolved).toBe(true)
+      await p
+
+      vi.useRealTimers()
+      vi.clearAllTimers()
+    })
+
+    it('uses DEFAULT_PRELOAD_TIMEOUT of 8000ms by default', () => {
+      expect(DEFAULT_PRELOAD_TIMEOUT).toBe(8000)
+    })
   })
 })

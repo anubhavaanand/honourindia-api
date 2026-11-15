@@ -38,6 +38,8 @@ interface MountOptions {
   size?: Size
   /** Optional API key (data-key) — unlocks higher rate limits for heavy embeds. */
   key?: string
+  /** Optional image preload timeout in ms, default 8000 (0 to disable timeout and wait for load) */
+  preloadTimeout?: number
 }
 
 interface MountHandle {
@@ -50,6 +52,7 @@ const MIN_INTERVAL = 5
 const MAX_INTERVAL = 60
 export const MAX_FETCH_RETRIES = 5
 export const MAX_IMAGE_RETRIES = 2
+export const DEFAULT_PRELOAD_TIMEOUT = 8000
 const DEFAULT_INTERVAL = 8
 
 const scriptEl = document.currentScript as HTMLScriptElement | null
@@ -450,16 +453,31 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string): void {
   attr.textContent = `Photo: ${credit}${license ? ` · ${license}` : ''}`
 }
 
-function preload(b: Billboard, baseUrl: string): Promise<void> {
+export function preload(b: Billboard, baseUrl: string, timeoutMs: number = DEFAULT_PRELOAD_TIMEOUT): Promise<void> {
   const image = b.image
   if (!image) return Promise.resolve()
   return new Promise((resolve) => {
     const img = new Image()
-    const done = () => resolve()
+    let timer: ReturnType<typeof setTimeout> | null = null
+    const done = () => {
+      if (timer !== null) {
+        clearTimeout(timer)
+        timer = null
+      }
+      img.onload = null
+      img.onerror = null
+      resolve()
+    }
     img.onload = done
     img.onerror = done
     img.src = new URL(image.url, baseUrl).toString()
-    setTimeout(done, 2000)
+    if (img.complete) {
+      done()
+      return
+    }
+    if (timeoutMs > 0) {
+      timer = setTimeout(done, timeoutMs)
+    }
   })
 }
 
@@ -472,6 +490,7 @@ class BillboardWidget {
   private destroyed = false
   private auto: boolean
   private intervalMs: number
+  private preloadTimeout: number
   private api: string
   private keyQuery: string
   private dom: ReturnType<typeof buildDom>
@@ -484,6 +503,7 @@ class BillboardWidget {
     this.keyQuery = opts.key ? `&key=${encodeURIComponent(opts.key)}` : ''
     const interval = clamp(opts.interval ?? DEFAULT_INTERVAL, MIN_INTERVAL, MAX_INTERVAL)
     this.intervalMs = interval * 1000
+    this.preloadTimeout = opts.preloadTimeout !== undefined ? Math.max(0, opts.preloadTimeout) : DEFAULT_PRELOAD_TIMEOUT
     this.auto = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     this.shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' })
@@ -596,7 +616,7 @@ class BillboardWidget {
     if (this.queue.length === 0) return
     this.index = ((index % this.queue.length) + this.queue.length) % this.queue.length
     const b = this.queue[this.index]!
-    if (!resumeOnly) await preload(b, this.api)
+    if (!resumeOnly) await preload(b, this.api, this.preloadTimeout)
 
     if (this.destroyed) return
     const incoming = this.dom.layers[this.active === 0 ? 1 : 0]!
@@ -657,12 +677,14 @@ function mount(el: Element | string, opts: MountOptions = {}): MountHandle {
 function readDataset(el: Element): MountOptions {
   const ds = (el as HTMLElement).dataset
   const interval = ds.interval !== undefined ? Number(ds.interval) : undefined
+  const preloadTimeout = ds.preloadTimeout !== undefined ? Number(ds.preloadTimeout) : undefined
   return {
     api: ds.api,
     theme: ds.theme === 'light' ? 'light' : ds.theme === 'dark' ? 'dark' : undefined,
     size: ['rectangle', 'leaderboard', 'poster'].includes(ds.size ?? '') ? (ds.size as Size) : undefined,
     interval: Number.isFinite(interval) ? interval : undefined,
     key: ds.key,
+    preloadTimeout: Number.isFinite(preloadTimeout) ? preloadTimeout : undefined,
   }
 }
 

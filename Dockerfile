@@ -28,7 +28,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/server/package.json ./apps/server/
 COPY packages/embed/package.json ./packages/embed/
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev --ignore-scripts
 
 COPY --from=builder /app/apps ./apps
 COPY --from=builder /app/packages ./packages

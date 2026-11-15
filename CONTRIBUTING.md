@@ -69,6 +69,10 @@ npm run format:check   # prettier, must report nothing to change
 `npm run lint:fix` and `npm run format` apply the fixes for you. CI runs all
 three checks, so a pull request that fails them will not merge.
 
+`npm install` also installs a pre-commit hook (husky + lint-staged) that lints
+and formats the files you stage, so the checks usually run before you remember
+to run them by hand.
+
 ## Tests
 
 Add or update tests for behavior changes:

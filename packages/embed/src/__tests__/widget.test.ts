@@ -614,4 +614,59 @@ describe('widget (packages/embed)', () => {
     handle.destroy()
     handleEager.destroy()
   })
+
+  it('supports keyboard navigation and accessible focus indicators on billboard controls', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const handle = window.HonourIndia!.mount(host, {
+      api: 'http://localhost/api/v1',
+      preloadTimeout: 10,
+    })
+
+    await new Promise((r) => setTimeout(r, 20))
+
+    const shadow = host.shadowRoot!
+    const root = shadow.querySelector('.hi') as HTMLElement
+    expect(root).toBeTruthy()
+    expect(root.getAttribute('tabindex')).toBe('0')
+    expect(root.getAttribute('role')).toBe('region')
+
+    const prevBtn = shadow.querySelector('.hi-prev') as HTMLButtonElement
+    const nextBtn = shadow.querySelector('.hi-next') as HTMLButtonElement
+    expect(prevBtn).toBeTruthy()
+    expect(nextBtn).toBeTruthy()
+    expect(prevBtn.type).toBe('button')
+    expect(nextBtn.type).toBe('button')
+    expect(prevBtn.getAttribute('aria-label')).toBe('Previous figure')
+    expect(nextBtn.getAttribute('aria-label')).toBe('Next figure')
+
+    const initialName = shadow.querySelector('.hi-layer.is-active .hi-name')?.textContent
+
+    // ArrowRight advances to next figure
+    root.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }))
+    await new Promise((r) => setTimeout(r, 20))
+    const secondName = shadow.querySelector('.hi-layer.is-active .hi-name')?.textContent
+    expect(secondName).toBeTruthy()
+    expect(secondName).not.toBe(initialName)
+
+    // ArrowLeft returns to previous figure
+    root.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }))
+    await new Promise((r) => setTimeout(r, 20))
+    const backName = shadow.querySelector('.hi-layer.is-active .hi-name')?.textContent
+    expect(backName).toBe(initialName)
+
+    // Next button click advances
+    nextBtn.click()
+    await new Promise((r) => setTimeout(r, 20))
+    const thirdName = shadow.querySelector('.hi-layer.is-active .hi-name')?.textContent
+    expect(thirdName).toBe(secondName)
+
+    // Stylesheet includes focus-visible rules
+    const style = shadow.querySelector('style')!.textContent
+    expect(style).toContain('.hi-nav:focus-visible')
+    expect(style).toContain('.hi:focus-visible')
+
+    handle.destroy()
+  })
 })

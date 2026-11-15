@@ -88,6 +88,52 @@ describe('widget (packages/embed)', () => {
     handle.destroy()
   })
 
+  it('sends the API key in the Authorization header, never in the query string (issue #44)', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      key: 'hi_secret_key',
+    })
+
+    await new Promise((r) => setTimeout(r, 0))
+
+    const url = fetchMock.mock.calls[0]![0]
+    const init = fetchMock.mock.calls[0]![1] as RequestInit
+    expect(url).toBe('http://localhost/api/v1/billboards/random?count=14')
+    expect(String(url)).not.toContain('hi_secret_key')
+    expect((init.headers as Record<string, string>).Authorization).toBe('Bearer hi_secret_key')
+    handle.destroy()
+  })
+
+  it('sends the updated API key in the Authorization header (issue #44)', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      key: 'hi_first_key',
+    })
+
+    await new Promise((r) => setTimeout(r, 0))
+
+    handle.update({ key: 'hi_second_key' })
+    await new Promise((r) => setTimeout(r, 0))
+
+    const lastCall = fetchMock.mock.calls[fetchMock.mock.calls.length - 1]!
+    const init = lastCall[1] as RequestInit
+    expect(String(lastCall[0])).not.toContain('hi_second_key')
+    expect((init.headers as Record<string, string>).Authorization).toBe('Bearer hi_second_key')
+    handle.destroy()
+  })
+
   it('mounts the poster size with the poster-specific layer markup', async () => {
     fetchMock.mockReturnValue(jsonResponse({ billboards }))
 

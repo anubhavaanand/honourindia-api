@@ -12,6 +12,12 @@ import type { Context, Next } from 'hono'
  * later. Keys are stored ONLY as sha-256 hashes in data/keys.json, which is
  * safe to commit (a hash of a 32-byte random key is not brute-forceable);
  * the plaintext is shown exactly once at issuance by scripts/issue-key.mjs.
+ *
+ * Preferred authentication method:
+ *   Authorization: Bearer <key>
+ *
+ * Query parameter (?key=) authentication is deprecated due to credential exposure risks
+ * in access logs, browser history, and HTTP Referer headers.
  */
 
 export interface AuthKey {
@@ -134,9 +140,23 @@ function safeEqual(a: string, b: string): boolean {
 export function auth() {
   return async (c: Context<Env>, next: Next) => {
     const header = c.req.header('authorization')
-    const raw = header?.startsWith('Bearer ')
-      ? header.slice(7).trim()
-      : c.req.query('key')?.trim()
+    // A Bearer header always wins; the query parameter is only a deprecated
+    // fallback for older embedders. An empty Bearer token stays anonymous
+    // and never falls back to the query parameter.
+    const bearer = header?.startsWith('Bearer ') ? header.slice(7).trim() : null
+    const queryKey = c.req.query('key')?.trim()
+    const raw = bearer ?? queryKey ?? undefined
+
+    // Query-string keys are still accepted, but they leak into access logs,
+    // browser history and Referer headers. Announce the deprecation whenever
+    // the key appears in the URL, even if the request also carried a header.
+    if (queryKey) {
+      c.header('Deprecation', 'true')
+      c.header(
+        'Warning',
+        '299 - "Passing API keys via the ?key= query parameter is deprecated; use the Authorization: Bearer <key> header instead."',
+      )
+    }
 
     if (!raw) {
       c.set('authKey', null)

@@ -1,11 +1,128 @@
 import type { Context, Next } from 'hono'
 import type { Env } from './auth.js'
+import fs from 'node:fs'
+import path from 'node:path'
 
-interface RateLimitOptions {
+export interface RateLimitStore {
+  /**
+   * Return timestamp array of hits within windowMs.
+   */
+  getHits(identity: string, now: number, windowMs: number): Promise<number[]> | number[]
+  /**
+   * Record a hit timestamp for an identity, pruning old entries if exceeding maxEntries.
+   */
+  recordHit(identity: string, now: number, windowMs: number, maxEntries: number): Promise<void> | void
+  /**
+   * Reset hits for a specific identity or all identities.
+   */
+  reset?(identity?: string): Promise<void> | void
+}
+
+export class MemoryRateLimitStore implements RateLimitStore {
+  private hits = new Map<string, number[]>()
+
+  getHits(identity: string, now: number, windowMs: number): number[] {
+    return (this.hits.get(identity) ?? []).filter((t) => now - t < windowMs)
+  }
+
+  recordHit(identity: string, now: number, windowMs: number, maxEntries: number): void {
+    const window = this.getHits(identity, now, windowMs)
+    window.push(now)
+    this.hits.set(identity, window)
+    if (this.hits.size > maxEntries) {
+      prune(this.hits, now, windowMs, maxEntries)
+    }
+  }
+
+  reset(identity?: string): void {
+    if (identity) this.hits.delete(identity)
+    else this.hits.clear()
+  }
+
+  get size(): number {
+    return this.hits.size
+  }
+}
+
+/**
+ * File-backed rate limit store that persists request hits to disk,
+ * allowing rate limiting state to survive server restarts.
+ */
+export class FileRateLimitStore implements RateLimitStore {
+  private hits = new Map<string, number[]>()
+  private filePath: string
+
+  constructor(filePath: string) {
+    this.filePath = filePath
+    this.load()
+  }
+
+  private load(): void {
+    try {
+      if (fs.existsSync(this.filePath)) {
+        const raw = fs.readFileSync(this.filePath, 'utf8')
+        const data = JSON.parse(raw) as Record<string, number[]>
+        for (const [k, v] of Object.entries(data)) {
+          if (Array.isArray(v)) this.hits.set(k, v)
+        }
+      }
+    } catch {
+      this.hits.clear()
+    }
+  }
+
+  private persist(): void {
+    try {
+      const dir = path.dirname(this.filePath)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+      }
+      const obj: Record<string, number[]> = {}
+      for (const [k, v] of this.hits.entries()) {
+        obj[k] = v
+      }
+      fs.writeFileSync(this.filePath, JSON.stringify(obj), 'utf8')
+    } catch {
+      // Non-fatal if filesystem is read-only
+    }
+  }
+
+  getHits(identity: string, now: number, windowMs: number): number[] {
+    return (this.hits.get(identity) ?? []).filter((t) => now - t < windowMs)
+  }
+
+  recordHit(identity: string, now: number, windowMs: number, maxEntries: number): void {
+    const window = this.getHits(identity, now, windowMs)
+    window.push(now)
+    this.hits.set(identity, window)
+    if (this.hits.size > maxEntries) {
+      prune(this.hits, now, windowMs, maxEntries)
+    }
+    this.persist()
+  }
+
+  reset(identity?: string): void {
+    if (identity) this.hits.delete(identity)
+    else this.hits.clear()
+    this.persist()
+  }
+
+  get size(): number {
+    return this.hits.size
+  }
+}
+
+export interface RateLimitOptions {
   windowMs?: number
   anonymousMax?: number
   keyedMax?: number
   maxEntries?: number
+  /**
+   * Backing store for rate limit hits. Defaults to MemoryRateLimitStore.
+   * For persistent single-instance storage, use FileRateLimitStore.
+   * For multi-instance distributed deployments, supply a custom RateLimitStore (e.g. Redis).
+   */
+  store?: RateLimitStore
 }
 
 const ANON_WINDOW_MS = 60_000
@@ -15,22 +132,27 @@ const MAX_ENTRIES = 50_000
  * Key-aware sliding-window limiter. Anonymous callers get a modest limit per
  * IP; keyed callers get a much higher one per key. Every response carries
  * X-RateLimit-* headers so consumers can see where they stand.
- * In-memory by design for the single-instance v1.
+ *
+ * Defaults to in-memory storage for single-instance setups. For persistence across
+ * server restarts, use FileRateLimitStore. For multi-instance clustering behind
+ * a load balancer, pass a custom distributed RateLimitStore implementation.
  */
 export function rateLimit({
   windowMs = ANON_WINDOW_MS,
   anonymousMax = 120,
   keyedMax = 1200,
   maxEntries = MAX_ENTRIES,
+  store,
 }: RateLimitOptions = {}) {
-  const hits = new Map<string, number[]>()
+  const activeStore = store ?? new MemoryRateLimitStore()
+
   return async (c: Context<Env>, next: Next) => {
     const key = c.get('authKey')
     const identity = key ? `key:${key.id}` : `ip:${clientIp(c)}`
     const max = key ? keyedMax : anonymousMax
 
     const now = Date.now()
-    const window = (hits.get(identity) ?? []).filter((t) => now - t < windowMs)
+    const window = await activeStore.getHits(identity, now, windowMs)
     const remaining = Math.max(0, max - window.length - 1)
 
     if (window.length >= max) {
@@ -44,14 +166,8 @@ export function rateLimit({
         },
       )
     }
-    window.push(now)
-    hits.set(identity, window)
 
-    // Evict only what is stale/oldest instead of wiping every identity when
-    // the map grows past its cap (which would reset all active limits).
-    if (hits.size > maxEntries) {
-      prune(hits, now, windowMs, maxEntries)
-    }
+    await activeStore.recordHit(identity, now, windowMs, maxEntries)
 
     c.header('X-RateLimit-Limit', String(max))
     c.header('X-RateLimit-Remaining', String(remaining))
@@ -63,7 +179,7 @@ function lastHit(times: number[]): number {
   return times.length > 0 ? times[times.length - 1]! : 0
 }
 
-function prune(hits: Map<string, number[]>, now: number, windowMs: number, maxEntries: number): void {
+export function prune(hits: Map<string, number[]>, now: number, windowMs: number, maxEntries: number): void {
   for (const [identity, times] of hits) {
     const fresh = times.filter((t) => now - t < windowMs)
     if (fresh.length === 0) {

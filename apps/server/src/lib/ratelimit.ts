@@ -156,15 +156,19 @@ export function rateLimit({
     const remaining = Math.max(0, max - window.length - 1)
 
     if (window.length >= max) {
-      return c.json(
-        { error: 'Too many requests. Slow down — the scientists are not going anywhere.' },
-        429,
-        {
-          'Retry-After': String(Math.ceil(windowMs / 1000)),
-          'X-RateLimit-Limit': String(max),
-          'X-RateLimit-Remaining': '0',
-        },
-      )
+      const headers = {
+        'Retry-After': String(Math.ceil(windowMs / 1000)),
+        'X-RateLimit-Limit': String(max),
+        'X-RateLimit-Remaining': '0',
+      }
+      if (!c.req.path || c.req.path.startsWith('/api/')) {
+        return c.json(
+          { error: 'Too many requests. Slow down — the scientists are not going anywhere.' },
+          429,
+          headers,
+        )
+      }
+      return c.text('Too many requests. Slow down — the scientists are not going anywhere.', 429, headers)
     }
 
     await activeStore.recordHit(identity, now, windowMs, maxEntries)

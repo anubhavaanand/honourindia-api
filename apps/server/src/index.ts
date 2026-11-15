@@ -46,7 +46,7 @@ async function serveFile(filePath: string, cacheControl: string): Promise<Respon
   }
 }
 
-const app = new Hono<Env>()
+export const app = new Hono<Env>()
 
 app.use('*', securityHeaders())
 app.use('*', requestId())
@@ -61,6 +61,25 @@ app.use('/api/*', rateLimit())
 // would break third-party website integrations. No user credentials/cookies are accepted.
 app.use('/api/*', cors({ origin: '*' }))
 app.route('/api/v1', api)
+
+// Rate limiting for non-API endpoints (/embed.js, /images/*, /figures/*, and site routes).
+// Generous limit (300 req/min) ensures normal browser asset loading and browsing isn't impacted
+// while protecting against image scraping, DDoS floods, and endpoint enumeration.
+const staticRateLimit = rateLimit({
+  windowMs: 60_000,
+  anonymousMax: 300,
+  keyedMax: 1200,
+})
+
+app.use('/embed.js', staticRateLimit)
+app.use('/images/*', staticRateLimit)
+app.use('/figures/*', staticRateLimit)
+app.use('/', staticRateLimit)
+app.use('/styles.css', staticRateLimit)
+app.use('/app.js', staticRateLimit)
+app.use('/figure.js', staticRateLimit)
+app.use('/admin', staticRateLimit)
+app.use('/admin.js', staticRateLimit)
 
 // The embeddable widget script — usable from any origin. Uncached outside
 // production so local iteration isn't bitten by the browser cache.
@@ -102,24 +121,26 @@ app.notFound((c) => {
 
 const isProd = process.env.NODE_ENV === 'production'
 
-const port = Number(process.env.PORT ?? 3000)
-const server = serve({ fetch: app.fetch, port }, (info) => {
-  console.log(`सम्मान · Honour India — serving on http://localhost:${info.port}`)
-  console.log(`  demo & docs : http://localhost:${info.port}/`)
-  console.log(`  api         : http://localhost:${info.port}/api/v1`)
-  console.log(`  embed       : http://localhost:${info.port}/embed.js`)
-})
+if (process.env.NODE_ENV !== 'test' && !process.env.VITEST) {
+  const port = Number(process.env.PORT ?? 3000)
+  const server = serve({ fetch: app.fetch, port }, (info) => {
+    console.log(`सम्मान · Honour India — serving on http://localhost:${info.port}`)
+    console.log(`  demo & docs : http://localhost:${info.port}/`)
+    console.log(`  api         : http://localhost:${info.port}/api/v1`)
+    console.log(`  embed       : http://localhost:${info.port}/embed.js`)
+  })
 
-// Stop accepting new connections and let in-flight requests finish before exit.
-let shuttingDown = false
-function shutdown(signal: NodeJS.Signals): void {
-  if (shuttingDown) return
-  shuttingDown = true
-  console.log(`${signal} received — draining connections`)
-  server.close(() => process.exit(0))
-  // Do not hang forever on keep-alive sockets or a stuck response.
-  setTimeout(() => process.exit(1), 10_000).unref()
+  // Stop accepting new connections and let in-flight requests finish before exit.
+  let shuttingDown = false
+  function shutdown(signal: NodeJS.Signals): void {
+    if (shuttingDown) return
+    shuttingDown = true
+    console.log(`${signal} received — draining connections`)
+    server.close(() => process.exit(0))
+    // Do not hang forever on keep-alive sockets or a stuck response.
+    setTimeout(() => process.exit(1), 10_000).unref()
+  }
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'))
+  process.on('SIGINT', () => shutdown('SIGINT'))
 }
-
-process.on('SIGTERM', () => shutdown('SIGTERM'))
-process.on('SIGINT', () => shutdown('SIGINT'))

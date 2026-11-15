@@ -6,10 +6,11 @@ import { rateLimit, FileRateLimitStore, MemoryRateLimitStore, type RateLimitStor
 
 type AuthKey = { id: string; name: string }
 
-function makeContext(authKey: AuthKey | null = null, ip = '1.2.3.4') {
+function makeContext(authKey: AuthKey | null = null, ip = '1.2.3.4', reqPath = '/api/v1/test') {
   const c: any = {
     headers: {},
     req: {
+      path: reqPath,
       header: (name: string) => {
         if (name === 'x-forwarded-for') return ip
         return undefined
@@ -24,6 +25,12 @@ function makeContext(authKey: AuthKey | null = null, ip = '1.2.3.4') {
       for (const [k, v] of Object.entries(headersObj)) h.set(k, v)
       c.lastJson = { body, status, headers: h }
       return c.lastJson
+    },
+    text: (text: string, status: number, headersObj: Record<string, string>) => {
+      const h = new Headers()
+      for (const [k, v] of Object.entries(headersObj)) h.set(k, v)
+      c.lastText = { text, status, headers: h }
+      return c.lastText
     },
   }
   return { c }
@@ -154,5 +161,19 @@ describe('rateLimit', () => {
 
     const second = await mw(c, () => Promise.resolve())
     expect(second!.status).toBe(429)
+  })
+
+  it('rate limits non-API routes with text 429 response', async () => {
+    const mw = rateLimit({ anonymousMax: 2, keyedMax: 10 })
+    const { c } = makeContext(null, '7.7.7.7', '/embed.js')
+
+    expect(await mw(c, () => Promise.resolve())).toBeUndefined()
+    expect(await mw(c, () => Promise.resolve())).toBeUndefined()
+
+    const blocked = await mw(c, () => Promise.resolve())
+    expect(blocked).toBeDefined()
+    expect(blocked!.status).toBe(429)
+    expect(blocked!.headers.get('Retry-After')).toBeDefined()
+    expect(c.lastText?.text).toContain('Too many requests')
   })
 })

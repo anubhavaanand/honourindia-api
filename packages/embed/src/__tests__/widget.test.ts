@@ -637,7 +637,9 @@ describe('widget (packages/embed)', () => {
       preloadTimeout: 10,
     })
 
-    await new Promise((r) => setTimeout(r, 20))
+    await vi.waitFor(() => {
+      expect(host.shadowRoot!.querySelector('.hi-layer.is-active img')).toBeTruthy()
+    })
 
     const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
     const img = active.querySelector('img') as HTMLImageElement
@@ -653,7 +655,9 @@ describe('widget (packages/embed)', () => {
       lazyLoad: false,
       preloadTimeout: 10,
     })
-    await new Promise((r) => setTimeout(r, 20))
+    await vi.waitFor(() => {
+      expect(eagerHost.shadowRoot!.querySelector('.hi-layer.is-active img')).toBeTruthy()
+    })
     const eagerImg = eagerHost.shadowRoot!.querySelector('.hi-layer.is-active img') as HTMLImageElement
     expect(eagerImg.loading).toBe('eager')
 

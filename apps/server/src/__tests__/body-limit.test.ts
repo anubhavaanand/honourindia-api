@@ -1,15 +1,24 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import { app } from '../index.js'
-import { loadSubmissions, saveSubmissions } from '../lib/submissions.js'
+import { setSubmissionsFile, resetSubmissionsFile } from '../lib/submissions.js'
 
 // A figure submission is a few kilobytes of JSON. Without a cap a single
 // request could ask the server to buffer an arbitrarily large body.
 describe('request body size limit (issue #79)', () => {
-  const originalSubmissions = loadSubmissions()
+  let tempDir: string
 
-  afterEach(() => {
-    // The accepted submission below really lands in the moderation queue.
-    saveSubmissions(originalSubmissions)
+  beforeAll(() => {
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'honourindia-body-limit-'))
+    // Keep the accepted submission out of the real moderation queue.
+    setSubmissionsFile(path.join(tempDir, 'submissions.json'))
+  })
+
+  afterAll(() => {
+    resetSubmissionsFile()
+    fs.rmSync(tempDir, { recursive: true, force: true })
   })
 
   it('accepts a normal-sized submission', async () => {

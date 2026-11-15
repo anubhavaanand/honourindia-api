@@ -3,6 +3,7 @@ import path from 'node:path'
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { compress } from 'hono/compress'
 import { api } from './routes/api.js'
 import { auth, type Env } from './lib/auth.js'
 import { rateLimit } from './lib/ratelimit.js'
@@ -47,7 +48,8 @@ const app = new Hono<Env>()
 app.use('*', securityHeaders())
 app.use('*', requestId())
 
-// Public API: open CORS, optional-key auth, key-aware rate limiting.
+// Public API: compression, open CORS, optional-key auth, key-aware rate limiting.
+app.use('/api/*', compress())
 app.use('/api/*', auth())
 app.use('/api/*', rateLimit())
 // Public API CORS: Wildcard origin ('*') is intentional and required by design

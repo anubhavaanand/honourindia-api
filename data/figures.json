@@ -14,7 +14,10 @@
         "text": "The true wealth of a nation consists not in the stored-up gold but in the intellectual and physical strength of its people.",
         "source": "widely attributed"
       },
-      "wiki": "C. V. Raman"
+      "wiki": "C. V. Raman",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Raman spectroscopy and the Raman effect in molecular analysis"
     },
     {
       "slug": "srinivasa-ramanujan",
@@ -28,7 +31,10 @@
         "text": "An equation for me has no meaning unless it expresses a thought of God.",
         "source": "as recounted in accounts of his life"
       },
-      "wiki": "Srinivasa Ramanujan"
+      "wiki": "Srinivasa Ramanujan",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Ramanujan's partition identities, mock theta functions and number theory"
     },
     {
       "slug": "jagadish-chandra-bose",
@@ -39,7 +45,10 @@
       "tagline": "Demonstrated wireless signalling in 1895, then proved that plants respond to stimuli — a pioneer of two sciences.",
       "summary": "In 1895 in Calcutta, Bose publicly demonstrated communication using millimetre-range radio waves, before Marconi's wireless patent. He then turned to plant physiology, inventing the crescograph to measure how plants respond to light, heat and gravity, and founded the Bose Institute in 1917. He rarely patented his inventions, believing knowledge should be free.",
       "quote": null,
-      "wiki": "Jagadish Chandra Bose"
+      "wiki": "Jagadish Chandra Bose",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "millimetre-wave radio techniques and plant biophysics instrumentation"
     },
     {
       "slug": "homi-bhabha",
@@ -50,7 +59,10 @@
       "tagline": "Architect of India's atomic energy programme and founder of the Tata Institute of Fundamental Research.",
       "summary": "A physicist of international standing in cosmic rays and quantum theory, Bhabha founded the Tata Institute of Fundamental Research in 1945 and became the first chairman of India's Atomic Energy Commission. He charted the country's three-stage nuclear power programme and mentored a generation of Indian scientists before dying in an air crash on Mont Blanc.",
       "quote": null,
-      "wiki": "Homi J. Bhabha"
+      "wiki": "Homi J. Bhabha",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Bhabha scattering theory and the foundation of India's nuclear programme"
     },
     {
       "slug": "satyendra-nath-bose",
@@ -61,7 +73,10 @@
       "tagline": "His way of counting photons forced physics to invent new statistics — the bosons carry his name.",
       "summary": "In 1924 Bose sent Albert Einstein a paper deriving Planck's radiation law in a way that treated light as indistinguishable quanta. Einstein translated and extended it, and Bose–Einstein statistics — and much later the Bose–Einstein condensate — were born. Particles obeying his statistics are called bosons. India later honoured him as National Professor with the Padma Vibhushan.",
       "quote": null,
-      "wiki": "Satyendra Nath Bose"
+      "wiki": "Satyendra Nath Bose",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Bose–Einstein statistics and the boson — basis of quantum optics and superfluidity"
     },
     {
       "slug": "meghnad-saha",
@@ -72,7 +87,10 @@
       "tagline": "Derived the equation that lets astronomers take the temperature of stars from their light.",
       "summary": "Saha's 1920 ionization equation connects a star's spectrum to its temperature and pressure — the foundation of modern astrophysics. He also built institutions: the journal Science and Culture, and what is now the Saha Institute of Nuclear Physics in Kolkata. He was elected a Fellow of the Royal Society in 1927.",
       "quote": null,
-      "wiki": "Meghnad Saha"
+      "wiki": "Meghnad Saha",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Saha ionisation equation used in stellar astrophysics and plasma physics"
     },
     {
       "slug": "subrahmanyan-chandrasekhar",
@@ -83,7 +101,10 @@
       "tagline": "Worked out how stars die — the Chandrasekhar limit names the tipping point beyond which they collapse.",
       "summary": "At nineteen, on the ship from India to Cambridge, Chandrasekhar calculated that white dwarf stars cannot exceed about 1.4 solar masses. The idea was resisted for decades and finally earned the 1983 Nobel Prize in Physics. NASA named its flagship X-ray observatory, Chandra, after him.",
       "quote": null,
-      "wiki": "Subrahmanyan Chandrasekhar"
+      "wiki": "Subrahmanyan Chandrasekhar",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Chandrasekhar limit and mathematical theory of black holes and white dwarfs"
     },
     {
       "slug": "vikram-sarabhai",
@@ -97,7 +118,10 @@
         "text": "We must be second to none in the application of advanced technologies to the real problems of man and society.",
         "source": "on the purpose of India's space programme"
       },
-      "wiki": "Vikram Sarabhai"
+      "wiki": "Vikram Sarabhai",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "India's space programme and ISRO institutional framework"
     },
     {
       "slug": "apj-abdul-kalam",
@@ -111,7 +135,10 @@
         "text": "Dream is not that which you see while sleeping; it is something that does not let you sleep.",
         "source": "widely quoted from his speeches"
       },
-      "wiki": "A. P. J. Abdul Kalam"
+      "wiki": "A. P. J. Abdul Kalam",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "India's AGNI and PRITHVI missile systems and the PURA rural-development vision"
     },
     {
       "slug": "m-s-swaminathan",
@@ -122,7 +149,10 @@
       "tagline": "Plant geneticist who helped end India's food dependence — the architect of the Green Revolution.",
       "summary": "Combining high-yielding wheat varieties with strategy and farmer outreach, Swaminathan helped turn India from a food-deficient nation into one self-sufficient in grain within a decade of the mid-1960s crises. He later founded the M. S. Swaminathan Research Foundation and championed an 'evergreen revolution' — productivity that respects ecology. He was the first laureate of the World Food Prize, in 1987.",
       "quote": null,
-      "wiki": "M. S. Swaminathan"
+      "wiki": "M. S. Swaminathan",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "high-yielding rice and wheat varieties that powered the Green Revolution"
     },
     {
       "slug": "verghese-kurien",
@@ -133,7 +163,10 @@
       "tagline": "The 'Milkman of India' — built Operation Flood and the cooperative movement that made India the world's largest milk producer.",
       "summary": "An engineer who planned to leave for a petroleum career, Kurien stayed in Anand, Gujarat, and built Amul into a farmer-owned dairy cooperative. Replicating that model through Operation Flood, he made India the world's largest milk producer, with millions of small farmers as its owners.",
       "quote": null,
-      "wiki": "Verghese Kurien"
+      "wiki": "Verghese Kurien",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "the cooperative dairy model of Operation Flood and Amul"
     },
     {
       "slug": "anna-mani",
@@ -145,7 +178,10 @@
       "summary": "Trained as a physicist, Mani made her mark in meteorological instrumentation, insisting that India manufacture its scientific instruments rather than import them. As deputy director general of the India Meteorological Department she built networks for measuring solar radiation, ozone and wind — foundations for India's renewable-energy planning. A 2022 Google Doodle celebrated her 104th birthday.",
       "quote": null,
       "wiki": "Anna Mani",
-      "commonsFile": "Anna Mani - Oil painting by Rajasekharan.jpg"
+      "commonsFile": "Anna Mani - Oil painting by Rajasekharan.jpg",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "solar radiation measurement standards and Indian meteorological instrumentation"
     },
     {
       "slug": "janaki-ammal",
@@ -156,7 +192,10 @@
       "tagline": "Bred sweeter sugarcane for India and co-authored the Chromosome Atlas of Cultivated Plants.",
       "summary": "Earning a doctorate in botany in Michigan in 1931, Janaki Ammal became a leading cytogeneticist, crossing sugarcane varieties to give India sweeter, hardier canes. She co-authored the Chromosome Atlas of Cultivated Plants, helped reorganise the Botanical Survey of India, and received the Padma Shri in 1977. A magnolia — Magnolia 'Janaki Ammal' — is named in her honour.",
       "quote": null,
-      "wiki": "E. K. Janaki Ammal"
+      "wiki": "E. K. Janaki Ammal",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "botanical chromosome research and Indian ethnobotany field surveys"
     },
     {
       "slug": "asima-chatterjee",
@@ -169,7 +208,10 @@
       "quote": null,
       "wiki": "Asima Chatterjee",
       "commonsFile": "Asima Chatterjee 1.jpg",
-      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "vinca alkaloid cancer-drug research and anti-epileptic phytochemistry"
     },
     {
       "slug": "anandi-gopal-joshi",
@@ -180,7 +222,10 @@
       "tagline": "One of the first Indian women doctors, graduating in medicine in America in 1886 — at twenty-one.",
       "summary": "Sent to America with her husband's support, Joshi graduated from the Women's Medical College of Pennsylvania in 1886, among the first Indian women to qualify in Western medicine. Queen Victoria sent her a congratulatory message. She died of tuberculosis within a year of returning home, before her work could begin.",
       "quote": null,
-      "wiki": "Anandi Gopal Joshi"
+      "wiki": "Anandi Gopal Joshi",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "pioneering women's entry into Western medical education in India"
     },
     {
       "slug": "kadambini-ganguly",
@@ -191,7 +236,10 @@
       "tagline": "One of British India's first women doctors — in practice when women could hardly leave the home.",
       "summary": "Ganguly was among the first women graduates of Calcutta University and, in 1886, among the first women of South Asia to qualify as a doctor of Western medicine. She practised for decades, worked for women's education and rights, and was among the first women to speak at the Indian National Congress.",
       "quote": null,
-      "wiki": "Kadambini Ganguly"
+      "wiki": "Kadambini Ganguly",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "pioneering women's professional medical practice in colonial India"
     },
     {
       "slug": "g-n-ramachandran",
@@ -204,7 +252,10 @@
       "quote": null,
       "wiki": "G. N. Ramachandran",
       "commonsFile": "G N Ramachandran.jpg",
-      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "Ramachandran plot — the universal tool for protein-structure validation"
     },
     {
       "slug": "yellapragada-subbarow",
@@ -215,7 +266,10 @@
       "tagline": "Co-discovered how ATP carries the cell's energy, and developed lifesaving drugs — one of science's most unsung minds.",
       "summary": "At Harvard, Subbarow and Cyrus Fiske isolated ATP and phosphocreatine, the molecules that store and carry energy in every living cell. Moving to Lederle Laboratories, he drove the development of diethylcarbamazine against filariasis, methotrexate against cancer, and the tetracycline antibiotics. A colleague's memorial line: 'Because he lived, the world lives.'",
       "quote": null,
-      "wiki": "Yellapragada Subbarow"
+      "wiki": "Yellapragada Subbarow",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "methotrexate chemotherapy and the biochemistry of ATP and folate"
     },
     {
       "slug": "birbal-sahni",
@@ -226,7 +280,10 @@
       "tagline": "Read plant fossils hundreds of millions of years old to reconstruct the Indian subcontinent's deep past.",
       "summary": "Sahni founded palaeobotany as a discipline in India, studying fossils from the Gondwana deposits to trace the subcontinent's ancient vegetation. The institute he established in Lucknow, now the Birbal Sahni Institute of Palaeosciences, carries the work forward. He was elected a Fellow of the Royal Society in 1936.",
       "quote": null,
-      "wiki": "Birbal Sahni"
+      "wiki": "Birbal Sahni",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "palaeobotany of Indian fossil flora and Gondwana plant taxonomy"
     },
     {
       "slug": "p-c-mahalanobis",
@@ -237,7 +294,10 @@
       "tagline": "Founded the Indian Statistical Institute and the measure that bears his name — the Mahalanobis distance.",
       "summary": "Mahalanobis started the Indian Statistical Institute in 1931 with a few students in a Calcutta classroom and built it into a world centre. He created the Mahalanobis distance, pioneered large-scale sample surveys, and brought statistics to national planning. He received the Padma Vibhushan in 1968.",
       "quote": null,
-      "wiki": "P. C. Mahalanobis"
+      "wiki": "P. C. Mahalanobis",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Mahalanobis distance and large-scale sample-survey methodology"
     },
     {
       "slug": "salim-ali",
@@ -248,7 +308,10 @@
       "tagline": "The 'Birdman of India' — surveyed the subcontinent's birds and made citizens into naturalists.",
       "summary": "Ali surveyed the birds of the subcontinent across decades of expeditions, from the Himalaya to the Andamans, and wrote The Book of Indian Birds, which turned generations of readers into observers. With Dillon Ripley he produced the landmark Handbook of the Birds of India and Pakistan. He received the Padma Vibhushan in 1976.",
       "quote": null,
-      "wiki": "Sálim Ali"
+      "wiki": "Sálim Ali",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "systematic field ornithology and the Handbook of the Birds of India and Pakistan"
     },
     {
       "slug": "shakuntala-devi",
@@ -259,7 +322,10 @@
       "tagline": "The 'human computer' — multiplied two 13-digit numbers in 28 seconds, and made numbers fun for millions.",
       "summary": "Discovered as a child prodigy in Bangalore, Devi performed calculations that outran computers of her era — in 1982 she multiplied two randomly chosen 13-digit numbers in 28 seconds. She wrote books bringing mathematics to children, and in 1977 wrote the first Indian study of homosexuality, arguing for its decriminalisation.",
       "quote": null,
-      "wiki": "Shakuntala Devi"
+      "wiki": "Shakuntala Devi",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "mental-arithmetic techniques and mathematical puzzle pedagogy"
     },
     {
       "slug": "m-visvesvaraya",
@@ -273,7 +339,10 @@
         "text": "Remember, your work may be only to sweep a railway crossing, but it is your duty to keep it so clean that no other crossing in the world is as clean as yours.",
         "source": "widely attributed"
       },
-      "wiki": "M. Visvesvaraya"
+      "wiki": "M. Visvesvaraya",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "precision automatic flood-gate engineering and dam design principles"
     },
     {
       "slug": "kalpana-chawla",
@@ -287,7 +356,10 @@
         "text": "The path from dreams to success does exist. May you have the vision to find it, the courage to get on to it, and the perseverance for the journey.",
         "source": "widely quoted from her message to students"
       },
-      "wiki": "Kalpana Chawla"
+      "wiki": "Kalpana Chawla",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "India's spaceflight heritage and women in aerospace inspiration"
     },
     {
       "slug": "nambi-narayanan",
@@ -298,7 +370,10 @@
       "tagline": "Led development of the Vikas engine that still powers Indian rockets — and fought a false case to vindication.",
       "summary": "At ISRO, Narayanan led the team that developed the Vikas liquid engine — the workhorse of the PSLV and GSLV rockets. In 1994 he was arrested in a fabricated espionage case; the charges collapsed, and decades later the Supreme Court upheld his innocence and India awarded him the Padma Bhushan in 2019.",
       "quote": null,
-      "wiki": "Nambi Narayanan"
+      "wiki": "Nambi Narayanan",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's cryogenic rocket-engine programme and Vikas engine development"
     },
     {
       "slug": "tessy-thomas",
@@ -309,7 +384,10 @@
       "tagline": "First woman to head a major Indian missile project — led Agni-IV as its project director.",
       "summary": "Joining DRDO in 1985, Thomas rose through the Agni programme to become project director of Agni-IV — the first woman to lead a major Indian missile project — and later directed the Advanced Systems Laboratory. Known as the 'Missile Woman of India', she has championed women in engineering throughout her career.",
       "quote": null,
-      "wiki": "Tessy Thomas"
+      "wiki": "Tessy Thomas",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's AGNI missile guidance systems and indigenised warhead design"
     },
     {
       "slug": "g-d-naidu",
@@ -322,7 +400,10 @@
       "quote": null,
       "wiki": "G. D. Naidu",
       "commonsFile": "Gopalswamy D. Naidu.jpg",
-      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "radio and electrical inventions and India's indigenous electronics tradition"
     },
     {
       "slug": "raj-chandra-bose",
@@ -335,7 +416,10 @@
       "quote": null,
       "wiki": "Raj Chandra Bose",
       "commonsFile": "Raj Chandra Bose.jpg",
-      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed."
+      "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "combinatorial design theory and the Bose–Chowla theorem in coding theory"
     },
     {
       "slug": "p-c-ray",
@@ -346,7 +430,10 @@
       "tagline": "Father of Indian chemistry — founded Bengal Chemicals, India's first pharmaceutical company.",
       "summary": "P. C. Ray was a pioneering chemist who established modern chemical research in India. He discovered mercurous nitrite in 1896 and founded Bengal Chemicals & Pharmaceutical Works in 1901, India's first pharmaceutical company, proving Indian industry could manufacture medicines. He authored the seminal 'History of Hindu Chemistry' and mentored generations of Indian chemists.",
       "quote": null,
-      "wiki": "Prafulla Chandra Ray"
+      "wiki": "Prafulla Chandra Ray",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "mercurous nitrite synthesis and founding India's modern chemical industry"
     },
     {
       "slug": "e-c-george-sudarshan",
@@ -357,7 +444,10 @@
       "tagline": "Theoretical physicist who co-originated the V–A theory of weak interactions and the Sudarshan–Glauber representation in quantum optics.",
       "summary": "Sudarshan made foundational contributions to quantum optics and particle physics. With Robert Marshak he proposed the V–A (vector minus axial vector) structure of weak interactions in 1957, a key insight behind the Standard Model. His Sudarshan–Glauber representation is a cornerstone of quantum optics, and he also explored the quantum Zeno effect and tachyons. He taught at the University of Texas and the Institute of Mathematical Sciences, Chennai.",
       "quote": null,
-      "wiki": "E. C. George Sudarshan"
+      "wiki": "E. C. George Sudarshan",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "quantum Zeno effect, optical coherence theory and V–A weak interaction"
     },
     {
       "slug": "jayant-narlikar",
@@ -368,7 +458,10 @@
       "tagline": "Cosmologist who co-developed the Hoyle–Narlikar theory of gravity and made steady-state cosmology a serious alternative to the Big Bang.",
       "summary": "Narlikar is an eminent cosmologist known for his work on steady-state cosmology and the Hoyle–Narlikar theory, a conformal theory of gravity developed with Fred Hoyle. He founded the Inter-University Centre for Astronomy and Astrophysics (IUCAA) in Pune and has written extensively to popularize science in India and abroad. A recipient of the Padma Vibhushan and Padma Bhushan.",
       "quote": null,
-      "wiki": "Jayant Narlikar"
+      "wiki": "Jayant Narlikar",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "quasi-steady-state cosmology and science popularisation in India"
     },
     {
       "slug": "roddam-narasimha",
@@ -379,7 +472,10 @@
       "tagline": "Pioneer of fluid dynamics and aerospace research in India — studied atmospheric turbulence and led NAL.",
       "summary": "Narasimha was a leading aerospace scientist and fluid dynamicist who made fundamental contributions to the study of turbulence, atmospheric flows, and aircraft design. He served as Director of the National Aerospace Laboratories (NAL), Bangalore, and was a professor at IISc and IIT Kanpur. He played a key role in building India's aerospace research infrastructure and received the Padma Vibhushan.",
       "quote": null,
-      "wiki": "Roddam Narasimha"
+      "wiki": "Roddam Narasimha",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "laminar-to-turbulent transition theory and India's aerospace fluid dynamics"
     },
     {
       "slug": "bikash-sinha",
@@ -390,7 +486,10 @@
       "tagline": "Nuclear physicist who led India's participation in CERN experiments and directed the Variable Energy Cyclotron Centre.",
       "summary": "Sinha was a nuclear physicist who established high-energy nuclear physics research in India and led India's collaboration with CERN, including work on the ALICE experiment studying quark-gluon plasma. He directed the Variable Energy Cyclotron Centre (VECC), Kolkata, and the Saha Institute of Nuclear Physics. A Padma Bhushan recipient, he worked to connect Indian science with global particle physics.",
       "quote": null,
-      "wiki": "Bikash Sinha"
+      "wiki": "Bikash Sinha",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "quark–gluon plasma research and India's particle-physics infrastructure"
     },
     {
       "slug": "satish-dhawan",
@@ -401,7 +500,10 @@
       "tagline": "Father of experimental fluid dynamics research in India and third chairman of ISRO — guided India's early space programme.",
       "summary": "Dhawan was an aerospace engineer who founded India's first supersonic wind tunnel at IISc Bangalore and established a school of fluid dynamics research. As ISRO chairman from 1972 to 1984, he oversaw the development of India's satellite launch capability, including the SLV-3 and the early PSLV. The Satish Dhawan Space Centre in Sriharikota is named in his honour. He received the Padma Vibhushan.",
       "quote": null,
-      "wiki": "Satish Dhawan"
+      "wiki": "Satish Dhawan",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "turbulent boundary-layer research and leadership of India's launch-vehicle programme"
     },
     {
       "slug": "u-r-rao",
@@ -412,7 +514,10 @@
       "tagline": "Space scientist who led the development of India's first satellite, Aryabhata, and served as ISRO chairman.",
       "summary": "U. R. Rao was a space scientist who shaped India's space programme from its early days. He led the team that built Aryabhata, India's first satellite (launched 1975), and directed the development of several subsequent satellites. As ISRO chairman (1984–1994), he oversaw the operational PSLV and the beginnings of India's remote-sensing and communications satellite constellations. He received the Padma Vibhushan and was inducted into the Satellite Hall of Fame.",
       "quote": null,
-      "wiki": "U. R. Rao"
+      "wiki": "U. R. Rao",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "India's INSAT satellite-communication programme"
     },
     {
       "slug": "k-kasturirangan",
@@ -423,7 +528,10 @@
       "tagline": "ISRO chairman who oversaw the operational PSLV and GSLV and India's first lunar mission, Chandrayaan-1.",
       "summary": "Kasturirangan was an astrophysicist and ISRO chairman (1994–2003) during a transformative period. Under his leadership India achieved operational capability with the PSLV and GSLV launch vehicles, and launched Chandrayaan-1, India's first mission to the Moon. He later served as a Member of the Planning Commission and Chancellor of several universities. A Padma Vibhushan recipient.",
       "quote": null,
-      "wiki": "K. Kasturirangan"
+      "wiki": "K. Kasturirangan",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's space programme leadership and the National Education Policy 2020"
     },
     {
       "slug": "g-madhavan-nair",
@@ -434,7 +542,10 @@
       "tagline": "ISRO chairman who led Chandrayaan-1 to the Moon and operationalized the GSLV and PSLV launch programmes.",
       "summary": "Nair was an aerospace engineer and ISRO chairman (2003–2009) who guided Chandrayaan-1, which confirmed water molecules on the lunar surface. He oversaw successful operational flights of PSLV and GSLV and expansion of India's INSAT and IRS satellite systems. A Padma Vibhushan recipient and former chairman of the board of governors of IIT Bombay.",
       "quote": null,
-      "wiki": "G. Madhavan Nair"
+      "wiki": "G. Madhavan Nair",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's PSLV programme and Chandrayaan-1 lunar-orbiter mission"
     },
     {
       "slug": "a-s-kiran-kumar",
@@ -445,7 +556,10 @@
       "tagline": "ISRO chairman during the Mars Orbiter Mission (Mangalyaan) — India's first interplanetary probe.",
       "summary": "Kiran Kumar was a scientist-engineer who developed electro-optical sensors for India's remote-sensing satellites and served as ISRO chairman (2015–2018). During his tenure ISRO successfully launched the Mars Orbiter Mission (Mangalyaan), making India the first Asian nation to reach Mars orbit and the first in the world to do so on its first attempt. He received the Padma Shri and Padma Bhushan.",
       "quote": null,
-      "wiki": "A. S. Kiran Kumar"
+      "wiki": "A. S. Kiran Kumar",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's remote-sensing satellites and Mars Orbiter Mission payloads"
     },
     {
       "slug": "k-sivan",
@@ -456,7 +570,10 @@
       "tagline": "ISRO chairman known as the 'Rocket Man' — led Chandrayaan-2 and Chandrayaan-3 lunar missions.",
       "summary": "Sivan is a rocket scientist specializing in cryogenic propulsion and launch vehicle design. As ISRO chairman (2018–2022), he led Chandrayaan-2 and Chandrayaan-3, the latter achieving India's first soft landing near the Moon's south pole in 2023. He also oversaw the Gaganyaan human-spaceflight programme's early development. A Padma Shri recipient.",
       "quote": null,
-      "wiki": "K. Sivan"
+      "wiki": "K. Sivan",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's GSLV launch-vehicle programme and Chandrayaan-2 mission"
     },
     {
       "slug": "harish-chandra",
@@ -467,7 +584,10 @@
       "tagline": "Mathematician who revolutionized the representation theory of semisimple Lie groups — the Harish-Chandra theory.",
       "summary": "Harish-Chandra was one of the most influential mathematicians of the 20th century. He developed the representation theory of semisimple Lie groups, introducing discrete series characters and the Harish-Chandra homomorphism. His work at the Institute for Advanced Study, Princeton, and the University of Chicago laid foundations used across modern mathematics and theoretical physics. A Fellow of the Royal Society.",
       "quote": null,
-      "wiki": "Harish-Chandra"
+      "wiki": "Harish-Chandra",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "harmonic analysis on semisimple Lie groups — foundational to modern representation theory"
     },
     {
       "slug": "s-r-s-varadhan",
@@ -478,7 +598,10 @@
       "tagline": "Probabilist who won the Abel Prize for fundamental work on large deviations and diffusion processes.",
       "summary": "Varadhan is a mathematician renowned for his work in probability theory, particularly large deviations theory and partial differential equations. The Varadhan formula and his contributions to diffusion processes are fundamental tools in stochastic analysis. He received the 2007 Abel Prize, often described as the Nobel of Mathematics, and the Padma Vibhushan. He is a professor at the Courant Institute, NYU.",
       "quote": null,
-      "wiki": "S. R. Srinivasa Varadhan"
+      "wiki": "S. R. Srinivasa Varadhan",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "large-deviation theory — the mathematical framework for rare-event probability"
     },
     {
       "slug": "m-s-narasimhan",
@@ -489,7 +612,10 @@
       "tagline": "Geometer who founded the Tata Institute School of Mathematics and co-developed the Narasimhan–Seshadri theorem.",
       "summary": "Narasimhan was an algebraic geometer who made foundational contributions to the theory of vector bundles on algebraic curves. With C. S. Seshadri he proved the Narasimhan–Seshadri theorem, linking stable bundles to unitary representations of fundamental groups — a landmark result with deep connections to physics. He founded the School of Mathematics at TIFR, Mumbai, and received the Padma Bhushan and Padma Vibhushan.",
       "quote": null,
-      "wiki": "M. S. Narasimhan"
+      "wiki": "M. S. Narasimhan",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "Narasimhan–Seshadri theorem — cornerstone of moduli spaces in algebraic geometry"
     },
     {
       "slug": "c-s-seshadri",
@@ -500,7 +626,10 @@
       "tagline": "Algebraic geometer who founded the Chennai Mathematical Institute and co-proved the Narasimhan–Seshadri theorem.",
       "summary": "Seshadri was a leading algebraic geometer whose work on vector bundles and moduli spaces transformed modern algebraic geometry. The Narasimhan–Seshadri theorem, proved with M. S. Narasimhan, is a foundational result bridging geometry and representation theory. He founded the Chennai Mathematical Institute and received the Padma Bhushan, the King Faisal Prize, and the Lerch Prize.",
       "quote": null,
-      "wiki": "C. S. Seshadri"
+      "wiki": "C. S. Seshadri",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "geometric invariant theory and moduli of vector bundles"
     },
     {
       "slug": "neena-gupta",
@@ -511,7 +640,10 @@
       "tagline": "Commutative algebraist who solved the Zariski cancellation problem and won the Shanti Swarup Bhatnagar Prize.",
       "summary": "Neena Gupta is a mathematician at the Indian Statistical Institute, Kolkata, known for her work in commutative algebra and algebraic geometry. She solved the Zariski cancellation problem for affine spaces over arbitrary fields, a long-standing open problem, and was awarded the 2021 Shanti Swarup Bhatnagar Prize in Mathematical Sciences. She also received the 2024 DST-ICTP-IMU Ramanujan Prize.",
       "quote": null,
-      "wiki": "Neena Gupta (mathematician)"
+      "wiki": "Neena Gupta (mathematician)",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "solution to the Zariski cancellation problem in algebraic geometry"
     },
     {
       "slug": "k-r-parthasarathy",
@@ -522,7 +654,10 @@
       "tagline": "Probabilist who founded quantum probability theory and quantum stochastic calculus.",
       "summary": "Parthasarathy is a mathematician who pioneered quantum probability and quantum stochastic calculus, creating a framework that models quantum noise and underpins quantum information theory. A professor at ISI Delhi, he trained a generation of probabilists and received the Padma Shri and the Humboldt Research Award.",
       "quote": null,
-      "wiki": "K. R. Parthasarathy"
+      "wiki": "K. R. Parthasarathy",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "quantum probability and non-commutative stochastic calculus"
     },
     {
       "slug": "s-s-abhyankar",
@@ -533,7 +668,10 @@
       "tagline": "Algebraic geometer known for Abhyankar's lemma and resolving singularities in positive characteristic.",
       "summary": "Abhyankar was a distinguished algebraic geometer whose work on resolution of singularities, local algebra, and algebraic curves earned international acclaim. Abhyankar's lemma is a standard tool in algebraic geometry. He taught at Purdue University for decades, supervised numerous doctoral students, and received the Padma Shri and the Steele Prize.",
       "quote": null,
-      "wiki": "Shreeram Shankar Abhyankar"
+      "wiki": "Shreeram Shankar Abhyankar",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "resolution of singularities in algebraic geometry and Abhyankar's conjecture"
     },
     {
       "slug": "t-r-govindachari",
@@ -544,7 +682,10 @@
       "tagline": "Natural-products chemist who pioneered research on Indian medicinal plants and alkaloids.",
       "summary": "Govindachari was a chemist who advanced the chemistry of natural products in India, particularly alkaloids and terpenoids from Indian medicinal plants. He worked at the Central College, Bangalore, and the Indian Institute of Science, training generations of chemists. His research laid groundwork for phytochemistry and drug discovery from India's botanical wealth.",
       "quote": null,
-      "wiki": "T. R. Govindachari"
+      "wiki": "T. R. Govindachari",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "alkaloid natural-product chemistry and Indian traditional-medicine phytochemistry"
     },
     {
       "slug": "kamala-sohonie",
@@ -555,7 +696,10 @@
       "tagline": "First Indian woman to earn a PhD in a scientific discipline — broke Cambridge's gender barrier to study nutrition.",
       "summary": "Sohonie was a biochemist who became the first Indian woman to receive a PhD in a scientific discipline (Cambridge, 1939), after initially being denied admission to the Indian Institute of Science by C. V. Raman because she was a woman. Her thesis on the proteins of pulses contributed to understanding Indian nutrition. She later worked at the Royal Institute of Science, Mumbai, and on Neera (palm nectar) as a nutritional supplement.",
       "quote": null,
-      "wiki": "Kamala Sohonie"
+      "wiki": "Kamala Sohonie",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "enzyme biochemistry research and cytochrome-C studies in Indian science"
     },
     {
       "slug": "p-m-bhargava",
@@ -566,7 +710,10 @@
       "tagline": "Father of Indian biotechnology — founded the Centre for Cellular and Molecular Biology (CCMB), Hyderabad.",
       "summary": "Bhargava was a molecular biologist and the founding Director of CCMB, which he established in 1977 as India's premier centre for modern biology research. He championed biotechnology and genetic engineering in India and was an outspoken advocate for scientific temper and rationalism. A Padma Bhushan recipient, he remained an influential public intellectual until his death.",
       "quote": null,
-      "wiki": "Pushpa Mittra Bhargava"
+      "wiki": "Pushpa Mittra Bhargava",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "founding India's biotechnology policy and the Department of Biotechnology"
     },
     {
       "slug": "lalji-singh",
@@ -577,7 +724,10 @@
       "tagline": "Father of Indian DNA fingerprinting — pioneered DNA-based identity testing and wildlife forensics in India.",
       "summary": "Singh was a molecular biologist who developed and introduced DNA fingerprinting technology in India, with applications in paternity testing, criminal forensics, and wildlife conservation. He directed the Centre for Cellular and Molecular Biology (CCMB) and later founded the Centre for DNA Fingerprinting and Diagnostics (CDFD), Hyderabad. A Padma Shri and Padma Bhushan recipient.",
       "quote": null,
-      "wiki": "Lalji Singh"
+      "wiki": "Lalji Singh",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "DNA fingerprinting forensics and population genetics in India"
     },
     {
       "slug": "b-c-roy",
@@ -588,7 +738,10 @@
       "tagline": "Physician and second Chief Minister of West Bengal — National Doctors' Day in India marks his birth and death anniversary.",
       "summary": "B. C. Roy was a renowned physician and educationist who established several medical institutions in Kolkata, including the Indian Medical Association and the Medical College Hospital. As Chief Minister of West Bengal (1948–1962) he advanced public health and education. India observes National Doctors' Day on 1 July, his birth and death anniversary, in his honour. He received the Bharat Ratna.",
       "quote": null,
-      "wiki": "Bidhan Chandra Roy"
+      "wiki": "Bidhan Chandra Roy",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "public-health infrastructure and medical education policy in independent India"
     },
     {
       "slug": "e-sreedharan",
@@ -599,7 +752,10 @@
       "tagline": "The 'Metro Man' — built the Konkan Railway and Delhi Metro, transforming urban transport in India.",
       "summary": "Sreedharan is a civil engineer credited with executing India's most challenging infrastructure projects on time. He led the Konkan Railway project through difficult terrain and later served as managing director of the Delhi Metro Rail Corporation, building India's first modern metro system. His reputation for integrity and project discipline earned him the Padma Shri and Padma Vibhushan.",
       "quote": null,
-      "wiki": "E. Sreedharan"
+      "wiki": "E. Sreedharan",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "metro-rail project management and urban-transit engineering in India"
     },
     {
       "slug": "brahm-prakash",
@@ -610,7 +766,10 @@
       "tagline": "Metallurgist and founding director of BARC — advanced India's nuclear materials and alloy development.",
       "summary": "Brahm Prakash was a metallurgical engineer who played a key role in establishing India's nuclear materials programme. As founding Director of the Metallurgy Division at BARC and later Director of IIT Kanpur, he advanced research on alloys, welding, and nuclear fuel materials. He helped build India's indigenous capability in strategic metallurgy.",
       "quote": null,
-      "wiki": "Brahm Prakash"
+      "wiki": "Brahm Prakash",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "India's nuclear metallurgy and space-grade materials programme"
     },
     {
       "slug": "vasant-gowarikar",
@@ -621,7 +780,10 @@
       "tagline": "Polymer scientist who developed polymers for India's rocket programme and advised on science policy.",
       "summary": "Gowariker was a chemical engineer and polymer scientist who developed high-performance polymers used in Indian rocket and satellite applications. As Scientific Adviser to the Defence Minister and Secretary, Department of Defence R&D, he guided India's defence research and the Integrated Guided Missile Development Programme. A Padma Shri and Padma Bhushan recipient.",
       "quote": null,
-      "wiki": "Vasant Gowarikar"
+      "wiki": "Vasant Gowarikar",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "India's SLV-3 space launch vehicle and long-range monsoon forecasting"
     },
     {
       "slug": "b-p-pal",
@@ -632,7 +794,10 @@
       "tagline": "Plant breeder and first Director General of ICAR — improved Indian wheat and rose varieties.",
       "summary": "B. P. Pal was a geneticist and plant breeder who led agricultural research in India as Director General of the Indian Council of Agricultural Research (ICAR). He developed improved wheat varieties and was renowned for his work on roses, writing the classic book 'The Rose in India'. He shaped India's post-independence agricultural research system.",
       "quote": null,
-      "wiki": "B. P. Pal"
+      "wiki": "B. P. Pal",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "high-yielding wheat varieties that underpinned India's Green Revolution"
     },
     {
       "slug": "raj-reddy",
@@ -643,7 +808,10 @@
       "tagline": "Computer scientist who won the Turing Award for pioneering work in artificial intelligence and speech recognition.",
       "summary": "Raj Reddy is a computer scientist whose work on large-scale AI systems, robotics, and speech recognition helped shape modern computing. He founded the Robotics Institute at Carnegie Mellon University and was a leading voice on using technology for social development. He received the 1994 Turing Award, the Padma Bhushan, and the Legion of Honour.",
       "quote": null,
-      "wiki": "Raj Reddy"
+      "wiki": "Raj Reddy",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "speech recognition, AI and human-computer interaction pioneer"
     },
     {
       "slug": "m-s-gopalakrishnan",
@@ -654,7 +822,10 @@
       "tagline": "Algebraist who built the School of Mathematics at TIFR and advanced representation theory in India.",
       "summary": "Gopalakrishnan was a mathematician whose research spanned algebra, representation theory, and number theory. He was instrumental in building the School of Mathematics at the Tata Institute of Fundamental Research into a world-class centre and trained many Indian mathematicians. He received the Shanti Swarup Bhatnagar Prize.",
       "quote": null,
-      "wiki": "M. S. Gopalakrishnan"
+      "wiki": "M. S. Gopalakrishnan",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "India's reactor engineering and atomic-energy infrastructure"
     },
     {
       "slug": "v-c-kulkarni",
@@ -665,7 +836,10 @@
       "tagline": "Commutative algebraist known for Kaplansky–Kulkarni results and teaching at IIT Bombay.",
       "summary": "V. C. Kulkarni is a mathematician specializing in commutative algebra and ring theory. A long-time professor at IIT Bombay, he mentored generations of students and contributed to the development of mathematics education in India. He received the Shanti Swarup Bhatnagar Prize in Mathematical Sciences.",
       "quote": null,
-      "wiki": "V. C. Kulkarni"
+      "wiki": "V. C. Kulkarni",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's radar and electronic-warfare systems development"
     },
     {
       "slug": "s-ramaseshan",
@@ -676,7 +850,10 @@
       "tagline": "Physicist and director of IISc — advanced crystallography and materials science in India.",
       "summary": "S. Ramaseshan was a physicist who made contributions to crystallography, X-ray diffraction, and materials science. As Director of the Indian Institute of Science, Bangalore, he strengthened research and institution-building. He was the grandson of C. V. Raman's brother and carried forward a distinguished scientific lineage. A Padma Bhushan recipient.",
       "quote": null,
-      "wiki": "S. Ramaseshan"
+      "wiki": "S. Ramaseshan",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "crystallography, X-ray optics and anomalous-dispersion methods"
     },
     {
       "slug": "r-n-chopra",
@@ -687,7 +864,10 @@
       "tagline": "Father of Indian pharmacology — founded the Indian Research Fund Association and studied indigenous medicinal plants.",
       "summary": "R. N. Chopra was a pharmacologist who established modern pharmacology in India. He founded the Indian Research Fund Association (precursor to ICMR) and conducted pioneering work on indigenous medicinal plants and their active compounds. His 'Glossary of Indian Medicinal Plants' remains a reference work.",
       "quote": null,
-      "wiki": "Ram Nath Chopra"
+      "wiki": "Ram Nath Chopra",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "pharmacological research on Indian medicinal plants and drug standardisation"
     },
     {
       "slug": "s-ramanathan",
@@ -698,7 +878,10 @@
       "tagline": "Organic chemist known for work on natural products and alkaloids; professor at IIT Madras.",
       "summary": "S. Ramanathan was an organic chemist whose research focused on the chemistry of natural products, alkaloids, and terpenes. He taught at IIT Madras and the Indian Institute of Science, training generations of chemists. He received the Shanti Swarup Bhatnagar Prize and helped build India's organic chemistry research base.",
       "quote": null,
-      "wiki": "S. Ramanathan"
+      "wiki": "S. Ramanathan",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "atmospheric electricity measurement and India's meteorological research tradition"
     },
     {
       "slug": "a-r-krishnan",
@@ -709,7 +892,10 @@
       "tagline": "Inorganic chemist and the first director of CSIR's Central Electrochemical Research Institute (CECRI), Karaikudi.",
       "summary": "A. R. Krishnan was an inorganic chemist who founded CECRI and advanced electrochemical research in India, including work on batteries, corrosion, and metal finishing. He helped establish India's capabilities in electrochemistry and electrochemical technology for industry.",
       "quote": null,
-      "wiki": "A. R. Krishnan"
+      "wiki": "A. R. Krishnan",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "crystal optics and liquid-viscosity research methods"
     },
     {
       "slug": "k-s-krishnan",
@@ -720,7 +906,10 @@
       "tagline": "Physicist who co-discovered the Raman effect with C. V. Raman and directed the National Physical Laboratory.",
       "summary": "K. S. Krishnan was C. V. Raman's collaborator in the discovery of the Raman effect (1928), one of the most important discoveries in spectroscopy. He later directed the National Physical Laboratory, Delhi, and built India's capabilities in precision measurement and ultrasonics. A Fellow of the Royal Society and Padma Bhushan recipient.",
       "quote": null,
-      "wiki": "Kariamanickam Srinivasa Krishnan"
+      "wiki": "Kariamanickam Srinivasa Krishnan",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "co-discovery of the Raman effect and magnetic susceptibility measurements"
     },
     {
       "slug": "r-s-mishra",
@@ -731,7 +920,10 @@
       "tagline": "Metallurgist who advanced steel research and founded the National Metallurgical Laboratory's R&D programmes.",
       "summary": "R. S. Mishra was a metallurgical engineer whose work on steelmaking, ironmaking, and materials processing supported India's industrial growth. He held leadership roles at CSIR's National Metallurgical Laboratory and contributed to national steel and materials research policy.",
       "quote": null,
-      "wiki": "R. S. Mishra"
+      "wiki": "R. S. Mishra",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "differential geometry, tensor analysis and cosmological relativity"
     },
     {
       "slug": "a-p-mitra",
@@ -742,7 +934,10 @@
       "tagline": "Atmospheric physicist who founded the Indian programme in aeronomy and studied the upper atmosphere.",
       "summary": "A. P. Mitra was a physicist who pioneered aeronomy — the study of Earth's upper atmosphere — in India. As Director of the National Physical Laboratory, he advanced research on atmospheric physics, radio wave propagation, and space science. He played a key role in establishing India's participation in international geophysical programmes.",
       "quote": null,
-      "wiki": "A. P. Mitra"
+      "wiki": "A. P. Mitra",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "ionospheric and solar-terrestrial physics research and measurement standards"
     },
     {
       "slug": "p-l-dhingra",
@@ -753,7 +948,10 @@
       "tagline": "Agricultural chemist who advanced soil science and fertilizer research in India.",
       "summary": "P. L. Dhingra was an agricultural chemist whose work on soil fertility, plant nutrition, and fertilizers helped shape India's agricultural research. He worked at the Indian Agricultural Research Institute and contributed to the Green Revolution's scientific foundation.",
       "quote": null,
-      "wiki": "P. L. Dhingra"
+      "wiki": "P. L. Dhingra",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "plant physiology and soil-crop interaction research in India"
     },
     {
       "slug": "s-varadarajan",
@@ -764,7 +962,10 @@
       "tagline": "Mathematician known for work on Lie groups and harmonic analysis; professor at UCLA.",
       "summary": "V. S. Varadarajan is a mathematician renowned for his work on Lie groups, their representations, and harmonic analysis, with applications to quantum mechanics. A professor at UCLA, he authored influential textbooks and trained many students. He received the Padma Shri and is a Fellow of the American Mathematical Society.",
       "quote": null,
-      "wiki": "V. S. Varadarajan"
+      "wiki": "V. S. Varadarajan",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "infinite-dimensional Lie-group representations and geometric quantisation"
     },
     {
       "slug": "h-k-sen",
@@ -775,7 +976,10 @@
       "tagline": "Chemical engineer and pioneer of membrane separation technology in India.",
       "summary": "H. K. Sen was a chemical engineer whose research on membrane technology, separation processes, and biochemical engineering found applications in water treatment and biotechnology. He taught at the Indian Institute of Science and IIT Delhi and received the Shanti Swarup Bhatnagar Prize.",
       "quote": null,
-      "wiki": "H. K. Sen"
+      "wiki": "H. K. Sen",
+      "era": "modern",
+      "enduring": true,
+      "stillUsed": "upper-atmosphere and cosmic-ray physics research in India"
     },
     {
       "slug": "r-c-mehrotra",
@@ -786,7 +990,10 @@
       "tagline": "Inorganic chemist known for organometallic chemistry and metal clusters; professor at IIT Kanpur.",
       "summary": "R. C. Mehrotra was an inorganic chemist whose work on organometallic compounds, metal clusters, and coordination chemistry advanced the field in India. He taught at IIT Kanpur for decades, supervised numerous PhD students, and received the Shanti Swarup Bhatnagar Prize in Chemical Sciences.",
       "quote": null,
-      "wiki": "R. C. Mehrotra"
+      "wiki": "R. C. Mehrotra",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "metal alkoxide chemistry and sol–gel process foundations"
     },
     {
       "slug": "s-m-mukherjee",
@@ -797,7 +1004,10 @@
       "tagline": "Physical chemist who advanced electrochemistry and founded research at Jadavpur University.",
       "summary": "S. M. Mukherjee was a physical chemist known for his work on electrochemistry and chemical kinetics. He established strong research programmes at Jadavpur University, Kolkata, and mentored many chemists. He received the Shanti Swarup Bhatnagar Prize.",
       "quote": null,
-      "wiki": "S. M. Mukherjee"
+      "wiki": "S. M. Mukherjee",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "applied industrial chemistry and India's pharmaceutical research foundations"
     },
     {
       "slug": "k-c-malhotra",
@@ -808,7 +1018,10 @@
       "tagline": "Plant pathologist who studied crop diseases and advanced agricultural plant protection in India.",
       "summary": "K. C. Malhotra was a botanist and plant pathologist whose research on crop diseases, particularly fungal pathogens, helped Indian agriculture reduce yield losses. He worked at the Indian Agricultural Research Institute and contributed to plant protection science.",
       "quote": null,
-      "wiki": "K. C. Malhotra"
+      "wiki": "K. C. Malhotra",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "tribal population genetics and community-biodiversity conservation in India"
     },
     {
       "slug": "v-r-thadani",
@@ -819,7 +1032,10 @@
       "tagline": "Physicist who founded the physics department at the University of Delhi and taught generations.",
       "summary": "V. R. Thadani was a physicist who helped establish the physics department at the University of Delhi and taught several generations of Indian physicists. His work spanned solid-state physics and science education.",
       "quote": null,
-      "wiki": "V. R. Thadani"
+      "wiki": "V. R. Thadani",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "pharmaceutical research and drug-standardisation methodology"
     },
     {
       "slug": "s-p-chatterjee",
@@ -830,7 +1046,10 @@
       "tagline": "Statistician who founded the Institute of Statistical Studies and advanced statistics education in West Bengal.",
       "summary": "S. P. Chatterjee was a statistician who played a key role in developing statistics education and research in West Bengal. He founded the Institute of Statistical Studies and contributed to the growth of the statistical profession in India.",
       "quote": null,
-      "wiki": "S. P. Chatterjee"
+      "wiki": "S. P. Chatterjee",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "regional geography methodology and cartographic survey techniques"
     },
     {
       "slug": "n-r-sen",
@@ -841,7 +1060,10 @@
       "tagline": "Mathematician known for work on differential geometry and tensor analysis at the University of Calcutta.",
       "summary": "N. R. Sen was a mathematician whose research on differential geometry and tensor analysis contributed to the mathematical foundations of relativity and geometry. He taught at the University of Calcutta and was a Fellow of several scientific academies.",
       "quote": null,
-      "wiki": "N. R. Sen"
+      "wiki": "N. R. Sen",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "fluid-mechanics and cosmological-relativity research in India"
     },
     {
       "slug": "b-m-udgaonkar",
@@ -852,7 +1074,10 @@
       "tagline": "Physicist who taught and popularized physics in western India at the Institute of Science, Mumbai.",
       "summary": "B. M. Udgaonkar was a physicist and educationist at the Institute of Science, Mumbai, known for his clear teaching and contributions to physics education in Maharashtra. He trained many students who went on to lead Indian science.",
       "quote": null,
-      "wiki": "B. M. Udgaonkar"
+      "wiki": "B. M. Udgaonkar",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "zoological taxonomy and India's faunal survey traditions"
     },
     {
       "slug": "c-n-r-rao",
@@ -863,7 +1088,10 @@
       "tagline": "Materials chemist and science adviser — one of India's most cited scientists, worked on nanomaterials.",
       "summary": "C. N. R. Rao is a materials chemist whose research on solid-state and structural chemistry, nanomaterials, and hybrid materials has made him one of the most cited scientists from India. He served as scientific adviser to the Prime Minister, founded the Jawaharlal Nehru Centre for Advanced Scientific Research (JNCASR), and received the Bharat Ratna and numerous international honours.",
       "quote": null,
-      "wiki": "C. N. R. Rao"
+      "wiki": "C. N. R. Rao",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "solid-state chemistry, transition-metal oxides and two-dimensional nanomaterials"
     },
     {
       "slug": "g-k-anklesaria",
@@ -874,7 +1102,10 @@
       "tagline": "Industrial chemist who advanced the chemical industry in Gujarat and founded research laboratories.",
       "summary": "G. K. Anklesaria was an industrial chemist who contributed to the development of India's chemical and pharmaceutical industry, particularly in Gujarat. He founded research and testing laboratories and supported industrial chemistry education.",
       "quote": null,
-      "wiki": "G. K. Anklesaria"
+      "wiki": "G. K. Anklesaria",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "geological survey of Kutch and Rajasthan mineral resources"
     },
     {
       "slug": "n-s-ramaswamy",
@@ -885,7 +1116,10 @@
       "tagline": "Biophysicist who developed image-processing methods for cryo-electron microscopy of macromolecules.",
       "summary": "N. S. Ramaswamy is a molecular biophysicist known for developing computational methods to reconstruct three-dimensional structures of biological macromolecules from electron micrographs, foundational to modern cryo-EM. He worked at the Molecular Biophysics Unit, IISc Bangalore, and is a Fellow of the Royal Society.",
       "quote": null,
-      "wiki": "N. S. Ramaswamy"
+      "wiki": "N. S. Ramaswamy",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "renewable-energy technology, biogas systems and rural electrification"
     },
     {
       "slug": "s-bhagavantam",
@@ -896,7 +1130,10 @@
       "tagline": "Physicist who directed CSIR laboratories and advanced radio and cosmic-ray research in India.",
       "summary": "S. Bhagavantam was a physicist whose work spanned radio physics, cosmic rays, and the ionosphere. He directed several CSIR laboratories and the Indian Institute of Technology, Kharagpur, and served as Vice-Chancellor of Osmania University. He helped build post-independence India's scientific infrastructure.",
       "quote": null,
-      "wiki": "S. Bhagavantam"
+      "wiki": "S. Bhagavantam",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "Raman-effect applications and crystal-acoustics research"
     },
     {
       "slug": "k-n-bahl",
@@ -907,7 +1144,10 @@
       "tagline": "Plant morphologist who advanced the study of Indian flora and taught at the University of Delhi.",
       "summary": "K. N. Bahl was a botanist whose research on plant morphology and anatomy advanced the understanding of Indian plants. He taught at the University of Delhi and helped establish botany as a strong discipline in Indian universities.",
       "quote": null,
-      "wiki": "K. N. Bahl"
+      "wiki": "K. N. Bahl",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "earthworm systematics and soil-biology taxonomy in India"
     },
     {
       "slug": "p-maheshwari",
@@ -918,7 +1158,10 @@
       "tagline": "Embryologist who founded the modern study of plant embryology in India.",
       "summary": "P. Maheshwari was a botanist who founded the modern study of plant embryology in India. His book 'An Introduction to the Embryology of Angiosperms' became a standard text worldwide. He taught at the University of Delhi and received the Shanti Swarup Bhatnagar Prize.",
       "quote": null,
-      "wiki": "P. Maheshwari"
+      "wiki": "P. Maheshwari",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "plant embryology and test-tube fertilisation techniques"
     },
     {
       "slug": "m-s-ramanathan",
@@ -929,7 +1172,10 @@
       "tagline": "Physicist who founded the physics department at Annamalai University and studied crystal physics.",
       "summary": "M. S. Ramanathan was a physicist who established the physics department at Annamalai University and conducted research on crystal physics and ultrasonics. He trained many students and contributed to physics education in Tamil Nadu.",
       "quote": null,
-      "wiki": "M. S. Ramanathan"
+      "wiki": "M. S. Ramanathan",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "India's numerical weather-forecasting and monsoon-prediction methods"
     },
     {
       "slug": "k-s-rajan",
@@ -940,7 +1186,10 @@
       "tagline": "Aerospace scientist who guided India's missile programmes and served as Scientific Adviser to the Defence Minister.",
       "summary": "K. S. Rajan was an aerospace scientist who contributed to India's missile and aerospace programmes, including work on aerodynamics and launch vehicles. As Scientific Adviser to the Raksha Mantri and Director General of DRDO's aerospace cluster, he guided strategic technology development. A Padma Shri recipient.",
       "quote": null,
-      "wiki": "K. S. Rajan"
+      "wiki": "K. S. Rajan",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's scientific instrument development and measurement standards"
     },
     {
       "slug": "a-j-m-salam",
@@ -951,7 +1200,10 @@
       "tagline": "Physicist who studied cosmic rays and high-energy physics at the Tata Institute of Fundamental Research.",
       "summary": "A. J. M. Salam was a physicist whose research on cosmic rays and high-energy physics contributed to TIFR's early experimental programme. He worked on balloon-borne and ground-based detectors and trained students in particle physics.",
       "quote": null,
-      "wiki": "A. J. M. Salam"
+      "wiki": "A. J. M. Salam",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's atmospheric chemistry, ozone monitoring and climate-science research"
     },
     {
       "slug": "d-s-koothan",
@@ -962,7 +1214,10 @@
       "tagline": "Physicist and educationist — founded the University Grants Commission and shaped Indian higher education.",
       "summary": "D. S. Kothari was a theoretical physicist whose research on the theory of the white dwarf and atmospheric electricity earned international recognition. He was the first Chairman of the University Grants Commission (UGC) and shaped India's higher-education system. The Kothari Commission on education bears his legacy. He received the Padma Bhushan and Padma Vibhushan.",
       "quote": null,
-      "wiki": "D. S. Kothari"
+      "wiki": "D. S. Kothari",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "nuclear-physics education and India's atomic-energy policy advocacy"
     },
     {
       "slug": "b-d-nagchaudhuri",
@@ -973,7 +1228,10 @@
       "tagline": "Physicist who directed the Indian Association for the Cultivation of Science and studied magnetism.",
       "summary": "B. D. Nagchaudhuri was a physicist whose work on magnetism and solid-state physics advanced materials research in India. He directed the Indian Association for the Cultivation of Science (IACS), Kolkata, and served as Vice-Chancellor of Jadavpur University.",
       "quote": null,
-      "wiki": "B. D. Nagchaudhuri"
+      "wiki": "B. D. Nagchaudhuri",
+      "era": "colonial",
+      "enduring": true,
+      "stillUsed": "nuclear physics and cosmic-ray research in India"
     },
     {
       "slug": "s-p-k-gupta",
@@ -984,7 +1242,10 @@
       "tagline": "Physicist who advanced nuclear physics research and taught at the University of Delhi.",
       "summary": "S. P. K. Gupta was a nuclear physicist who contributed to experimental nuclear physics and taught at the University of Delhi. He helped build India's nuclear research capabilities and trained students in the field.",
       "quote": null,
-      "wiki": "S. P. K. Gupta"
+      "wiki": "S. P. K. Gupta",
+      "era": "living",
+      "enduring": true,
+      "stillUsed": "India's meteorological research and upper-atmosphere measurement instruments"
     },
     {
       "slug": "aryabhata",

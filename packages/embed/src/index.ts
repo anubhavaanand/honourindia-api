@@ -271,6 +271,18 @@ const CSS = `
 .hi-prev { left: 6px; }
 .hi-next { right: 6px; }
 .hi-nav:hover { background: rgba(10,12,14,.75); }
+.hi-nav:focus-visible, .hi-retry:focus-visible {
+  outline: 2px solid #ff9933;
+  outline-offset: 2px;
+}
+.hi-card:focus-visible {
+  outline: 2px solid #ff9933;
+  outline-offset: -2px;
+}
+.hi:focus-visible {
+  outline: 2px solid #ff9933;
+  outline-offset: 2px;
+}
 
 .hi-error {
   position: absolute; inset: 0;
@@ -318,6 +330,7 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
   root.className = `hi hi--${size} hi--${theme}`
   root.setAttribute('role', 'region')
   root.setAttribute('aria-label', 'Honour India — billboards honouring Indian scientists')
+  root.setAttribute('tabindex', '0')
 
   const card = document.createElement('a')
   card.className = 'hi-card'
@@ -361,10 +374,12 @@ function buildDom(size: Size, theme: Theme): { root: HTMLElement; progress: HTML
 
   const navPrev = document.createElement('button')
   navPrev.className = 'hi-nav hi-prev'
+  navPrev.setAttribute('type', 'button')
   navPrev.setAttribute('aria-label', 'Previous figure')
   navPrev.innerHTML = '&#8249;'
   const navNext = document.createElement('button')
   navNext.className = 'hi-nav hi-next'
+  navNext.setAttribute('type', 'button')
   navNext.setAttribute('aria-label', 'Next figure')
   navNext.innerHTML = '&#8250;'
 
@@ -564,7 +579,18 @@ class BillboardWidget {
     void this.fetchBatch()
   }
 
+  private onKeydown = (e: KeyboardEvent): void => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      this.step(-1)
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      this.step(1)
+    }
+  }
+
   private attachDomEvents(): void {
+    this.dom.root.addEventListener('keydown', this.onKeydown)
     this.dom.navPrev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(-1) })
     this.dom.navNext.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.step(1) })
     var retryBtn = this.dom.errorBox.querySelector('.hi-retry')
@@ -587,6 +613,7 @@ class BillboardWidget {
     }
 
     if (opts.size && opts.size !== this.size) {
+      this.dom.root.removeEventListener('keydown', this.onKeydown)
       this.size = opts.size
       const oldRoot = this.dom.root
       this.dom = buildDom(this.size, this.theme)
@@ -768,6 +795,7 @@ class BillboardWidget {
       this.observer = null
     }
     document.removeEventListener('visibilitychange', this.onVisibility)
+    this.dom.root.removeEventListener('keydown', this.onKeydown)
     this.shadow.innerHTML = ''
   }
 }

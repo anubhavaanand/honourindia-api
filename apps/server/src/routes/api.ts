@@ -5,6 +5,7 @@ import { etag } from 'hono/etag'
 import { figures, findBySlug, filterFigures, sampleRandom, toBillboard, toSummary, figuresVersion, ROOT } from '../lib/data.js'
 import type { FigureFilter } from '../lib/data.js'
 import type { Env } from '../lib/auth.js'
+import { createSubmission } from '../lib/submissions.js'
 
 const OPENAPI_JSON = path.join(ROOT, 'docs/openapi.json')
 const OPENAPI_YAML = path.join(ROOT, 'docs/openapi.yaml')
@@ -37,6 +38,7 @@ api.get('/', (c) =>
       'GET /api/v1/billboards/random?count=8': 'Random billboards for the embed widget (count 1–24).',
       'GET /api/v1/figures': 'The full catalogue of honoured figures.',
       'GET /api/v1/figures/:slug': 'Full record for one figure.',
+      'POST /api/v1/figures/submit': 'Submit a new figure for moderation and inclusion in the catalogue.',
       'GET /api/v1/whoami': 'Shows your tier (anonymous/keyed) and rate-limit budget.',
       'GET /api/v1/meta': 'Dataset and licensing metadata.',
       'GET /api/v1/openapi': 'OpenAPI 3.1 specification (also available as /openapi.json or /openapi.yaml).',
@@ -134,6 +136,64 @@ api.get('/figures/:slug', (c) => {
     summary: f.summary,
     wikipedia: `https://en.wikipedia.org/wiki/${encodeURIComponent(f.wiki.replace(/ /g, '_'))}`,
   })
+})
+
+api.post('/figures/submit', async (c) => {
+  let body: any
+  try {
+    body = await c.req.json()
+  } catch {
+    return c.json({ error: 'Request body must be valid JSON' }, 400)
+  }
+
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    return c.json({ error: 'Request body must be an object' }, 400)
+  }
+
+  const { name, born, died, field, tagline, summary, wiki, quote, submitterName, submitterEmail } = body
+
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return c.json({ error: 'Field "name" is required and must be a non-empty string' }, 400)
+  }
+  if (born === undefined || born === null || typeof born !== 'number') {
+    return c.json({ error: 'Field "born" is required and must be a number' }, 400)
+  }
+  if (died !== undefined && died !== null && typeof died !== 'number') {
+    return c.json({ error: 'Field "died" must be a number or null' }, 400)
+  }
+  if (!field || typeof field !== 'string' || field.trim() === '') {
+    return c.json({ error: 'Field "field" is required and must be a non-empty string' }, 400)
+  }
+  if (!tagline || typeof tagline !== 'string' || tagline.trim() === '') {
+    return c.json({ error: 'Field "tagline" is required and must be a non-empty string' }, 400)
+  }
+  if (!summary || typeof summary !== 'string' || summary.trim() === '') {
+    return c.json({ error: 'Field "summary" is required and must be a non-empty string' }, 400)
+  }
+  if (!wiki || typeof wiki !== 'string' || wiki.trim() === '') {
+    return c.json({ error: 'Field "wiki" is required and must be a non-empty string' }, 400)
+  }
+
+  const submission = createSubmission({
+    name: name.trim(),
+    born,
+    died: died ?? null,
+    field: field.trim(),
+    tagline: tagline.trim(),
+    summary: summary.trim(),
+    wiki: wiki.trim(),
+    quote: quote && typeof quote.text === 'string' ? { text: quote.text, source: quote.source } : null,
+    submitterName: typeof submitterName === 'string' ? submitterName.trim() : null,
+    submitterEmail: typeof submitterEmail === 'string' ? submitterEmail.trim() : null,
+  })
+
+  return c.json(
+    {
+      message: 'Figure submission received for moderation',
+      submission,
+    },
+    201,
+  )
 })
 
 api.get('/openapi', (c) => {

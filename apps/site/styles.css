@@ -393,3 +393,158 @@ pre {
 @media (min-width: 760px) {
   .figure-detail { grid-template-columns: 1fr 1.1fr; gap: 44px; }
 }
+
+/* Print stylesheet (issue #24) */
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .skip-link,
+  .site-head nav,
+  .hero-actions,
+  .playground,
+  .copy-btn,
+  .figure-actions .btn,
+  .back-link,
+  .figure-loading,
+  .figure-not-found {
+    display: none !important;
+  }
+
+  .site-head {
+    border-bottom: 1px solid #cccccc;
+    padding: 10px 0;
+    margin-bottom: 20px;
+  }
+
+  .site-head .wordmark {
+    color: #111111 !important;
+    font-size: 1.2rem;
+  }
+
+  .wrap {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .figure-detail {
+    display: block !important;
+    margin-top: 0 !important;
+    page-break-inside: auto;
+  }
+
+  .figure-media {
+    float: left;
+    width: 200px;
+    margin: 0 24px 20px 0;
+    page-break-inside: avoid;
+  }
+
+  .figure-portrait {
+    width: 200px;
+    height: auto;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    box-shadow: none !important;
+  }
+
+  .figure-monogram {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #cccccc;
+    color: #333333;
+    background: #f5f5f5;
+  }
+
+  .figure-copy {
+    color: #111111 !important;
+  }
+
+  .figure-name {
+    color: #111111 !important;
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+
+  .figure-meta {
+    color: #555555 !important;
+    margin-bottom: 12px;
+  }
+
+  .figure-era-badge {
+    border: 1px solid #777777 !important;
+    color: #222222 !important;
+    background: transparent !important;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+  }
+
+  .figure-tagline {
+    color: #333333 !important;
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  .figure-summary {
+    color: #222222 !important;
+    margin-bottom: 16px;
+  }
+
+  .figure-quote {
+    border-left: 3px solid #666666 !important;
+    background: #f8f8f8 !important;
+    color: #222222 !important;
+    padding: 8px 14px !important;
+    margin: 16px 0 !important;
+    page-break-inside: avoid;
+  }
+
+  .figure-quote p {
+    font-size: 1rem;
+    color: #222222 !important;
+  }
+
+  .figure-quote cite {
+    color: #555555 !important;
+  }
+
+  .figure-still-used {
+    color: #1b5e20 !important;
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .figure-credit {
+    color: #666666 !important;
+    font-size: 0.75rem;
+    margin-top: 10px;
+    clear: both;
+  }
+
+  .site-foot {
+    border-top: 1px solid #cccccc;
+    margin-top: 30px;
+    padding-top: 15px;
+    color: #666666;
+    font-size: 0.75rem;
+    page-break-inside: avoid;
+  }
+
+  .foot-row {
+    padding: 0 !important;
+  }
+
+  a {
+    color: #111111 !important;
+    text-decoration: underline;
+  }
+}

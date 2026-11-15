@@ -25,45 +25,87 @@ const DATA_FILE = path.join(ROOT, 'data/figures.json')
 const IMAGES_FILE = path.join(ROOT, 'data/images.json')
 const IMAGES_DIR = path.join(ROOT, 'public/images')
 
-const DELETE = process.argv.includes('--delete')
-
-async function main() {
-  const figures = JSON.parse(await readFile(DATA_FILE, 'utf8')).figures
+export async function findOrphanImages({
+  dataFile = DATA_FILE,
+  imagesFile = IMAGES_FILE,
+  imagesDir = IMAGES_DIR,
+} = {}) {
+  const figures = JSON.parse(await readFile(dataFile, 'utf8')).figures
   const figureSlugs = new Set(figures.map((f) => f.slug))
 
   let images = {}
-  if (existsSync(IMAGES_FILE)) {
-    images = JSON.parse(await readFile(IMAGES_FILE, 'utf8'))
+  if (existsSync(imagesFile)) {
+    images = JSON.parse(await readFile(imagesFile, 'utf8'))
   }
 
   const orphanEntries = []
   const missingFiles = []
   for (const [slug, img] of Object.entries(images)) {
     if (!figureSlugs.has(slug)) orphanEntries.push(slug)
-    if (img.file && !existsSync(path.join(IMAGES_DIR, img.file))) missingFiles.push(`${slug} (${img.file})`)
+    if (img.file && !existsSync(path.join(imagesDir, img.file))) missingFiles.push(`${slug} (${img.file})`)
   }
 
-  const diskFiles = await readdir(IMAGES_DIR)
+  let diskFiles = []
+  if (existsSync(imagesDir)) {
+    diskFiles = await readdir(imagesDir)
+  }
+  const referencedFiles = new Set(Object.values(images).map((img) => img.file).filter(Boolean))
+  const orphanFiles = diskFiles.filter((f) => !referencedFiles.has(f))
+
+  return { orphanEntries, missingFiles, orphanFiles, images }
+}
+
+export async function cleanOrphans({
+  dataFile = DATA_FILE,
+  imagesFile = IMAGES_FILE,
+  imagesDir = IMAGES_DIR,
+  deleteFiles = false,
+} = {}) {
+  const { orphanEntries, missingFiles, orphanFiles, images } = await findOrphanImages({
+    dataFile,
+    imagesFile,
+    imagesDir,
+  })
+
+  if (deleteFiles) {
+    for (const slug of orphanEntries) delete images[slug]
+    for (const f of orphanFiles) await unlink(path.join(imagesDir, f))
+    if (orphanEntries.length) {
+      await writeFile(imagesFile, JSON.stringify(images, null, 2) + '\n')
+    }
+  }
+
+  return {
+    deletedEntries: deleteFiles ? orphanEntries.length : 0,
+    deletedFiles: deleteFiles ? orphanFiles.length : 0,
+    orphanEntries,
+    missingFiles,
+    orphanFiles,
+  }
+}
+
+async function main() {
+  const DELETE = process.argv.includes('--delete')
+  const result = await cleanOrphans({ deleteFiles: DELETE })
+
+  console.log(`Report:`)
+  console.log(`  orphan entries in images.json: ${result.orphanEntries.length}`)
+  for (const slug of result.orphanEntries) console.log(`    - ${slug}`)
+  console.log(`  missing files referenced: ${result.missingFiles.length}`)
+  for (const f of result.missingFiles) console.log(`    - ${f}`)
+  console.log(`  unreferenced files on disk: ${result.orphanFiles.length}`)
+  for (const f of result.orphanFiles) console.log(`    - public/images/${f}`)
 
   if (DELETE) {
-    for (const slug of orphanEntries) delete images[slug]
-    const referencedFiles = new Set(Object.values(images).map((img) => img.file).filter(Boolean))
-    const orphanFiles = diskFiles.filter((f) => !referencedFiles.has(f))
-    for (const f of orphanFiles) await unlink(path.join(IMAGES_DIR, f))
-    if (orphanEntries.length) {
-      await writeFile(IMAGES_FILE, JSON.stringify(images, null, 2) + '\n')
-    }
-    console.log(`\nDeleted ${orphanEntries.length} images.json entr(y/ies) and ${orphanFiles.length} file(s).`)
-  } else {
-    const referencedFiles = new Set(Object.values(images).map((img) => img.file).filter(Boolean))
-    const orphanFiles = diskFiles.filter((f) => !referencedFiles.has(f))
-    console.log(`  unreferenced files on disk: ${orphanFiles.length}`)
-    for (const f of orphanFiles) console.log(`    - public/images/${f}`)
+    console.log(`\nDeleted ${result.deletedEntries} images.json entr(y/ies) and ${result.deletedFiles} file(s).`)
+  } else if (result.orphanEntries.length || result.orphanFiles.length) {
     console.log('\nPass --delete to remove the orphans above.')
   }
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}

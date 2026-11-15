@@ -1,5 +1,7 @@
-import { readFile } from 'node:fs/promises'
+import { createReadStream } from 'node:fs'
+import { stat } from 'node:fs/promises'
 import path from 'node:path'
+import { Readable } from 'node:stream'
 import { serve } from '@hono/node-server'
 import { Hono, type Context } from 'hono'
 import { cors } from 'hono/cors'
@@ -43,15 +45,32 @@ const MIME: Record<string, string> = {
 }
 
 async function serveFile(filePath: string, cacheControl: string): Promise<Response> {
+  let size: number
   try {
-    const data = await readFile(filePath)
-    const type = MIME[path.extname(filePath).toLowerCase()] ?? 'application/octet-stream'
-    return new Response(new Uint8Array(data), {
-      headers: { 'content-type': type, 'cache-control': cacheControl },
-    })
+    const info = await stat(filePath)
+    if (!info.isFile()) {
+      return notFound()
+    }
+    size = info.size
   } catch {
-    return new Response('Not found', { status: 404, headers: { 'content-type': 'text/plain' } })
+    return notFound()
   }
+
+  const type = MIME[path.extname(filePath).toLowerCase()] ?? 'application/octet-stream'
+  // Stream the file instead of buffering it: a portrait or the widget bundle
+  // never has to sit in memory in full.
+  const body = Readable.toWeb(createReadStream(filePath)) as ReadableStream<Uint8Array>
+  return new Response(body, {
+    headers: {
+      'content-type': type,
+      'cache-control': cacheControl,
+      'content-length': String(size),
+    },
+  })
+}
+
+function notFound(): Response {
+  return new Response('Not found', { status: 404, headers: { 'content-type': 'text/plain' } })
 }
 
 export const app = new Hono<Env>()

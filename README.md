@@ -240,7 +240,10 @@ Example billboard:
 ## Deployment
 
 Single stateless Node process (≥ 20) — no database, no secrets. `PORT`
-(default 3000) is the only configuration.
+(default 3000) is the only configuration. `LOG_LEVEL` (`debug`, `info`,
+`warn`, `error`) and `LOG_FORMAT` (`json`, `pretty`) tune the logs; in
+production every line is a JSON object with the request's method, path,
+status, duration and request id.
 
 **Render (one click):** the repo ships a `render.yaml` Blueprint. In Render:
 *New + → Blueprint* → select the repo → apply. The build compiles both

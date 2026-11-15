@@ -43,7 +43,8 @@ npm test -- apps/server           # run only server tests
 widget, rerun `npm run build -w packages/embed` (or restart `npm run dev`) so
 `/embed.js` is fresh.
 
-The server reads only `PORT` (default `3000`). See [.env.example](.env.example).
+The server reads `PORT` (default `3000`), plus `LOG_LEVEL` and `LOG_FORMAT`
+for the logs. See [.env.example](.env.example).
 
 ## Code style
 

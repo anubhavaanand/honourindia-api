@@ -22,6 +22,13 @@ export function securityHeaders() {
     // resources; send only the origin to those sites, never the full path
     // or query string of the page that linked there.
     c.res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+    // The site and the widget never ask for a camera, a microphone, a
+    // location or a payment — so no browser should offer them. interest-cohort
+    // opts out of the advertising-derived audience segments.
+    c.res.headers.set(
+      'Permissions-Policy',
+      'camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), interest-cohort=()',
+    )
     c.res.headers.set('Content-Security-Policy', c.req.path.startsWith('/api/') ? API_CSP : SITE_CSP)
   }
 }

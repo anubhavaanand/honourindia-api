@@ -52,6 +52,23 @@ describe('securityHeaders', () => {
     const res = await app.request('/api/v1/meta')
     expect(res.headers.get('Referrer-Policy')).toBe('strict-origin-when-cross-origin')
   })
+
+  it('switches off the browser features the site never uses (issue #68)', async () => {
+    const c = makeContext('/')
+    await securityHeaders()(c, () => Promise.resolve())
+
+    const policy = c.res.headers.get('Permissions-Policy')
+    expect(policy).toContain('camera=()')
+    expect(policy).toContain('microphone=()')
+    expect(policy).toContain('geolocation=()')
+    expect(policy).toContain('payment=()')
+    expect(policy).toContain('interest-cohort=()')
+  })
+
+  it('sends the Permissions-Policy on real API responses too (issue #68)', async () => {
+    const res = await app.request('/api/v1/meta')
+    expect(res.headers.get('Permissions-Policy')).toContain('camera=()')
+  })
 })
 
 describe('/images/* path traversal protection', () => {

@@ -34,3 +34,22 @@ describe('GET /billboards/random count validation', () => {
     },
   )
 })
+
+describe('GET /openapi', () => {
+  it('serves openapi JSON specification', async () => {
+    const res = await api.request('/openapi')
+    expect(res.status).toBe(200)
+    const body: any = await res.json()
+    expect(body.openapi).toBe('3.1.0')
+    expect(body.info.title).toBe('Honour India API')
+    expect(body.paths['/billboards/random']).toBeDefined()
+  })
+
+  it('serves openapi YAML specification', async () => {
+    const res = await api.request('/openapi.yaml')
+    expect(res.status).toBe(200)
+    expect(res.headers.get('content-type')).toContain('text/yaml')
+    const text = await res.text()
+    expect(text).toContain('openapi: 3.1.0')
+  })
+})

@@ -44,6 +44,15 @@ describe('data.ts', () => {
         expect(ok, `${f.slug} has invalid died: ${f.died}`).toBe(true)
       }
     })
+
+    it('every figure has valid source attribution (issue #63)', () => {
+      for (const f of figures) {
+        expect(f.attribution).toBeDefined()
+        expect(f.attribution?.source).toBe('Wikipedia')
+        expect(f.attribution?.url).toContain('https://en.wikipedia.org/wiki/')
+        expect(f.attribution?.license).toBe('CC BY-SA 4.0')
+      }
+    })
   })
 
   describe('findBySlug', () => {
@@ -70,6 +79,11 @@ describe('data.ts', () => {
       expect(b.tagline).toBeTruthy()
       expect(b.quote).toEqual({ text: expect.any(String), source: 'widely attributed' })
       expect(b.link).toBe('https://en.wikipedia.org/wiki/C._V._Raman')
+      expect(b.attribution).toEqual({
+        source: 'Wikipedia',
+        url: 'https://en.wikipedia.org/wiki/C._V._Raman',
+        license: 'CC BY-SA 4.0',
+      })
       expect(b.image).toMatchObject({ url: expect.any(String), credit: expect.any(String), license: expect.any(String) })
     })
 

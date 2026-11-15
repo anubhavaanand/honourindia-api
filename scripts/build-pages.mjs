@@ -43,6 +43,11 @@ const billboards = figures.map((f) => ({
   quote: f.quote,
   image: img(f.slug),
   link: wikiLink(f.wiki),
+  attribution: f.attribution ?? {
+    source: 'Wikipedia',
+    url: wikiLink(f.wiki),
+    license: 'CC BY-SA 4.0',
+  },
 }))
 
 const summaries = figures.map((f) => ({

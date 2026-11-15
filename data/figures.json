@@ -17,7 +17,12 @@
       "wiki": "C. V. Raman",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Raman spectroscopy and the Raman effect in molecular analysis"
+      "stillUsed": "Raman spectroscopy and the Raman effect in molecular analysis",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/C._V._Raman",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "srinivasa-ramanujan",
@@ -34,7 +39,12 @@
       "wiki": "Srinivasa Ramanujan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Ramanujan's partition identities, mock theta functions and number theory"
+      "stillUsed": "Ramanujan's partition identities, mock theta functions and number theory",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Srinivasa_Ramanujan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "jagadish-chandra-bose",
@@ -48,7 +58,12 @@
       "wiki": "Jagadish Chandra Bose",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "millimetre-wave radio techniques and plant biophysics instrumentation"
+      "stillUsed": "millimetre-wave radio techniques and plant biophysics instrumentation",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Jagadish_Chandra_Bose",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "homi-bhabha",
@@ -62,7 +77,12 @@
       "wiki": "Homi J. Bhabha",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Bhabha scattering theory and the foundation of India's nuclear programme"
+      "stillUsed": "Bhabha scattering theory and the foundation of India's nuclear programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Homi_J._Bhabha",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "satyendra-nath-bose",
@@ -76,7 +96,12 @@
       "wiki": "Satyendra Nath Bose",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Bose–Einstein statistics and the boson — basis of quantum optics and superfluidity"
+      "stillUsed": "Bose–Einstein statistics and the boson — basis of quantum optics and superfluidity",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Satyendra_Nath_Bose",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "meghnad-saha",
@@ -90,7 +115,12 @@
       "wiki": "Meghnad Saha",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Saha ionisation equation used in stellar astrophysics and plasma physics"
+      "stillUsed": "Saha ionisation equation used in stellar astrophysics and plasma physics",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Meghnad_Saha",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "subrahmanyan-chandrasekhar",
@@ -104,7 +134,12 @@
       "wiki": "Subrahmanyan Chandrasekhar",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Chandrasekhar limit and mathematical theory of black holes and white dwarfs"
+      "stillUsed": "Chandrasekhar limit and mathematical theory of black holes and white dwarfs",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Subrahmanyan_Chandrasekhar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "vikram-sarabhai",
@@ -121,7 +156,12 @@
       "wiki": "Vikram Sarabhai",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "India's space programme and ISRO institutional framework"
+      "stillUsed": "India's space programme and ISRO institutional framework",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Vikram_Sarabhai",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "apj-abdul-kalam",
@@ -138,7 +178,12 @@
       "wiki": "A. P. J. Abdul Kalam",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's AGNI and PRITHVI missile systems and the PURA rural-development vision"
+      "stillUsed": "India's AGNI and PRITHVI missile systems and the PURA rural-development vision",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/A._P._J._Abdul_Kalam",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-s-swaminathan",
@@ -152,7 +197,12 @@
       "wiki": "M. S. Swaminathan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "high-yielding rice and wheat varieties that powered the Green Revolution"
+      "stillUsed": "high-yielding rice and wheat varieties that powered the Green Revolution",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._S._Swaminathan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "verghese-kurien",
@@ -166,7 +216,12 @@
       "wiki": "Verghese Kurien",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "the cooperative dairy model of Operation Flood and Amul"
+      "stillUsed": "the cooperative dairy model of Operation Flood and Amul",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Verghese_Kurien",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "anna-mani",
@@ -181,7 +236,12 @@
       "commonsFile": "Anna Mani - Oil painting by Rajasekharan.jpg",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "solar radiation measurement standards and Indian meteorological instrumentation"
+      "stillUsed": "solar radiation measurement standards and Indian meteorological instrumentation",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Anna_Mani",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "janaki-ammal",
@@ -195,7 +255,12 @@
       "wiki": "E. K. Janaki Ammal",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "botanical chromosome research and Indian ethnobotany field surveys"
+      "stillUsed": "botanical chromosome research and Indian ethnobotany field surveys",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/E._K._Janaki_Ammal",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "asima-chatterjee",
@@ -211,7 +276,12 @@
       "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "vinca alkaloid cancer-drug research and anti-epileptic phytochemistry"
+      "stillUsed": "vinca alkaloid cancer-drug research and anti-epileptic phytochemistry",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Asima_Chatterjee",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "anandi-gopal-joshi",
@@ -225,7 +295,12 @@
       "wiki": "Anandi Gopal Joshi",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "pioneering women's entry into Western medical education in India"
+      "stillUsed": "pioneering women's entry into Western medical education in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Anandi_Gopal_Joshi",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "kadambini-ganguly",
@@ -239,7 +314,12 @@
       "wiki": "Kadambini Ganguly",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "pioneering women's professional medical practice in colonial India"
+      "stillUsed": "pioneering women's professional medical practice in colonial India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Kadambini_Ganguly",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "g-n-ramachandran",
@@ -255,7 +335,12 @@
       "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "Ramachandran plot — the universal tool for protein-structure validation"
+      "stillUsed": "Ramachandran plot — the universal tool for protein-structure validation",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/G._N._Ramachandran",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "yellapragada-subbarow",
@@ -269,7 +354,12 @@
       "wiki": "Yellapragada Subbarow",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "methotrexate chemotherapy and the biochemistry of ATP and folate"
+      "stillUsed": "methotrexate chemotherapy and the biochemistry of ATP and folate",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Yellapragada_Subbarow",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "birbal-sahni",
@@ -283,7 +373,12 @@
       "wiki": "Birbal Sahni",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "palaeobotany of Indian fossil flora and Gondwana plant taxonomy"
+      "stillUsed": "palaeobotany of Indian fossil flora and Gondwana plant taxonomy",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Birbal_Sahni",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "p-c-mahalanobis",
@@ -297,7 +392,12 @@
       "wiki": "P. C. Mahalanobis",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Mahalanobis distance and large-scale sample-survey methodology"
+      "stillUsed": "Mahalanobis distance and large-scale sample-survey methodology",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/P._C._Mahalanobis",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "salim-ali",
@@ -311,7 +411,12 @@
       "wiki": "Sálim Ali",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "systematic field ornithology and the Handbook of the Birds of India and Pakistan"
+      "stillUsed": "systematic field ornithology and the Handbook of the Birds of India and Pakistan",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S%C3%A1lim_Ali",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "shakuntala-devi",
@@ -325,7 +430,12 @@
       "wiki": "Shakuntala Devi",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "mental-arithmetic techniques and mathematical puzzle pedagogy"
+      "stillUsed": "mental-arithmetic techniques and mathematical puzzle pedagogy",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Shakuntala_Devi",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-visvesvaraya",
@@ -342,7 +452,12 @@
       "wiki": "M. Visvesvaraya",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "precision automatic flood-gate engineering and dam design principles"
+      "stillUsed": "precision automatic flood-gate engineering and dam design principles",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._Visvesvaraya",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "kalpana-chawla",
@@ -359,7 +474,12 @@
       "wiki": "Kalpana Chawla",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's spaceflight heritage and women in aerospace inspiration"
+      "stillUsed": "India's spaceflight heritage and women in aerospace inspiration",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Kalpana_Chawla",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "nambi-narayanan",
@@ -373,7 +493,12 @@
       "wiki": "Nambi Narayanan",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's cryogenic rocket-engine programme and Vikas engine development"
+      "stillUsed": "India's cryogenic rocket-engine programme and Vikas engine development",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Nambi_Narayanan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "tessy-thomas",
@@ -387,7 +512,12 @@
       "wiki": "Tessy Thomas",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's AGNI missile guidance systems and indigenised warhead design"
+      "stillUsed": "India's AGNI missile guidance systems and indigenised warhead design",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Tessy_Thomas",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "g-d-naidu",
@@ -403,7 +533,12 @@
       "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "radio and electrical inventions and India's indigenous electronics tradition"
+      "stillUsed": "radio and electrical inventions and India's indigenous electronics tradition",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/G._D._Naidu",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "raj-chandra-bose",
@@ -419,7 +554,12 @@
       "imageNote": "No freely-licensed portrait is available yet; the widget shows a monogram until one is contributed.",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "combinatorial design theory and the Bose–Chowla theorem in coding theory"
+      "stillUsed": "combinatorial design theory and the Bose–Chowla theorem in coding theory",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Raj_Chandra_Bose",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "p-c-ray",
@@ -433,7 +573,12 @@
       "wiki": "Prafulla Chandra Ray",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "mercurous nitrite synthesis and founding India's modern chemical industry"
+      "stillUsed": "mercurous nitrite synthesis and founding India's modern chemical industry",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Prafulla_Chandra_Ray",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "e-c-george-sudarshan",
@@ -447,7 +592,12 @@
       "wiki": "E. C. George Sudarshan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "quantum Zeno effect, optical coherence theory and V–A weak interaction"
+      "stillUsed": "quantum Zeno effect, optical coherence theory and V–A weak interaction",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/E._C._George_Sudarshan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "jayant-narlikar",
@@ -461,7 +611,12 @@
       "wiki": "Jayant Narlikar",
       "era": "living",
       "enduring": true,
-      "stillUsed": "quasi-steady-state cosmology and science popularisation in India"
+      "stillUsed": "quasi-steady-state cosmology and science popularisation in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Jayant_Narlikar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "roddam-narasimha",
@@ -475,7 +630,12 @@
       "wiki": "Roddam Narasimha",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "laminar-to-turbulent transition theory and India's aerospace fluid dynamics"
+      "stillUsed": "laminar-to-turbulent transition theory and India's aerospace fluid dynamics",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Roddam_Narasimha",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "bikash-sinha",
@@ -489,7 +649,12 @@
       "wiki": "Bikash Sinha",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "quark–gluon plasma research and India's particle-physics infrastructure"
+      "stillUsed": "quark–gluon plasma research and India's particle-physics infrastructure",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Bikash_Sinha",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "satish-dhawan",
@@ -503,7 +668,12 @@
       "wiki": "Satish Dhawan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "turbulent boundary-layer research and leadership of India's launch-vehicle programme"
+      "stillUsed": "turbulent boundary-layer research and leadership of India's launch-vehicle programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Satish_Dhawan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "u-r-rao",
@@ -517,7 +687,12 @@
       "wiki": "U. R. Rao",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's INSAT satellite-communication programme"
+      "stillUsed": "India's INSAT satellite-communication programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/U._R._Rao",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-kasturirangan",
@@ -531,7 +706,12 @@
       "wiki": "K. Kasturirangan",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's space programme leadership and the National Education Policy 2020"
+      "stillUsed": "India's space programme leadership and the National Education Policy 2020",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._Kasturirangan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "g-madhavan-nair",
@@ -545,7 +725,12 @@
       "wiki": "G. Madhavan Nair",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's PSLV programme and Chandrayaan-1 lunar-orbiter mission"
+      "stillUsed": "India's PSLV programme and Chandrayaan-1 lunar-orbiter mission",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/G._Madhavan_Nair",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "a-s-kiran-kumar",
@@ -559,7 +744,12 @@
       "wiki": "A. S. Kiran Kumar",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's remote-sensing satellites and Mars Orbiter Mission payloads"
+      "stillUsed": "India's remote-sensing satellites and Mars Orbiter Mission payloads",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/A._S._Kiran_Kumar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-sivan",
@@ -573,7 +763,12 @@
       "wiki": "K. Sivan",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's GSLV launch-vehicle programme and Chandrayaan-2 mission"
+      "stillUsed": "India's GSLV launch-vehicle programme and Chandrayaan-2 mission",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._Sivan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "harish-chandra",
@@ -587,7 +782,12 @@
       "wiki": "Harish-Chandra",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "harmonic analysis on semisimple Lie groups — foundational to modern representation theory"
+      "stillUsed": "harmonic analysis on semisimple Lie groups — foundational to modern representation theory",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Harish-Chandra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-r-s-varadhan",
@@ -601,7 +801,12 @@
       "wiki": "S. R. Srinivasa Varadhan",
       "era": "living",
       "enduring": true,
-      "stillUsed": "large-deviation theory — the mathematical framework for rare-event probability"
+      "stillUsed": "large-deviation theory — the mathematical framework for rare-event probability",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._R._Srinivasa_Varadhan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-s-narasimhan",
@@ -615,7 +820,12 @@
       "wiki": "M. S. Narasimhan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "Narasimhan–Seshadri theorem — cornerstone of moduli spaces in algebraic geometry"
+      "stillUsed": "Narasimhan–Seshadri theorem — cornerstone of moduli spaces in algebraic geometry",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._S._Narasimhan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "c-s-seshadri",
@@ -629,7 +839,12 @@
       "wiki": "C. S. Seshadri",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "geometric invariant theory and moduli of vector bundles"
+      "stillUsed": "geometric invariant theory and moduli of vector bundles",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/C._S._Seshadri",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "neena-gupta",
@@ -643,7 +858,12 @@
       "wiki": "Neena Gupta (mathematician)",
       "era": "living",
       "enduring": true,
-      "stillUsed": "solution to the Zariski cancellation problem in algebraic geometry"
+      "stillUsed": "solution to the Zariski cancellation problem in algebraic geometry",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Neena_Gupta_(mathematician)",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-r-parthasarathy",
@@ -657,7 +877,12 @@
       "wiki": "K. R. Parthasarathy",
       "era": "living",
       "enduring": true,
-      "stillUsed": "quantum probability and non-commutative stochastic calculus"
+      "stillUsed": "quantum probability and non-commutative stochastic calculus",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._R._Parthasarathy",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-s-abhyankar",
@@ -671,7 +896,12 @@
       "wiki": "Shreeram Shankar Abhyankar",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "resolution of singularities in algebraic geometry and Abhyankar's conjecture"
+      "stillUsed": "resolution of singularities in algebraic geometry and Abhyankar's conjecture",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Shreeram_Shankar_Abhyankar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "t-r-govindachari",
@@ -685,7 +915,12 @@
       "wiki": "T. R. Govindachari",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "alkaloid natural-product chemistry and Indian traditional-medicine phytochemistry"
+      "stillUsed": "alkaloid natural-product chemistry and Indian traditional-medicine phytochemistry",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/T._R._Govindachari",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "kamala-sohonie",
@@ -699,7 +934,12 @@
       "wiki": "Kamala Sohonie",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "enzyme biochemistry research and cytochrome-C studies in Indian science"
+      "stillUsed": "enzyme biochemistry research and cytochrome-C studies in Indian science",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Kamala_Sohonie",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "p-m-bhargava",
@@ -713,7 +953,12 @@
       "wiki": "Pushpa Mittra Bhargava",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "founding India's biotechnology policy and the Department of Biotechnology"
+      "stillUsed": "founding India's biotechnology policy and the Department of Biotechnology",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Pushpa_Mittra_Bhargava",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "lalji-singh",
@@ -727,7 +972,12 @@
       "wiki": "Lalji Singh",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "DNA fingerprinting forensics and population genetics in India"
+      "stillUsed": "DNA fingerprinting forensics and population genetics in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Lalji_Singh",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "b-c-roy",
@@ -741,7 +991,12 @@
       "wiki": "Bidhan Chandra Roy",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "public-health infrastructure and medical education policy in independent India"
+      "stillUsed": "public-health infrastructure and medical education policy in independent India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Bidhan_Chandra_Roy",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "e-sreedharan",
@@ -755,7 +1010,12 @@
       "wiki": "E. Sreedharan",
       "era": "living",
       "enduring": true,
-      "stillUsed": "metro-rail project management and urban-transit engineering in India"
+      "stillUsed": "metro-rail project management and urban-transit engineering in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/E._Sreedharan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "brahm-prakash",
@@ -769,7 +1029,12 @@
       "wiki": "Brahm Prakash",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "India's nuclear metallurgy and space-grade materials programme"
+      "stillUsed": "India's nuclear metallurgy and space-grade materials programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Brahm_Prakash",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "vasant-gowarikar",
@@ -783,7 +1048,12 @@
       "wiki": "Vasant Gowarikar",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's SLV-3 space launch vehicle and long-range monsoon forecasting"
+      "stillUsed": "India's SLV-3 space launch vehicle and long-range monsoon forecasting",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Vasant_Gowarikar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "b-p-pal",
@@ -797,7 +1067,12 @@
       "wiki": "B. P. Pal",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "high-yielding wheat varieties that underpinned India's Green Revolution"
+      "stillUsed": "high-yielding wheat varieties that underpinned India's Green Revolution",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/B._P._Pal",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "raj-reddy",
@@ -811,7 +1086,12 @@
       "wiki": "Raj Reddy",
       "era": "living",
       "enduring": true,
-      "stillUsed": "speech recognition, AI and human-computer interaction pioneer"
+      "stillUsed": "speech recognition, AI and human-computer interaction pioneer",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Raj_Reddy",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-s-gopalakrishnan",
@@ -825,7 +1105,12 @@
       "wiki": "M. S. Gopalakrishnan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's reactor engineering and atomic-energy infrastructure"
+      "stillUsed": "India's reactor engineering and atomic-energy infrastructure",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._S._Gopalakrishnan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "v-c-kulkarni",
@@ -839,7 +1124,12 @@
       "wiki": "V. C. Kulkarni",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's radar and electronic-warfare systems development"
+      "stillUsed": "India's radar and electronic-warfare systems development",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/V._C._Kulkarni",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-ramaseshan",
@@ -853,7 +1143,12 @@
       "wiki": "S. Ramaseshan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "crystallography, X-ray optics and anomalous-dispersion methods"
+      "stillUsed": "crystallography, X-ray optics and anomalous-dispersion methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._Ramaseshan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "r-n-chopra",
@@ -867,7 +1162,12 @@
       "wiki": "Ram Nath Chopra",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "pharmacological research on Indian medicinal plants and drug standardisation"
+      "stillUsed": "pharmacological research on Indian medicinal plants and drug standardisation",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Ram_Nath_Chopra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-ramanathan",
@@ -881,7 +1181,12 @@
       "wiki": "S. Ramanathan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "atmospheric electricity measurement and India's meteorological research tradition"
+      "stillUsed": "atmospheric electricity measurement and India's meteorological research tradition",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._Ramanathan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "a-r-krishnan",
@@ -895,7 +1200,12 @@
       "wiki": "A. R. Krishnan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "crystal optics and liquid-viscosity research methods"
+      "stillUsed": "crystal optics and liquid-viscosity research methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/A._R._Krishnan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-s-krishnan",
@@ -909,7 +1219,12 @@
       "wiki": "Kariamanickam Srinivasa Krishnan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "co-discovery of the Raman effect and magnetic susceptibility measurements"
+      "stillUsed": "co-discovery of the Raman effect and magnetic susceptibility measurements",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Kariamanickam_Srinivasa_Krishnan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "r-s-mishra",
@@ -923,7 +1238,12 @@
       "wiki": "R. S. Mishra",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "differential geometry, tensor analysis and cosmological relativity"
+      "stillUsed": "differential geometry, tensor analysis and cosmological relativity",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/R._S._Mishra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "a-p-mitra",
@@ -937,7 +1257,12 @@
       "wiki": "A. P. Mitra",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "ionospheric and solar-terrestrial physics research and measurement standards"
+      "stillUsed": "ionospheric and solar-terrestrial physics research and measurement standards",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/A._P._Mitra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "p-l-dhingra",
@@ -951,7 +1276,12 @@
       "wiki": "P. L. Dhingra",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "plant physiology and soil-crop interaction research in India"
+      "stillUsed": "plant physiology and soil-crop interaction research in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/P._L._Dhingra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-varadarajan",
@@ -965,7 +1295,12 @@
       "wiki": "V. S. Varadarajan",
       "era": "living",
       "enduring": true,
-      "stillUsed": "infinite-dimensional Lie-group representations and geometric quantisation"
+      "stillUsed": "infinite-dimensional Lie-group representations and geometric quantisation",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/V._S._Varadarajan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "h-k-sen",
@@ -979,7 +1314,12 @@
       "wiki": "H. K. Sen",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "upper-atmosphere and cosmic-ray physics research in India"
+      "stillUsed": "upper-atmosphere and cosmic-ray physics research in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/H._K._Sen",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "r-c-mehrotra",
@@ -993,7 +1333,12 @@
       "wiki": "R. C. Mehrotra",
       "era": "living",
       "enduring": true,
-      "stillUsed": "metal alkoxide chemistry and sol–gel process foundations"
+      "stillUsed": "metal alkoxide chemistry and sol–gel process foundations",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/R._C._Mehrotra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-m-mukherjee",
@@ -1007,7 +1352,12 @@
       "wiki": "S. M. Mukherjee",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "applied industrial chemistry and India's pharmaceutical research foundations"
+      "stillUsed": "applied industrial chemistry and India's pharmaceutical research foundations",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._M._Mukherjee",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-c-malhotra",
@@ -1021,7 +1371,12 @@
       "wiki": "K. C. Malhotra",
       "era": "living",
       "enduring": true,
-      "stillUsed": "tribal population genetics and community-biodiversity conservation in India"
+      "stillUsed": "tribal population genetics and community-biodiversity conservation in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._C._Malhotra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "v-r-thadani",
@@ -1035,7 +1390,12 @@
       "wiki": "V. R. Thadani",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "pharmaceutical research and drug-standardisation methodology"
+      "stillUsed": "pharmaceutical research and drug-standardisation methodology",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/V._R._Thadani",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-p-chatterjee",
@@ -1049,7 +1409,12 @@
       "wiki": "S. P. Chatterjee",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "regional geography methodology and cartographic survey techniques"
+      "stillUsed": "regional geography methodology and cartographic survey techniques",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._P._Chatterjee",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "n-r-sen",
@@ -1063,7 +1428,12 @@
       "wiki": "N. R. Sen",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "fluid-mechanics and cosmological-relativity research in India"
+      "stillUsed": "fluid-mechanics and cosmological-relativity research in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/N._R._Sen",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "b-m-udgaonkar",
@@ -1077,7 +1447,12 @@
       "wiki": "B. M. Udgaonkar",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "zoological taxonomy and India's faunal survey traditions"
+      "stillUsed": "zoological taxonomy and India's faunal survey traditions",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/B._M._Udgaonkar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "c-n-r-rao",
@@ -1091,7 +1466,12 @@
       "wiki": "C. N. R. Rao",
       "era": "living",
       "enduring": true,
-      "stillUsed": "solid-state chemistry, transition-metal oxides and two-dimensional nanomaterials"
+      "stillUsed": "solid-state chemistry, transition-metal oxides and two-dimensional nanomaterials",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/C._N._R._Rao",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "g-k-anklesaria",
@@ -1105,7 +1485,12 @@
       "wiki": "G. K. Anklesaria",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "geological survey of Kutch and Rajasthan mineral resources"
+      "stillUsed": "geological survey of Kutch and Rajasthan mineral resources",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/G._K._Anklesaria",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "n-s-ramaswamy",
@@ -1119,7 +1504,12 @@
       "wiki": "N. S. Ramaswamy",
       "era": "living",
       "enduring": true,
-      "stillUsed": "renewable-energy technology, biogas systems and rural electrification"
+      "stillUsed": "renewable-energy technology, biogas systems and rural electrification",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/N._S._Ramaswamy",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-bhagavantam",
@@ -1133,7 +1523,12 @@
       "wiki": "S. Bhagavantam",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Raman-effect applications and crystal-acoustics research"
+      "stillUsed": "Raman-effect applications and crystal-acoustics research",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._Bhagavantam",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-n-bahl",
@@ -1147,7 +1542,12 @@
       "wiki": "K. N. Bahl",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "earthworm systematics and soil-biology taxonomy in India"
+      "stillUsed": "earthworm systematics and soil-biology taxonomy in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._N._Bahl",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "p-maheshwari",
@@ -1161,7 +1561,12 @@
       "wiki": "P. Maheshwari",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "plant embryology and test-tube fertilisation techniques"
+      "stillUsed": "plant embryology and test-tube fertilisation techniques",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/P._Maheshwari",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-s-ramanathan",
@@ -1175,7 +1580,12 @@
       "wiki": "M. S. Ramanathan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "India's numerical weather-forecasting and monsoon-prediction methods"
+      "stillUsed": "India's numerical weather-forecasting and monsoon-prediction methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._S._Ramanathan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-s-rajan",
@@ -1189,7 +1599,12 @@
       "wiki": "K. S. Rajan",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's scientific instrument development and measurement standards"
+      "stillUsed": "India's scientific instrument development and measurement standards",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._S._Rajan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "a-j-m-salam",
@@ -1203,7 +1618,12 @@
       "wiki": "A. J. M. Salam",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's atmospheric chemistry, ozone monitoring and climate-science research"
+      "stillUsed": "India's atmospheric chemistry, ozone monitoring and climate-science research",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/A._J._M._Salam",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "d-s-koothan",
@@ -1217,7 +1637,12 @@
       "wiki": "D. S. Kothari",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "nuclear-physics education and India's atomic-energy policy advocacy"
+      "stillUsed": "nuclear-physics education and India's atomic-energy policy advocacy",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/D._S._Kothari",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "b-d-nagchaudhuri",
@@ -1231,7 +1656,12 @@
       "wiki": "B. D. Nagchaudhuri",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "nuclear physics and cosmic-ray research in India"
+      "stillUsed": "nuclear physics and cosmic-ray research in India",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/B._D._Nagchaudhuri",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-p-k-gupta",
@@ -1245,7 +1675,12 @@
       "wiki": "S. P. K. Gupta",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's meteorological research and upper-atmosphere measurement instruments"
+      "stillUsed": "India's meteorological research and upper-atmosphere measurement instruments",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._P._K._Gupta",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "aryabhata",
@@ -1259,7 +1694,12 @@
       "wiki": "Aryabhata",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "the place-value system and zero"
+      "stillUsed": "the place-value system and zero",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Aryabhata",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "brahmagupta",
@@ -1273,7 +1713,12 @@
       "wiki": "Brahmagupta",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "zero as a number and rules for negative numbers"
+      "stillUsed": "zero as a number and rules for negative numbers",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Brahmagupta",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "bhaskara-i",
@@ -1287,7 +1732,12 @@
       "wiki": "Bhaskara I",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "Bhaskara I's sine approximation formula"
+      "stillUsed": "Bhaskara I's sine approximation formula",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Bhaskara_I",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "bhaskara-ii",
@@ -1301,7 +1751,12 @@
       "wiki": "Bhaskara II",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "Lilavati and early differential concepts"
+      "stillUsed": "Lilavati and early differential concepts",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Bhaskara_II",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "varahamihira",
@@ -1315,7 +1770,12 @@
       "wiki": "Varahamihira",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "astronomical tables in the Brihat Samhita"
+      "stillUsed": "astronomical tables in the Brihat Samhita",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Varahamihira",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "kanad",
@@ -1329,7 +1789,12 @@
       "wiki": "Kanada",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "the concept of the atom (paramanu)"
+      "stillUsed": "the concept of the atom (paramanu)",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Kanada",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "sushruta",
@@ -1343,7 +1808,12 @@
       "wiki": "Sushruta",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "surgical techniques in the Sushruta Samhita"
+      "stillUsed": "surgical techniques in the Sushruta Samhita",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Sushruta",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "charaka",
@@ -1357,7 +1827,12 @@
       "wiki": "Charaka",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "Ayurvedic principles in the Charaka Samhita"
+      "stillUsed": "Ayurvedic principles in the Charaka Samhita",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Charaka",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "nagarjuna",
@@ -1371,7 +1846,12 @@
       "wiki": "Nagarjuna",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "early metallurgical and alchemical processes"
+      "stillUsed": "early metallurgical and alchemical processes",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Nagarjuna",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "pingala",
@@ -1385,7 +1865,12 @@
       "wiki": "Pingala",
       "era": "ancient",
       "enduring": true,
-      "stillUsed": "the binary numeral system"
+      "stillUsed": "the binary numeral system",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Pingala",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "aryabhata-ii",
@@ -1399,7 +1884,12 @@
       "wiki": "Aryabhata II",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "astronomical and algebraic rules in the Maha-Siddhanta"
+      "stillUsed": "astronomical and algebraic rules in the Maha-Siddhanta",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Aryabhata_II",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "lalla",
@@ -1413,7 +1903,12 @@
       "wiki": "Lalla (astronomer)",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "astronomical instruments and methods"
+      "stillUsed": "astronomical instruments and methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Lalla_(astronomer)",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "sripati",
@@ -1427,7 +1922,12 @@
       "wiki": "Sripati",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "astronomical computations"
+      "stillUsed": "astronomical computations",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Sripati",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "manjula",
@@ -1441,7 +1941,12 @@
       "wiki": "Manjula (astronomer)",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "astronomical tables"
+      "stillUsed": "astronomical tables",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Manjula_(astronomer)",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "madhava",
@@ -1455,7 +1960,12 @@
       "wiki": "Madhava of Sangamagrama",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "Madhava's infinite series for pi and sine/cosine"
+      "stillUsed": "Madhava's infinite series for pi and sine/cosine",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Madhava_of_Sangamagrama",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "nilakantha-somayaji",
@@ -1469,7 +1979,12 @@
       "wiki": "Nilakantha Somayaji",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "Nilakantha's planetary models and series expansions"
+      "stillUsed": "Nilakantha's planetary models and series expansions",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Nilakantha_Somayaji",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "jyesthadeva",
@@ -1483,7 +1998,12 @@
       "wiki": "Jyesthadeva",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "calculus derivations in the Yuktibhasa"
+      "stillUsed": "calculus derivations in the Yuktibhasa",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Jyesthadeva",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "parameshvara",
@@ -1497,7 +2017,12 @@
       "wiki": "Parameshvara (astronomer)",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "eclipse prediction and observation methods"
+      "stillUsed": "eclipse prediction and observation methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Parameshvara_(astronomer)",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "mahavira-math",
@@ -1511,7 +2036,12 @@
       "wiki": "Mahavira (mathematician)",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "arithmetic rules in the Ganita-sara-sangraha"
+      "stillUsed": "arithmetic rules in the Ganita-sara-sangraha",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Mahavira_(mathematician)",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "sridhara-math",
@@ -1525,7 +2055,12 @@
       "wiki": "Sridharacharya",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "rules for solving quadratic equations"
+      "stillUsed": "rules for solving quadratic equations",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Sridharacharya",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "mahendra-suri",
@@ -1539,7 +2074,12 @@
       "wiki": "Mahendra Suri",
       "era": "medieval",
       "enduring": true,
-      "stillUsed": "designs for the Yantra-raja astronomical instrument"
+      "stillUsed": "designs for the Yantra-raja astronomical instrument",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Mahendra_Suri",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "sisir-kumar-mitra",
@@ -1553,7 +2093,12 @@
       "wiki": "Sisir Kumar Mitra",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "ionospheric research methods"
+      "stillUsed": "ionospheric research methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Sisir_Kumar_Mitra",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "p-r-pisharoty",
@@ -1567,7 +2112,12 @@
       "wiki": "P. R. Pisharoty",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "remote sensing techniques in Indian meteorology"
+      "stillUsed": "remote sensing techniques in Indian meteorology",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/P._R._Pisharoty",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-r-ramanathan",
@@ -1581,7 +2131,12 @@
       "wiki": "K. R. Ramanathan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "atmospheric and ozone research methods"
+      "stillUsed": "atmospheric and ozone research methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._R._Ramanathan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "d-n-wadia",
@@ -1595,7 +2150,12 @@
       "wiki": "D. N. Wadia",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "Himalayan geological mapping"
+      "stillUsed": "Himalayan geological mapping",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/D._N._Wadia",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-r-ranganathan",
@@ -1609,7 +2169,12 @@
       "wiki": "S. R. Ranganathan",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "colon classification system"
+      "stillUsed": "colon classification system",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._R._Ranganathan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "b-c-guha",
@@ -1623,7 +2188,12 @@
       "wiki": "B. C. Guha",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "anthropometric surveys of Indian populations"
+      "stillUsed": "anthropometric surveys of Indian populations",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/B._C._Guha",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-annadurai",
@@ -1637,7 +2207,12 @@
       "wiki": "M. Annadurai",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's lunar and Mars mission programme"
+      "stillUsed": "India's lunar and Mars mission programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._Annadurai",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-somanath",
@@ -1651,7 +2226,12 @@
       "wiki": "S. Somanath",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's launch vehicle and lunar programme"
+      "stillUsed": "India's launch vehicle and lunar programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._Somanath",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-k-shivakumar",
@@ -1665,7 +2245,12 @@
       "wiki": "S. K. Shivakumar",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "deep-space tracking and communication methods"
+      "stillUsed": "deep-space tracking and communication methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._K._Shivakumar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "t-k-alex",
@@ -1679,7 +2264,12 @@
       "wiki": "T. K. Alex",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's satellite and NavIC navigation programme"
+      "stillUsed": "India's satellite and NavIC navigation programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/T._K._Alex",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "g-satheesh-reddy",
@@ -1693,7 +2283,12 @@
       "wiki": "G. Satheesh Reddy",
       "era": "living",
       "enduring": true,
-      "stillUsed": "India's indigenous missile and defence technology"
+      "stillUsed": "India's indigenous missile and defence technology",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/G._Satheesh_Reddy",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "shanti-swarup-bhatnagar",
@@ -1707,7 +2302,12 @@
       "wiki": "Shanti Swarup Bhatnagar",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "CSIR's national laboratory network"
+      "stillUsed": "CSIR's national laboratory network",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Shanti_Swarup_Bhatnagar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-s-raghunathan",
@@ -1721,7 +2321,12 @@
       "wiki": "M. S. Raghunathan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "Raghunathan theorem on lattices in Lie groups"
+      "stillUsed": "Raghunathan theorem on lattices in Lie groups",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._S._Raghunathan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "r-parimala",
@@ -1735,7 +2340,12 @@
       "wiki": "R. Parimala",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "results on quadratic forms over function fields"
+      "stillUsed": "results on quadratic forms over function fields",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/R._Parimala",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "h-n-sethna",
@@ -1749,7 +2359,12 @@
       "wiki": "Homi N. Sethna",
       "era": "colonial",
       "enduring": true,
-      "stillUsed": "India's nuclear power and materials programme"
+      "stillUsed": "India's nuclear power and materials programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Homi_N._Sethna",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "r-chidambaram",
@@ -1763,7 +2378,12 @@
       "wiki": "R. Chidambaram",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's nuclear programme and science policy"
+      "stillUsed": "India's nuclear programme and science policy",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/R._Chidambaram",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "p-k-iyengar",
@@ -1777,7 +2397,12 @@
       "wiki": "P. K. Iyengar",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's nuclear power reactor programme"
+      "stillUsed": "India's nuclear power reactor programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/P._K._Iyengar",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "v-rajaraman",
@@ -1791,7 +2416,12 @@
       "wiki": "V. Rajaraman",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "computer science curricula in Indian institutions"
+      "stillUsed": "computer science curricula in Indian institutions",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/V._Rajaraman",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "b-m-johri",
@@ -1805,7 +2435,12 @@
       "wiki": "B. M. Johri",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "plant embryology research methods"
+      "stillUsed": "plant embryology research methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/B._M._Johri",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "k-s-valdiya",
@@ -1819,7 +2454,12 @@
       "wiki": "K. S. Valdiya",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "Himalayan neotectonics and hazard studies"
+      "stillUsed": "Himalayan neotectonics and hazard studies",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/K._S._Valdiya",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-s-thiagarajan",
@@ -1833,7 +2473,12 @@
       "wiki": "M. S. Thiagarajan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "bioinorganic chemistry methods"
+      "stillUsed": "bioinorganic chemistry methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._S._Thiagarajan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "g-s-pandey",
@@ -1847,7 +2492,12 @@
       "wiki": "G. S. Pandey",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "liquid crystal and materials research"
+      "stillUsed": "liquid crystal and materials research",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/G._S._Pandey",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "s-g-dani",
@@ -1861,7 +2511,12 @@
       "wiki": "S. G. Dani",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "ergodic theory and dynamical systems methods"
+      "stillUsed": "ergodic theory and dynamical systems methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/S._G._Dani",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "j-k-verma",
@@ -1875,7 +2530,12 @@
       "wiki": "J. K. Verma",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "commutative algebra methods"
+      "stillUsed": "commutative algebra methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/J._K._Verma",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "v-s-sunder",
@@ -1889,7 +2549,12 @@
       "wiki": "V. S. Sunder",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "operator algebra methods"
+      "stillUsed": "operator algebra methods",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/V._S._Sunder",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "m-s-srinivasan",
@@ -1903,7 +2568,12 @@
       "wiki": "M. R. Srinivasan",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's nuclear power and fast-breeder reactor programme"
+      "stillUsed": "India's nuclear power and fast-breeder reactor programme",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/M._R._Srinivasan",
+        "license": "CC BY-SA 4.0"
+      }
     },
     {
       "slug": "v-k-saraswat",
@@ -1917,7 +2587,12 @@
       "wiki": "V. K. Saraswat",
       "era": "modern",
       "enduring": true,
-      "stillUsed": "India's indigenous missile systems"
+      "stillUsed": "India's indigenous missile systems",
+      "attribution": {
+        "source": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/V._K._Saraswat",
+        "license": "CC BY-SA 4.0"
+      }
     }
   ]
 }

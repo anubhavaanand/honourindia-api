@@ -64,6 +64,21 @@ function clamp(n: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, n))
 }
 
+export function parseRetryAfter(header: string | null | undefined): number {
+  if (!header) return 60000
+  const trimmed = header.trim()
+  if (/^\d+$/.test(trimmed)) {
+    const seconds = parseInt(trimmed, 10)
+    return seconds > 0 ? seconds * 1000 : 60000
+  }
+  const dateMs = Date.parse(trimmed)
+  if (!Number.isNaN(dateMs)) {
+    const diff = dateMs - Date.now()
+    return diff > 0 ? diff : 60000
+  }
+  return 60000
+}
+
 /** Fisher-Yates — randomises order client-side so even a cached or static batch rotates freshly per visitor. */
 function shuffle<T>(items: T[]): T[] {
   const a = [...items]
@@ -494,12 +509,28 @@ class BillboardWidget {
     this.fetching = true
     let retryMs = 5000
     for (;;) {
-      if (this.destroyed) return
+      if (this.destroyed) {
+        this.fetching = false
+        return
+      }
       try {
         const res = await fetch(`${this.api}/billboards/random?count=${BATCH_SIZE}${this.keyQuery}`)
+        if (res.status === 429) {
+          const waitMs = parseRetryAfter(res.headers?.get?.('Retry-After'))
+          if (this.index < 0) {
+            this.dom.errorBox.style.display = 'flex'
+            this.dom.card.style.visibility = 'hidden'
+            this.dom.loading.classList.add('hi-loading-hidden')
+          }
+          await new Promise((r) => setTimeout(r, waitMs))
+          continue
+        }
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = (await res.json()) as { billboards: Billboard[] }
-        if (this.destroyed) return
+        if (this.destroyed) {
+          this.fetching = false
+          return
+        }
         this.dom.errorBox.style.display = 'none'
         this.dom.card.style.visibility = 'visible'
         this.dom.loading.classList.add('hi-loading-hidden')
@@ -515,6 +546,10 @@ class BillboardWidget {
           this.dom.loading.classList.add('hi-loading-hidden')
         }
         await new Promise((r) => setTimeout(r, retryMs))
+        if (this.destroyed) {
+          this.fetching = false
+          return
+        }
         retryMs = Math.min(retryMs * 3, 90000)
       }
     }

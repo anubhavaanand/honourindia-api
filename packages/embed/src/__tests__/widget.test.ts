@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Load the widget so window.HonourIndia is defined
-import '../index.ts'
+import { parseRetryAfter } from '../index'
 
 const billboards = [
   {
@@ -171,6 +171,70 @@ describe('widget (packages/embed)', () => {
     await new Promise<void>((r) => queueMicrotask(() => r()))
     expect(fetchMock).toHaveBeenCalledTimes(2)
 
+    vi.useRealTimers()
+    vi.clearAllTimers()
+  })
+
+  describe('parseRetryAfter', () => {
+    it('parses numeric seconds into milliseconds', () => {
+      expect(parseRetryAfter('30')).toBe(30000)
+      expect(parseRetryAfter('1')).toBe(1000)
+    })
+
+    it('falls back to 60s for invalid or missing values', () => {
+      expect(parseRetryAfter(null)).toBe(60000)
+      expect(parseRetryAfter(undefined)).toBe(60000)
+      expect(parseRetryAfter('invalid')).toBe(60000)
+      expect(parseRetryAfter('-5')).toBe(60000)
+    })
+  })
+
+  it('handles 429 rate limit responses with Retry-After header', async () => {
+    vi.useFakeTimers()
+    const rateLimitedResponse = {
+      ok: false,
+      status: 429,
+      headers: {
+        get: (header: string) => (header.toLowerCase() === 'retry-after' ? '12' : null),
+      },
+    }
+
+    const fiveBillboards = [
+      ...billboards,
+      { ...billboards[0]!, slug: 'b3' },
+      { ...billboards[0]!, slug: 'b4' },
+      { ...billboards[0]!, slug: 'b5' },
+    ]
+
+    fetchMock
+      .mockResolvedValueOnce(rateLimitedResponse)
+      .mockResolvedValueOnce(jsonResponse({ billboards: fiveBillboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by the widget bundle
+    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
+
+    await new Promise<void>((r) => queueMicrotask(() => r()))
+
+    const errorBox = host.shadowRoot!.querySelector('.hi-error')!
+    expect(errorBox).toBeTruthy()
+    expect((errorBox as HTMLElement).style.display).toBe('flex')
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+
+    // Advancing 10s should not trigger retry since Retry-After is 12s
+    await vi.advanceTimersByTimeAsync(10000)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+
+    // Advancing past 12s triggers retry
+    await vi.advanceTimersByTimeAsync(2500)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+
+    // Second request succeeded; error box hidden
+    expect((errorBox as HTMLElement).style.display).toBe('none')
+
+    handle.destroy()
     vi.useRealTimers()
     vi.clearAllTimers()
   })

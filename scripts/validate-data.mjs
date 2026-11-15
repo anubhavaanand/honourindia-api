@@ -89,12 +89,29 @@ async function main() {
     process.exit(1)
   }
 
+  const FIX = process.argv.includes('--fix')
   const figureSlugs = new Set((raw.figures ?? []).map((f) => f.slug))
+  const orphanSlugs = []
   for (const [slug, img] of Object.entries(images ?? {})) {
-    if (!figureSlugs.has(slug)) error(`images.json: orphan entry for unknown slug "${slug}"`)
+    if (!figureSlugs.has(slug)) {
+      if (FIX) {
+        orphanSlugs.push(slug)
+      } else {
+        error(`images.json: orphan entry for unknown slug "${slug}" (pass --fix to clean up, or run npm run clean:orphan-images --delete)`)
+      }
+    }
     if (!img.license) warn(`images.json: ${slug} has no license`)
     else if (/fair/i.test(img.license)) warn(`images.json: ${slug} is "Fair use" — must not be served (see #95)`)
     if (img.file && !existsSync(path.join(IMAGES_DIR, img.file))) error(`images.json: ${slug} references missing file "${img.file}"`)
+  }
+
+  if (FIX && orphanSlugs.length > 0) {
+    for (const slug of orphanSlugs) {
+      delete images[slug]
+    }
+    const { writeFile } = await import('node:fs/promises')
+    await writeFile(IMAGES_FILE, JSON.stringify(images, null, 2) + '\n')
+    console.log(`✓ Cleaned up ${orphanSlugs.length} orphan images.json entry/entries`)
   }
 
   console.log(`\nValidated ${figures?.length ?? 0} figures and ${Object.keys(images ?? {}).length} image entries`)

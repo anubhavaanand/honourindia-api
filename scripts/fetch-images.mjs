@@ -149,11 +149,25 @@ async function exists(p) {
 
 async function main() {
   const figures = JSON.parse(await readFile(DATA_FILE, 'utf8')).figures
+  const figureSlugs = new Set(figures.map((f) => f.slug))
   await mkdir(IMAGES_DIR, { recursive: true })
 
   let existing = {}
   if (await exists(OUT_FILE)) {
     existing = JSON.parse(await readFile(OUT_FILE, 'utf8'))
+  }
+
+  // Prune any orphan entries from existing whose figure was removed from figures.json (fixes #31)
+  let cleaned = 0
+  for (const slug of Object.keys(existing)) {
+    if (!figureSlugs.has(slug)) {
+      delete existing[slug]
+      cleaned++
+    }
+  }
+  if (cleaned > 0) {
+    console.log(`Cleaned up ${cleaned} orphaned image entry/entries from images.json`)
+    await writeFile(OUT_FILE, JSON.stringify(existing, null, 2) + '\n')
   }
 
   const results = { ...existing }

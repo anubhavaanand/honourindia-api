@@ -50,9 +50,12 @@ api.get('/billboards/random', (c) => {
   const raw = c.req.query('count')
   let count = 8
   if (raw !== undefined) {
-    const n = Number.parseInt(raw, 10)
-    if (!Number.isFinite(n)) return c.json({ error: 'count must be an integer' }, 400)
-    count = Math.min(24, Math.max(1, n))
+    if (!/^\d+$/.test(raw)) return c.json({ error: 'count must be an integer between 1 and 24' }, 400)
+    const n = Number(raw)
+    if (!Number.isInteger(n) || n < 1 || n > 24) {
+      return c.json({ error: 'count must be an integer between 1 and 24' }, 400)
+    }
+    count = n
   }
   const billboards = sampleRandom(count).map(toBillboard)
   c.header('Cache-Control', 'public, max-age=30, stale-while-revalidate=60')

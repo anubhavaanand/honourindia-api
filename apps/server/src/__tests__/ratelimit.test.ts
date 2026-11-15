@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { rateLimit } from '../lib/ratelimit.js'
 
 type AuthKey = { id: string; name: string }
@@ -71,5 +71,35 @@ describe('rateLimit', () => {
     // anonymous is tracked separately from keyed
     const passAnon = await mw(anonymous.c, () => Promise.resolve())
     expect(passAnon).toBeUndefined()
+  })
+
+  it('evicts the oldest identities instead of clearing every limit when the map is full', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(0)
+    try {
+      const mw = rateLimit({ anonymousMax: 1, keyedMax: 100, maxEntries: 2 })
+      const a = makeContext(null, '10.0.0.1')
+      const b = makeContext(null, '10.0.0.2')
+      const c = makeContext(null, '10.0.0.3')
+
+      expect(await mw(a.c, () => Promise.resolve())).toBeUndefined()
+      vi.advanceTimersByTime(1)
+      expect(await mw(b.c, () => Promise.resolve())).toBeUndefined()
+      vi.advanceTimersByTime(1)
+
+      // A is still inside its window and blocked.
+      expect((await mw(a.c, () => Promise.resolve()))!.status).toBe(429)
+      vi.advanceTimersByTime(1)
+
+      // Adding C exceeds maxEntries=2 and evicts A (oldest last hit).
+      expect(await mw(c.c, () => Promise.resolve())).toBeUndefined()
+      expect(await mw(a.c, () => Promise.resolve())).toBeUndefined()
+
+      // C's active window survives the eviction that re-admitted A; B was evicted.
+      expect((await mw(c.c, () => Promise.resolve()))!.status).toBe(429)
+      expect(await mw(b.c, () => Promise.resolve())).toBeUndefined()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

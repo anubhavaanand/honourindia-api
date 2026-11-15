@@ -6,7 +6,9 @@ import { cors } from 'hono/cors'
 import { api } from './routes/api.js'
 import { auth, type Env } from './lib/auth.js'
 import { rateLimit } from './lib/ratelimit.js'
+import { securityHeaders } from './lib/security.js'
 import { ROOT } from './lib/data.js'
+import { requestId } from './lib/request-id.js'
 
 const IMAGES_DIR = path.join(ROOT, 'public/images')
 const SITE_DIR = path.join(ROOT, 'apps/site')
@@ -42,6 +44,9 @@ async function serveFile(filePath: string, cacheControl: string): Promise<Respon
 
 const app = new Hono<Env>()
 
+app.use('*', securityHeaders())
+app.use('*', requestId())
+
 // Public API: open CORS, optional-key auth, key-aware rate limiting.
 app.use('/api/*', auth())
 app.use('/api/*', rateLimit())
@@ -70,6 +75,8 @@ app.get('/styles.css', (c) => serveFile(path.join(SITE_DIR, 'styles.css'), isPro
 app.get('/app.js', (c) => serveFile(path.join(SITE_DIR, 'app.js'), isProd ? 'public, max-age=600' : 'no-cache'))
 app.get('/figure.js', (c) => serveFile(path.join(SITE_DIR, 'figure.js'), isProd ? 'public, max-age=600' : 'no-cache'))
 app.get('/figures/:slug', (c) => serveFile(path.join(SITE_DIR, 'figure.html'), 'no-cache'))
+app.get('/favicon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
+app.get('/apple-touch-icon.svg', (c) => serveFile(path.join(SITE_DIR, 'favicon.svg'), 'public, max-age=86400, stale-while-revalidate=604800'))
 
 app.get('/healthz', (c) => c.json({ ok: true }))
 
@@ -83,9 +90,23 @@ app.notFound((c) => {
 const isProd = process.env.NODE_ENV === 'production'
 
 const port = Number(process.env.PORT ?? 3000)
-serve({ fetch: app.fetch, port }, (info) => {
+const server = serve({ fetch: app.fetch, port }, (info) => {
   console.log(`सम्मान · Honour India — serving on http://localhost:${info.port}`)
   console.log(`  demo & docs : http://localhost:${info.port}/`)
   console.log(`  api         : http://localhost:${info.port}/api/v1`)
   console.log(`  embed       : http://localhost:${info.port}/embed.js`)
 })
+
+// Stop accepting new connections and let in-flight requests finish before exit.
+let shuttingDown = false
+function shutdown(signal: NodeJS.Signals): void {
+  if (shuttingDown) return
+  shuttingDown = true
+  console.log(`${signal} received — draining connections`)
+  server.close(() => process.exit(0))
+  // Do not hang forever on keep-alive sockets or a stuck response.
+  setTimeout(() => process.exit(1), 10_000).unref()
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'))
+process.on('SIGINT', () => shutdown('SIGINT'))

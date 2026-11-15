@@ -21,7 +21,7 @@
  * Requires: data/wikidata-candidates.json (from scripts/research-wikidata.mjs)
  */
 
-import { readFile, writeFile } from 'node:fs'
+import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 

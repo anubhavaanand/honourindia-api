@@ -76,6 +76,62 @@ How it behaves:
 - figures without a freely-licensed portrait get an elegant monogram card;
 - only ~11 kb minified, no dependencies, works back to ES2018 browsers.
 
+## Embedding on different platforms
+
+The widget is dependency-free and mounts into a shadow root, so it works on any platform that lets you paste HTML or JavaScript.
+
+### Plain HTML (any site)
+```html
+<div data-honourindia data-size="poster" data-theme="dark" data-interval="8"></div>
+<script src="https://your-host/embed.js" async></script>
+```
+
+### React
+```jsx
+import { useEffect, useRef } from 'react'
+
+export function HonourBillboard({ size = 'rectangle', theme = 'dark', interval = 8 }) {
+  const ref = useRef()
+  useEffect(() => {
+    if (!window.HonourIndia) return
+    const widget = window.HonourIndia.mount(ref.current, { size, theme, interval })
+    return () => widget.destroy()
+  }, [])
+  return <div ref={ref} />
+}
+```
+
+### Vue 3
+```vue
+<template><div ref="billboard"/></template>
+<script setup>
+import { onMounted, onBeforeUnmount, ref } from 'vue'
+const billboard = ref()
+let widget
+onMounted(() => {
+  widget = window.HonourIndia.mount(billboard.value, { size: 'poster' })
+})
+onBeforeUnmount(() => widget.destroy())
+</script>
+```
+
+### WordPress
+Add a **Custom HTML** block to your page or widget area:
+```html
+<div data-honourindia data-size="leaderboard"></div>
+<script src="https://your-host/embed.js" async></script>
+```
+Some WordPress themes strip `data-*` attributes; if the widget doesn't render, switch the block to "Edit as HTML" and paste it exactly as shown, or load `embed.js` through a header/footer script injector.
+
+### Attributes recap
+| Attribute | Values | Default |
+|---|---|---|
+| `data-theme` | `dark` \| `light` | `dark` |
+| `data-size` | `rectangle` \| `leaderboard` \| `poster` | `rectangle` |
+| `data-interval` | seconds per billboard (5–60) | `8` |
+| `data-api` | override API base | origin of `embed.js` |
+| `data-key` | optional API key | none |
+
 ## The API (v1)
 
 Open CORS on everything, JSON only, cache-friendly, light rate limiting

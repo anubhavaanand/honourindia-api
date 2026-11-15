@@ -71,8 +71,65 @@ function wikiLink(wiki: string): string {
   return `https://en.wikipedia.org/wiki/${encodeURIComponent(wiki.replace(/ /g, '_'))}`
 }
 
+const VALID_ERAS = new Set(['ancient', 'medieval', 'colonial', 'modern', 'living'])
+
+/** Lightweight runtime schema validation for a single figure record. */
+function validateFigure(f: unknown, index: number): void {
+  if (typeof f !== 'object' || f === null || Array.isArray(f)) {
+    throw new Error(`figures[${index}]: expected object, got ${JSON.stringify(f)}`)
+  }
+  const fig = f as Record<string, unknown>
+
+  const requiredString = (key: string) => {
+    if (typeof fig[key] !== 'string' || (fig[key] as string).trim() === '') {
+      throw new Error(`figures[${index}] (slug=${fig['slug']}): "${key}" must be a non-empty string`)
+    }
+  }
+  const requiredNumber = (key: string) => {
+    if (typeof fig[key] !== 'number') {
+      throw new Error(`figures[${index}] (slug=${fig['slug']}): "${key}" must be a number`)
+    }
+  }
+
+  requiredString('slug')
+  requiredString('name')
+  requiredNumber('born')
+
+  if (fig['died'] !== null && fig['died'] !== undefined && typeof fig['died'] !== 'number') {
+    throw new Error(`figures[${index}] (slug=${fig['slug']}): "died" must be a number or null`)
+  }
+
+  requiredString('field')
+  requiredString('tagline')
+  requiredString('summary')
+  requiredString('wiki')
+
+  if (!VALID_ERAS.has(fig['era'] as string)) {
+    throw new Error(
+      `figures[${index}] (slug=${fig['slug']}): "era" must be one of ${[...VALID_ERAS].join(', ')} — got ${JSON.stringify(fig['era'])}`
+    )
+  }
+
+  if (typeof fig['enduring'] !== 'boolean') {
+    throw new Error(`figures[${index}] (slug=${fig['slug']}): "enduring" must be a boolean`)
+  }
+
+  if (fig['quote'] !== null && fig['quote'] !== undefined) {
+    const q = fig['quote'] as Record<string, unknown>
+    if (typeof q['text'] !== 'string' || q['text'].trim() === '') {
+      throw new Error(`figures[${index}] (slug=${fig['slug']}): "quote.text" must be a non-empty string`)
+    }
+  }
+}
+
 function loadFigures(): FigureRecord[] {
   const raw = JSON.parse(readFileSync(path.join(DATA_DIR, 'figures.json'), 'utf8')) as FiguresFile
+
+  if (!Array.isArray(raw.figures)) {
+    throw new Error('figures.json: top-level "figures" key must be an array')
+  }
+  raw.figures.forEach(validateFigure)
+
   const images = loadImages()
   return raw.figures.map((f) => {
     const img = images[f.slug]

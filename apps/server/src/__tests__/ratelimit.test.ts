@@ -177,3 +177,54 @@ describe('rateLimit', () => {
     expect(c.lastText?.text).toContain('Too many requests')
   })
 })
+
+describe('documented rate limits (issue #40)', () => {
+  it('gives anonymous callers 120 requests a minute and keyed callers 1200', async () => {
+    const mw = rateLimit()
+
+    const anonymous = makeContext(null, '1.2.3.4')
+    await mw(anonymous.c, () => Promise.resolve())
+    expect(anonymous.c.headers['X-RateLimit-Limit']).toBe('120')
+    expect(anonymous.c.headers['X-RateLimit-Remaining']).toBe('119')
+
+    const keyed = makeContext({ id: 'key-a', name: 'A' }, '1.2.3.4')
+    await mw(keyed.c, () => Promise.resolve())
+    expect(keyed.c.headers['X-RateLimit-Limit']).toBe('1200')
+    expect(keyed.c.headers['X-RateLimit-Remaining']).toBe('1199')
+  })
+
+  it('gives every address its own anonymous window', async () => {
+    const mw = rateLimit({ anonymousMax: 1, keyedMax: 10 })
+
+    const first = makeContext(null, '10.0.0.1')
+    const second = makeContext(null, '10.0.0.2')
+
+    expect(await mw(first.c, () => Promise.resolve())).toBeUndefined()
+    expect((await mw(first.c, () => Promise.resolve()))!.status).toBe(429)
+
+    // A different address still has its full window.
+    expect(await mw(second.c, () => Promise.resolve())).toBeUndefined()
+  })
+
+  it('gives every key its own window, even from the same address', async () => {
+    const mw = rateLimit({ anonymousMax: 1, keyedMax: 1 })
+
+    const keyA = makeContext({ id: 'key-a', name: 'A' }, '10.0.0.3')
+    const keyB = makeContext({ id: 'key-b', name: 'B' }, '10.0.0.3')
+
+    expect(await mw(keyA.c, () => Promise.resolve())).toBeUndefined()
+    expect((await mw(keyA.c, () => Promise.resolve()))!.status).toBe(429)
+
+    expect(await mw(keyB.c, () => Promise.resolve())).toBeUndefined()
+  })
+
+  it('does not spend the anonymous window of an address on a keyed request', async () => {
+    const mw = rateLimit({ anonymousMax: 1, keyedMax: 10 })
+
+    const keyed = makeContext({ id: 'key-a', name: 'A' }, '10.0.0.4')
+    expect(await mw(keyed.c, () => Promise.resolve())).toBeUndefined()
+
+    const anonymous = makeContext(null, '10.0.0.4')
+    expect(await mw(anonymous.c, () => Promise.resolve())).toBeUndefined()
+  })
+})

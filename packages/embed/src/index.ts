@@ -756,24 +756,65 @@ declare global {
     HonourIndia?: {
       version: string
       mount(el: Element | string, opts?: MountOptions): MountHandle
+      mountAll(root?: ParentNode): MountHandle[]
     }
   }
 }
 
-window.HonourIndia = { version: VERSION, mount }
-
-function autoMount(): void {
-  document.querySelectorAll('[data-honourindia]').forEach((el) => {
+function mountAll(root: ParentNode = document): MountHandle[] {
+  const handles: MountHandle[] = []
+  root.querySelectorAll('[data-honourindia]').forEach((el) => {
     if (el.getAttribute('data-honourindia-mounted') === '1') return
     el.setAttribute('data-honourindia-mounted', '1')
-    mount(el, readDataset(el))
+    handles.push(mount(el, readDataset(el)))
   })
+  return handles
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', autoMount, { once: true })
-} else {
-  autoMount()
+function setupObserver(): MutationObserver | null {
+  if (typeof MutationObserver === 'undefined' || typeof document === 'undefined') return null
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (let i = 0; i < mutation.addedNodes.length; i++) {
+        const node = mutation.addedNodes[i]!
+        if (node.nodeType === 1) {
+          const el = node as Element
+          if (el.hasAttribute('data-honourindia') && el.getAttribute('data-honourindia-mounted') !== '1') {
+            el.setAttribute('data-honourindia-mounted', '1')
+            mount(el, readDataset(el))
+          }
+          if (el.querySelectorAll) {
+            el.querySelectorAll('[data-honourindia]').forEach((child) => {
+              if (child.getAttribute('data-honourindia-mounted') === '1') return
+              child.setAttribute('data-honourindia-mounted', '1')
+              mount(child, readDataset(child))
+            })
+          }
+        }
+      }
+    }
+  })
+
+  const target = document.body || document.documentElement
+  if (target) {
+    observer.observe(target, { childList: true, subtree: true })
+  }
+  return observer
 }
 
-export { mount, VERSION }
+window.HonourIndia = { version: VERSION, mount, mountAll }
+
+function initAutoMount(): void {
+  mountAll()
+  setupObserver()
+}
+
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAutoMount, { once: true })
+  } else {
+    initAutoMount()
+  }
+}
+
+export { mount, mountAll, setupObserver, VERSION }

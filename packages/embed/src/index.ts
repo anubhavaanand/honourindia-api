@@ -49,6 +49,7 @@ const BATCH_SIZE = 14
 const MIN_INTERVAL = 5
 const MAX_INTERVAL = 60
 export const MAX_FETCH_RETRIES = 5
+export const MAX_IMAGE_RETRIES = 2
 const DEFAULT_INTERVAL = 8
 
 const scriptEl = document.currentScript as HTMLScriptElement | null
@@ -417,8 +418,17 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string): void {
     img.alt = `Portrait of ${b.name}`
     img.loading = 'eager'
     img.decoding = 'async'
-    img.src = new URL(b.image.url, baseUrl).toString()
+    const fullUrl = new URL(b.image.url, baseUrl).toString()
+    img.src = fullUrl
+    let attempts = 0
     img.onerror = () => {
+      if (attempts < MAX_IMAGE_RETRIES) {
+        attempts++
+        setTimeout(() => {
+          img.src = `${fullUrl}${fullUrl.includes('?') ? '&' : '?'}retry=${attempts}_${Date.now()}`
+        }, 300 * attempts)
+        return
+      }
       media.innerHTML = ''
       const fallback = document.createElement('div')
       fallback.className = 'hi-noimg'

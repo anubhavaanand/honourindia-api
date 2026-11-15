@@ -22,6 +22,7 @@
     "issue-key": "node scripts/issue-key.mjs",
     "research:wikidata": "node scripts/research-wikidata.mjs",
     "dedup:figures": "node scripts/dedup-figures.mjs",
+    "clean:orphan-images": "node scripts/clean-orphan-images.mjs",
     "import:candidates": "node scripts/import-candidates.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run"

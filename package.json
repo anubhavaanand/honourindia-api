@@ -27,6 +27,7 @@
     "validate:data": "node scripts/validate-data.mjs",
     "validate:data:fix": "node scripts/validate-data.mjs --fix",
     "check:size": "node scripts/check-bundle-size.mjs",
+    "check:sri": "node scripts/check-sri.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{ts,js,mjs,json,md,yml,yaml}\"",

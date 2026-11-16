@@ -63,6 +63,11 @@ Drop the container anywhere; attributes tune it:
 | `data-interval` | seconds per billboard (5–60)                                          | `8`                  |
 | `data-api`      | override API base                                                     | origin of `embed.js` |
 
+The snippet carries a SHA-384 integrity hash so a tampered `embed.js` is rejected.
+`/embed.js` is served with `Access-Control-Allow-Origin: *` because
+`crossorigin="anonymous"` requires CORS on third-party sites. After rebuilding the
+widget, update every snippet and run `npm run check:sri` (CI runs it automatically).
+
 Or mount programmatically: `HonourIndia.mount('#slot', { theme: 'light', interval: 10 })`
 returns `{ destroy() }`.
 

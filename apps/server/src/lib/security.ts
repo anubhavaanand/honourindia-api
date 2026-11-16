@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto'
 import type { Context, Next } from 'hono'
 import type { Env } from './auth.js'
 
@@ -13,6 +14,12 @@ const SITE_CSP =
 /** Baseline security headers for every response. */
 export function securityHeaders() {
   return async (c: Context<Env>, next: Next) => {
+    const isApi = c.req.path.startsWith('/api/')
+    // Site HTML may contain inline scripts. Give each response a fresh nonce
+    // and add it to script-src; the HTML renderer injects the same value.
+    const nonce = isApi ? null : randomBytes(16).toString('base64')
+    if (nonce) c.set('cspNonce', nonce)
+
     await next()
     // Set after next(): handlers such as serveFile() return a raw Response,
     // which replaces headers queued with c.header().
@@ -29,9 +36,9 @@ export function securityHeaders() {
       'Permissions-Policy',
       'camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), interest-cohort=()',
     )
-    c.res.headers.set(
-      'Content-Security-Policy',
-      c.req.path.startsWith('/api/') ? API_CSP : SITE_CSP,
-    )
+    const siteCsp = nonce
+      ? SITE_CSP.replace("script-src 'self'", `script-src 'self' 'nonce-${nonce}'`)
+      : SITE_CSP
+    c.res.headers.set('Content-Security-Policy', isApi ? API_CSP : siteCsp)
   }
 }

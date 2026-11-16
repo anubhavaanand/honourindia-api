@@ -28,7 +28,7 @@ export interface AuthKey {
 
 /** Shared Hono env so c.get('authKey') is typed app-wide. */
 export interface Env {
-  Variables: { authKey: AuthKey | null }
+  Variables: { authKey: AuthKey | null; cspNonce?: string }
 }
 
 export interface KeyRecord {

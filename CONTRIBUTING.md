@@ -60,6 +60,9 @@ for the logs. See [.env.example](.env.example).
   `packages/embed/dist/embed.js`; avoid adding runtime dependencies.
 - Public API responses are JSON only and open CORS by design. Preserve the
   cache headers and attribution fields when changing API code.
+- Inline scripts must use `nonce="__CSP_NONCE__"`. The server replaces the
+  placeholder with a per-request nonce and adds it to `script-src`; do not add
+  `'unsafe-inline'` to `script-src`.
 - Prefer small, focused pull requests with a clear title in conventional-commit
   form (`fix:`, `feat:`, `docs:`, `test:`, `chore:`).
 

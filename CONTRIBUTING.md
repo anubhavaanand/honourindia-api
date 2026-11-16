@@ -63,15 +63,23 @@ for the logs. See [.env.example](.env.example).
 - Prefer small, focused pull requests with a clear title in conventional-commit
   form (`fix:`, `feat:`, `docs:`, `test:`, `chore:`).
 
-Before opening a pull request, run:
+Before opening a pull request, run the same checks CI runs:
 
-```bash
-npm run lint           # eslint, must report no errors
-npm run format:check   # prettier, must report nothing to change
-```
+| Command                | What it verifies                           |
+| ---------------------- | ------------------------------------------ |
+| `npm run lint`         | ESLint — must report no errors             |
+| `npm run format:check` | Prettier — must report nothing to change   |
+| `npm test`             | Vitest unit and integration suite          |
+| `npm run test:visual`  | Widget visual regression snapshots         |
+| `npm run build`        | Widget bundle and server compile           |
+| `npm run check:sri`    | SRI hashes match the built `embed.js`      |
+| `npm run check:size`   | Widget bundle stays within its size budget |
 
-`npm run lint:fix` and `npm run format` apply the fixes for you. CI runs all
-three checks, so a pull request that fails them will not merge.
+`npm run lint:fix` and `npm run format` apply the fixes for you. CI runs the
+full list, so a pull request that fails any of them will not merge.
+
+`npm test` includes the visual regression suite; `npm run test:visual` runs only
+that suite while you iterate on the widget.
 
 `npm ci` also installs a pre-commit hook (husky + lint-staged) that lints
 and formats the files you stage, so the checks usually run before you remember
@@ -82,7 +90,7 @@ to run them by hand.
 Add or update tests for behavior changes:
 
 - `apps/server/src/__tests__` — data helpers, auth, rate limiting
-- `packages/embed/src/__tests__` — widget behavior (jsdom)
+- `packages/embed/src/__tests__` — widget behavior (jsdom) and visual regression snapshots
 - `apps/site/__tests__` — demo site glue
 
 Run `npm test` before opening a pull request. If a change is hard to unit test,

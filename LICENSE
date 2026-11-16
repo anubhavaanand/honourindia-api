@@ -26,3 +26,17 @@ Portraits in `public/images/` are NOT covered by this license. Each image keeps
 its original free license (public domain, CC BY, CC BY-SA, GODL-India, …),
 recorded per figure in `data/images.json`. The billboard widget displays this
 credit on every rotation and embedders must preserve it.
+
+## Data and text
+
+The MIT license above covers the source code in this repository. The catalogue
+in `data/figures.json` contains facts, summaries, taglines, and quotations:
+
+- Facts themselves are not copyrightable.
+- Summaries and taglines must be original paraphrases, not copied text. By
+  contributing catalogue text, you agree to license your contribution under the
+  MIT license.
+- Direct quotations remain under the license of their original source. Wikipedia
+  text is CC BY-SA 4.0; keep the quote's source attribution when adding it.
+- Portraits are not covered by the MIT license; each image keeps the license
+  recorded in `data/images.json`.

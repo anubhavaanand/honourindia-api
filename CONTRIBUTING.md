@@ -167,7 +167,9 @@ You can submit new figures for inclusion in the catalogue either via:
   portrait exists, leave the figure without an image; the widget renders a
   monogram.
 - Facts are not copyrightable, but summaries should be written or paraphrased
-  rather than copied. Link the Wikipedia page for readers.
+  rather than copied. Link the Wikipedia page for readers. By contributing
+  catalogue text you agree to license it under the MIT license; direct
+  quotations retain their original license and must keep attribution.
 - The widget displays `credit · license`; do not remove that attribution path.
 
 ### Data quality checks

@@ -242,7 +242,10 @@ Example billboard:
 ## Data & licensing policy
 
 - Facts about people are not copyrightable; the catalogue lives in
-  `data/figures.json` and anyone may extend it via pull request.
+  `data/figures.json` and anyone may extend it via pull request. Code is MIT
+  licensed; catalogue text contributions are MIT licensed, while direct
+  quotations retain their source license (for example CC BY-SA 4.0 for
+  Wikipedia text). Portraits keep their per-image license.
 - **Only freely-licensed portraits are served.** The seed script records each
   image's author and license from Wikimedia metadata, and four figures whose
   only available images were _fair-use_ (Asima Chatterjee, G. N. Ramachandran,

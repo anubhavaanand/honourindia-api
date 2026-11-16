@@ -168,6 +168,7 @@ Open CORS on everything, JSON only, cache-friendly, light rate limiting
 | `GET /api/v1/billboards/random?count=8` | Random billboards for widgets (`count` 1–24).      |
 | `GET /api/v1/figures`                   | The full catalogue (summaries).                    |
 | `GET /api/v1/figures/:slug`             | One figure in full — summary, quote, links.        |
+| `POST /api/v1/figures/submit`           | Submit a figure for moderation (JSON).             |
 | `GET /api/v1/whoami`                    | Your tier (anonymous/keyed) and rate-limit budget. |
 | `GET /api/v1/meta`                      | Dataset size and licensing metadata.               |
 | `GET /embed.js`                         | The widget script itself.                          |
@@ -176,6 +177,45 @@ Open CORS on everything, JSON only, cache-friendly, light rate limiting
 `count` on the random endpoint must be an integer from 1 to 24 (default 8);
 anything else — including non-integers such as `2.5` and out-of-range values —
 is rejected with HTTP 400 rather than silently clamped.
+
+### Submitting a figure
+
+`POST /api/v1/figures/submit` accepts a JSON body and queues a pending
+submission for moderation. It does not add the figure to the public catalogue
+immediately.
+
+Required fields: `name`, `born` (number), `field`, `tagline`, `summary`, and
+`wiki`. Optional fields: `died` (number or null), `quote`
+(`{ "text": "...", "source": "..." }`), `submitterName`, and `submitterEmail`.
+
+```bash
+curl -X POST https://host/api/v1/figures/submit \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "A. Person",
+    "born": 1900,
+    "field": "Physics",
+    "tagline": "One line for the billboard.",
+    "summary": "Two or three sentences with sources.",
+    "wiki": "A._Person"
+  }'
+```
+
+A valid submission returns `201`:
+
+```json
+{
+  "message": "Figure submission received for moderation",
+  "submission": {
+    "id": "sub_...",
+    "status": "pending",
+    "name": "A. Person"
+  }
+}
+```
+
+Invalid JSON or a missing/invalid required field returns `400` with an
+`{ "error": "..." }` body.
 
 ### API versioning
 

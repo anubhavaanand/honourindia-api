@@ -158,6 +158,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /figures/submit:
+    post:
+      summary: Submit a figure for moderation
+      description: Validates a figure submission and queues it as pending. Approved submissions are added to the catalogue by a maintainer; this endpoint does not publish immediately.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FigureSubmission'
+      responses:
+        '201':
+          description: Submission received and queued for moderation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  submission:
+                    $ref: '#/components/schemas/Submission'
+        '400':
+          description: Invalid JSON or missing/invalid required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /figures/{slug}:
     get:
       summary: Full figure record
@@ -341,6 +369,94 @@ components:
           type: string
         source:
           type: string
+    FigureSubmission:
+      type: object
+      required: [name, born, field, tagline, summary, wiki]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        born:
+          type: integer
+        died:
+          type: integer
+          nullable: true
+        field:
+          type: string
+          minLength: 1
+        tagline:
+          type: string
+          minLength: 1
+        summary:
+          type: string
+          minLength: 1
+        wiki:
+          type: string
+          minLength: 1
+        quote:
+          type: object
+          nullable: true
+          properties:
+            text:
+              type: string
+            source:
+              type: string
+        submitterName:
+          type: string
+          nullable: true
+        submitterEmail:
+          type: string
+          nullable: true
+    Submission:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        born:
+          type: integer
+        died:
+          type: integer
+          nullable: true
+        field:
+          type: string
+        tagline:
+          type: string
+        summary:
+          type: string
+        wiki:
+          type: string
+        quote:
+          type: object
+          nullable: true
+          properties:
+            text:
+              type: string
+            source:
+              type: string
+        submitterName:
+          type: string
+          nullable: true
+        submitterEmail:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        submittedAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type: string
+          format: date-time
+          nullable: true
+        reviewNote:
+          type: string
+          nullable: true
+        reviewedBy:
+          type: string
+          nullable: true
     ErrorResponse:
       type: object
       properties:

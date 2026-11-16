@@ -140,11 +140,15 @@ You can submit new figures for inclusion in the catalogue either via:
 ### Data quality checks
 
 ```bash
-npm run dedup:figures   # writes data/duplicates-report.json (review only)
+npm run dedup:figures             # writes data/duplicates-report.json (review only)
+npm run dedup:figures -- --fix    # merge exact duplicates (same slug or wiki title)
+npm run dedup:figures -- --fix --dry-run
 ```
 
 Review the report before adding figures. Duplicate slugs or duplicate Wikipedia
-titles are the most common problems.
+titles are the most common problems. `--fix` keeps the first record and only
+fills fields that are missing from it; it never overwrites a value that is
+already present.
 
 ## Pull requests
 

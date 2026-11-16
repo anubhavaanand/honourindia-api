@@ -185,6 +185,11 @@ titles are the most common problems. `--fix` keeps the first record and only
 fills fields that are missing from it; it never overwrites a value that is
 already present.
 
+## Releases
+
+See [docs/RELEASE.md](docs/RELEASE.md) for the release checklist covering data,
+widget, SRI, and deployment steps.
+
 ## Pull requests
 
 - Base your branch on `main` and keep unrelated changes out.

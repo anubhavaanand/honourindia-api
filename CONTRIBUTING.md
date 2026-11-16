@@ -121,7 +121,9 @@ You can submit new figures for inclusion in the catalogue either via:
    an `imageNote` explaining that a monogram is shown.
 
 2. Run `npm run seed:images` to download the lead portrait and record its author
-   and license in `data/images.json`.
+   and license in `data/images.json`. Lookups are batched and downloads run in
+   parallel; tune with `--concurrency` (1–16, default 4) and `--delay` (ms
+   between API batches, default 250).
 
 3. Restart the server (the catalogue is loaded at boot) and check the figure
    detail page and a random billboard.

@@ -8,26 +8,46 @@
  *   3. asks Wikimedia Commons for the file's author and license,
  *   4. records everything in data/images.json (used by the API for attribution).
  *
- * Idempotent: skips figures whose file already exists and has a data/images.json entry.
- * Usage: npm run seed:images
+ * API lookups are batched (up to 50 titles per request) and image downloads run
+ * through a bounded worker pool, so seeding a large catalogue does not spend
+ * minutes sleeping between requests. Idempotent: skips figures whose file
+ * already exists and has a data/images.json entry.
+ *
+ * Usage:
+ *   npm run seed:images
+ *   node scripts/fetch-images.mjs --concurrency 6 --delay 100
+ *   node scripts/fetch-images.mjs --slug cv-raman --limit 10
  */
 
 import { mkdir, readFile, writeFile, access, unlink } from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const IMAGES_DIR = path.join(ROOT, 'public/images')
-const DATA_FILE = path.join(ROOT, 'data/figures.json')
+const DATA_FILE = path.join(ROOT, 'data', 'figures.json')
 const OUT_FILE = path.join(ROOT, 'data/images.json')
 
 const UA =
   'HonourIndia-seed/0.1 (billboard project honouring Indian scientists; contact via repository)'
 const THUMB_SIZE = 640
+const API_BATCH_SIZE = 50
+const DEFAULT_CONCURRENCY = 4
+const DEFAULT_DELAY_MS = 250
 
 const ENWIKI = 'https://en.wikipedia.org/w/api.php'
 const COMMONS = 'https://commons.wikimedia.org/w/api.php'
+
+const HELP = `Usage: node scripts/fetch-images.mjs [options]
+
+Options:
+  --slug <slug>       Only seed the figure with this slug.
+  --limit <n>         Process at most n new figures.
+  --concurrency <n>   Parallel image downloads (1-16, default ${DEFAULT_CONCURRENCY}).
+  --delay <ms>        Courtesy delay between Wikipedia API batches (0-60000, default ${DEFAULT_DELAY_MS}).
+  -h, --help          Show this help.
+`
 
 function decodeEntities(s) {
   return (
@@ -48,6 +68,81 @@ function decodeEntities(s) {
   )
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/** Splits an array into fixed-size batches. */
+export function chunk(items, size) {
+  if (!Number.isInteger(size) || size < 1) throw new Error('batch size must be a positive integer')
+  const batches = []
+  for (let i = 0; i < items.length; i += size) batches.push(items.slice(i, i + size))
+  return batches
+}
+
+/**
+ * Runs `fn` over `items` with at most `limit` calls in flight, preserving the
+ * input order in the returned array.
+ */
+export async function mapLimit(items, limit, fn) {
+  if (!Number.isInteger(limit) || limit < 1) throw new Error('limit must be a positive integer')
+  const results = new Array(items.length)
+  let next = 0
+
+  const worker = async () => {
+    while (true) {
+      const index = next++
+      if (index >= items.length) return
+      results[index] = await fn(items[index], index)
+    }
+  }
+
+  const workers = Array.from({ length: Math.min(limit, items.length) }, () => worker())
+  await Promise.all(workers)
+  return results
+}
+
+export function parsePositiveInt(value, name, { min = 1, max = Number.MAX_SAFE_INTEGER } = {}) {
+  const parsed = Number(value)
+  if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
+    throw new Error(`${name} must be an integer between ${min} and ${max}`)
+  }
+  return parsed
+}
+
+/**
+ * Builds a resolver for Wikipedia's `normalized`/`redirects` maps so a batch
+ * response can be matched back to the titles we asked for.
+ */
+export function buildTitleAliasMap(data, requested = []) {
+  const aliases = new Map()
+  for (const entry of data?.query?.normalized ?? []) aliases.set(entry.from, entry.to)
+  for (const entry of data?.query?.redirects ?? []) aliases.set(entry.from, entry.to)
+
+  const resolve = (title) => {
+    let current = title
+    const seen = new Set()
+    while (aliases.has(current) && !seen.has(current)) {
+      seen.add(current)
+      const next = aliases.get(current)
+      if (next === undefined) break
+      current = next
+    }
+    return current
+  }
+
+  for (const title of requested) aliases.set(title, resolve(title))
+  return { aliases, resolve }
+}
+
+/** Extracts the lead-image fields used by the seeder from a pageimages page. */
+export function pageImageFromPage(page) {
+  return {
+    thumb: page?.thumbnail?.source ?? null,
+    file: page?.pageimage ?? null,
+  }
+}
+
 async function apiGet(url) {
   const res = await fetch(url, { headers: { 'User-Agent': UA } })
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`)
@@ -63,83 +158,147 @@ async function fetchJsonRetry(url, tries = 5) {
       // Wikipedia rate-limits bursty traffic (429); back off generously.
       const wait = err.message.includes('429') ? 12000 * (i + 1) : 1500 * (i + 1)
       console.log(`    …retrying in ${wait / 1000}s (${err.message})`)
-      await new Promise((r) => setTimeout(r, wait))
+      await sleep(wait)
     }
   }
 }
 
-async function getLeadImage(wikiTitle) {
-  const params = new URLSearchParams({
-    action: 'query',
-    format: 'json',
-    redirects: 1,
-    prop: 'pageimages',
-    piprop: 'thumbnail|name',
-    pithumbsize: String(THUMB_SIZE),
-    titles: wikiTitle,
-  })
-  const data = await fetchJsonRetry(`${ENWIKI}?${params}`)
-  const pages = data?.query?.pages ?? {}
-  const page = Object.values(pages)[0]
-  if (!page || page.missing !== undefined) {
-    return { thumb: null, file: null }
+/**
+ * Fetches lead images for many articles in one request per 50 titles.
+ * Returns a Map keyed by both the requested title and the resolved page title.
+ */
+export async function fetchLeadImages(
+  wikiTitles,
+  { delayMs = 0, batchSize = API_BATCH_SIZE } = {},
+) {
+  const byTitle = new Map()
+  const titles = [...new Set(wikiTitles.filter(Boolean))]
+
+  for (const batch of chunk(titles, batchSize)) {
+    const params = new URLSearchParams({
+      action: 'query',
+      format: 'json',
+      redirects: 1,
+      prop: 'pageimages',
+      piprop: 'thumbnail|name',
+      pithumbsize: String(THUMB_SIZE),
+      titles: batch.join('|'),
+    })
+    const data = await fetchJsonRetry(`${ENWIKI}?${params}`)
+    const { resolve } = buildTitleAliasMap(data, batch)
+
+    for (const page of Object.values(data?.query?.pages ?? {})) {
+      const value = pageImageFromPage(page)
+      if (page.title) byTitle.set(page.title, value)
+      const resolved = resolve(page.title)
+      if (resolved) byTitle.set(resolved, value)
+    }
+
+    // Make the exact titles we asked for resolve even when Wikipedia
+    // normalized or redirected them.
+    for (const title of batch) {
+      const value = byTitle.get(resolve(title)) ?? byTitle.get(title)
+      if (value) byTitle.set(title, value)
+    }
+
+    if (delayMs > 0) await sleep(delayMs)
   }
-  return {
-    thumb: page.thumbnail?.source ?? null,
-    file: page.pageimage ?? null, // File:Name.ext (without the File: prefix)
-  }
+
+  return byTitle
 }
 
-/** Direct file lookup for figures whose article has no flagged lead image. Tries Commons, then local enwiki files. */
-async function getCommonsFile(fileName) {
-  const params = new URLSearchParams({
-    action: 'query',
-    format: 'json',
-    prop: 'imageinfo',
-    iiprop: 'url|extmetadata',
-    iiurlwidth: String(THUMB_SIZE),
-    titles: `File:${fileName}`,
-  })
-  for (const host of [COMMONS, ENWIKI]) {
+async function fetchImageInfo(host, fileNames, { delayMs = 0, batchSize = API_BATCH_SIZE } = {}) {
+  const info = new Map()
+  const names = [...new Set(fileNames.filter(Boolean))]
+
+  for (const batch of chunk(names, batchSize)) {
+    const params = new URLSearchParams({
+      action: 'query',
+      format: 'json',
+      prop: 'imageinfo',
+      iiprop: 'url|extmetadata',
+      iiurlwidth: String(THUMB_SIZE),
+      titles: batch.map((name) => `File:${name}`).join('|'),
+    })
     const data = await fetchJsonRetry(`${host}?${params}`)
-    const page = Object.values(data?.query?.pages ?? {})[0]
-    const info = page?.imageinfo?.[0]
-    if (!info) continue
-    const meta = info.extmetadata ?? {}
-    return {
-      thumb: info.thumburl ?? info.url ?? null,
-      file: fileName,
-      credit: meta.Artist?.value ? decodeEntities(meta.Artist.value) : undefined,
-      license: meta.LicenseShortName?.value
-        ? decodeEntities(meta.LicenseShortName.value)
-        : undefined,
-      source: meta.Credit?.value ? decodeEntities(meta.Credit.value) : undefined,
+    const requested = batch.map((name) => `File:${name}`)
+    const { resolve } = buildTitleAliasMap(data, requested)
+
+    for (const page of Object.values(data?.query?.pages ?? {})) {
+      const imageInfo = page.imageinfo?.[0]
+      if (!imageInfo || !page.title) continue
+      const meta = imageInfo.extmetadata ?? {}
+      const value = {
+        thumb: imageInfo.thumburl ?? imageInfo.url ?? null,
+        file: page.title.replace(/^File:/i, ''),
+        credit: meta.Artist?.value ? decodeEntities(meta.Artist.value) : undefined,
+        license: meta.LicenseShortName?.value
+          ? decodeEntities(meta.LicenseShortName.value)
+          : undefined,
+        source: meta.Credit?.value ? decodeEntities(meta.Credit.value) : undefined,
+      }
+      const resolved = resolve(page.title).replace(/^File:/i, '')
+      info.set(value.file, value)
+      if (resolved !== value.file) info.set(resolved, value)
+    }
+
+    for (const name of batch) {
+      const resolved = resolve(`File:${name}`).replace(/^File:/i, '')
+      const value = info.get(resolved) ?? info.get(name)
+      if (value) info.set(name, value)
+    }
+
+    if (delayMs > 0) await sleep(delayMs)
+  }
+
+  return info
+}
+
+/** Looks up file metadata on Commons, falling back to English Wikipedia. */
+export async function fetchCommonsFiles(fileNames, options = {}) {
+  const info = await fetchImageInfo(COMMONS, fileNames, options)
+  const missing = [...new Set(fileNames.filter(Boolean))].filter(
+    (name) => !info.has(name) || !info.get(name)?.thumb,
+  )
+  if (missing.length === 0) return info
+
+  const fallback = await fetchImageInfo(ENWIKI, missing, options)
+  for (const [name, value] of fallback) {
+    if (!info.has(name) || !info.get(name)?.thumb) info.set(name, value)
+  }
+  return info
+}
+
+/** Batch license/author lookup for files that came from a lead image. */
+export async function fetchLicenses(fileNames, options = {}) {
+  const info = await fetchImageInfo(COMMONS, fileNames, options)
+  const licenses = new Map()
+  for (const [name, value] of info) {
+    licenses.set(name, { credit: value.credit, license: value.license, source: value.source })
+  }
+  return licenses
+}
+
+/** Downloads an image with a few retries for transient network failures. */
+export async function downloadImage(url, tries = 3) {
+  let lastError
+  for (let i = 0; i < tries; i++) {
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': UA } })
+      if (!res.ok) throw new Error(`image download HTTP ${res.status}`)
+      return Buffer.from(await res.arrayBuffer())
+    } catch (err) {
+      lastError = err
+      if (i < tries - 1) await sleep(500 * (i + 1))
     }
   }
-  return null
+  throw lastError
 }
 
 async function getLicense(fileName) {
-  const params = new URLSearchParams({
-    action: 'query',
-    format: 'json',
-    prop: 'imageinfo',
-    iiprop: 'extmetadata',
-    titles: `File:${fileName}`,
-  })
   try {
-    const data = await fetchJsonRetry(`${COMMONS}?${params}`)
-    const pages = data?.query?.pages ?? {}
-    const page = Object.values(pages)[0]
-    const meta = page?.imageinfo?.[0]?.extmetadata
-    if (!meta) return {}
-    return {
-      credit: meta.Artist?.value ? decodeEntities(meta.Artist.value) : undefined,
-      license: meta.LicenseShortName?.value
-        ? decodeEntities(meta.LicenseShortName.value)
-        : undefined,
-      source: meta.Credit?.value ? decodeEntities(meta.Credit.value) : undefined,
-    }
+    const info = await fetchLicenses([fileName])
+    return info.get(fileName) ?? {}
   } catch {
     return {} // attribution falls back to "Wikimedia Commons" in the widget
   }
@@ -154,11 +313,48 @@ async function exists(p) {
   }
 }
 
+function optionValue(args, name) {
+  const index = args.indexOf(name)
+  return index === -1 ? undefined : args[index + 1]
+}
+
+function parseOptions(args) {
+  const slug = optionValue(args, '--slug')
+  const limitRaw = optionValue(args, '--limit')
+  const concurrencyRaw = optionValue(args, '--concurrency')
+  const delayRaw = optionValue(args, '--delay')
+
+  return {
+    slug: slug ?? null,
+    limit: limitRaw === undefined ? Infinity : parsePositiveInt(limitRaw, '--limit'),
+    concurrency:
+      concurrencyRaw === undefined
+        ? DEFAULT_CONCURRENCY
+        : parsePositiveInt(concurrencyRaw, '--concurrency', { min: 1, max: 16 }),
+    delayMs:
+      delayRaw === undefined
+        ? DEFAULT_DELAY_MS
+        : parsePositiveInt(delayRaw, '--delay', { min: 0, max: 60000 }),
+  }
+}
+
 async function main() {
-  const slugArgIdx = process.argv.indexOf('--slug')
-  const targetSlug = slugArgIdx !== -1 ? process.argv[slugArgIdx + 1] : null
-  const limitArgIdx = process.argv.indexOf('--limit')
-  const limit = limitArgIdx !== -1 ? parseInt(process.argv[limitArgIdx + 1], 10) : Infinity
+  const args = process.argv.slice(2)
+  if (args.includes('-h') || args.includes('--help')) {
+    console.log(HELP)
+    return
+  }
+
+  let options
+  try {
+    options = parseOptions(args)
+  } catch (err) {
+    console.error(err.message)
+    console.error(HELP)
+    process.exit(1)
+  }
+
+  const { slug: targetSlug, limit, concurrency, delayMs } = options
 
   let figures = JSON.parse(await readFile(DATA_FILE, 'utf8')).figures
   if (targetSlug) {
@@ -191,67 +387,112 @@ async function main() {
   }
 
   const results = { ...existing }
-  let ok = 0
   let skipped = 0
-  let failed = []
-  let processed = 0
+  const pending = []
 
-  for (const f of figures) {
-    if (processed >= limit) break
-
-    const prev = existing[f.slug]
+  for (const figure of figures) {
+    if (pending.length >= limit) break
+    const prev = existing[figure.slug]
     if (prev && (await exists(path.join(IMAGES_DIR, prev.file)))) {
-      results[f.slug] = prev
+      results[figure.slug] = prev
       skipped++
       continue
     }
+    pending.push(figure)
+  }
 
-    processed++
+  if (pending.length === 0) {
+    console.log(`\nDone: 0 downloaded, ${skipped} already present, 0 failed/skipped.`)
+    return
+  }
+
+  console.log(
+    `Seeding ${pending.length} figure(s) with ${concurrency} parallel download(s), ${delayMs}ms between API batches…`,
+  )
+
+  // One pageimages request per 50 titles instead of one request per figure.
+  const wikiTitles = pending.filter((f) => !f.commonsFile && f.wiki).map((f) => f.wiki)
+  const leadImages = wikiTitles.length ? await fetchLeadImages(wikiTitles, { delayMs }) : new Map()
+
+  const commonsFiles = pending.filter((f) => f.commonsFile).map((f) => f.commonsFile)
+  const presets = commonsFiles.length
+    ? await fetchCommonsFiles(commonsFiles, { delayMs })
+    : new Map()
+
+  const tasks = pending.map((figure) => {
+    if (figure.commonsFile) {
+      const preset = presets.get(figure.commonsFile)
+      if (!preset) return { figure, error: `commonsFile not found: ${figure.commonsFile}` }
+      return { figure, thumb: preset.thumb, file: preset.file, preset }
+    }
+
+    const lead = figure.wiki ? leadImages.get(figure.wiki) : undefined
+    if (!lead?.thumb || !lead.file) return { figure, error: 'no lead image found' }
+    return { figure, thumb: lead.thumb, file: lead.file, preset: null }
+  })
+
+  const licenseFiles = [
+    ...new Set(tasks.filter((task) => !task.preset && !task.error).map((task) => task.file)),
+  ]
+  const licenses = licenseFiles.length ? await fetchLicenses(licenseFiles, { delayMs }) : new Map()
+
+  let ok = 0
+  const failed = []
+  let saveChain = Promise.resolve()
+
+  // Persist after every figure so the script is resumable across interruptions.
+  const persist = () => {
+    const snapshot = JSON.stringify(results, null, 2) + '\n'
+    saveChain = saveChain.then(() => writeFile(OUT_FILE, snapshot)).catch(() => {})
+    return saveChain
+  }
+
+  await mapLimit(tasks, concurrency, async (task) => {
+    if (task.error) {
+      failed.push(task.figure.slug)
+      console.error(`  ✗ ${task.figure.slug}: ${task.error}`)
+      await persist()
+      return
+    }
+
     try {
-      let thumb, file, preset
-      if (f.commonsFile) {
-        preset = await getCommonsFile(f.commonsFile)
-        if (!preset) throw new Error(`commonsFile not found: ${f.commonsFile}`)
-        ;({ thumb, file } = preset)
-      } else {
-        ;({ thumb, file } = await getLeadImage(f.wiki))
-      }
-      if (!thumb || !file) throw new Error('no lead image found')
-
-      const ext = (path.extname(new URL(thumb).pathname) || '.jpg').toLowerCase()
-      const name = `${f.slug}${ext}`
+      const ext = (path.extname(new URL(task.thumb).pathname) || '.jpg').toLowerCase()
+      const name = `${task.figure.slug}${ext}`
       const dest = path.join(IMAGES_DIR, name)
 
-      const imgRes = await fetch(thumb, { headers: { 'User-Agent': UA } })
-      if (!imgRes.ok) throw new Error(`image download HTTP ${imgRes.status}`)
-      const buf = Buffer.from(await imgRes.arrayBuffer())
+      const buf = await downloadImage(task.thumb)
       if (buf.length < 1000) throw new Error('image suspiciously small')
       await writeFile(dest, buf)
 
-      const license = preset
-        ? { credit: preset.credit, license: preset.license, source: preset.source }
-        : await getLicense(file)
+      let license
+      if (task.preset) {
+        license = {
+          credit: task.preset.credit,
+          license: task.preset.license,
+          source: task.preset.source,
+        }
+      } else {
+        license = licenses.get(task.file) ?? {}
+        if (!license.license) license = await getLicense(task.file)
+      }
 
       if (license.license && /fair/i.test(license.license)) {
         await unlink(dest).catch(() => {})
         throw new Error(`license "${license.license}" is Fair use — must not be served (see #95)`)
       }
 
-      results[f.slug] = { file: name, ...license }
+      results[task.figure.slug] = { file: name, ...license }
       ok++
-      console.log(`  ✓ ${f.slug} (${name}, ${license.license ?? 'license unknown'})`)
+      console.log(`  ✓ ${task.figure.slug} (${name}, ${license.license ?? 'license unknown'})`)
     } catch (err) {
-      failed.push(f.slug)
-      console.error(`  ✗ ${f.slug}: ${err.message}`)
+      failed.push(task.figure.slug)
+      console.error(`  ✗ ${task.figure.slug}: ${err.message}`)
     }
 
-    // be polite to the APIs (1200ms delay to prevent HTTP 429)
-    await new Promise((r) => setTimeout(r, 1200))
+    await persist()
+  })
 
-    // persist progress after every figure so the script is resumable
-    // across interruptions (network blips, timeouts, rate limits)
-    await writeFile(OUT_FILE, JSON.stringify(results, null, 2) + '\n')
-  }
+  await saveChain
 
   console.log(
     `\nDone: ${ok} downloaded, ${skipped} already present, ${failed.length} failed/skipped.`,
@@ -261,7 +502,10 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+const invokedPath = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : ''
+if (import.meta.url === invokedPath) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}

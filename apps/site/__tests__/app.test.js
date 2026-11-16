@@ -7,7 +7,7 @@ describe('site app.js', () => {
       <pre id="snippet"><code></code></pre>
       <div id="previewMount"></div>
       <select id="optTheme"><option value="dark" selected>dark</option><option value="light">light</option></select>
-      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option><option value="poster">poster · 480×320</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option><option value="poster">poster · 480×480</option></select>
       <input id="optInterval" type="range" min="5" max="60" value="8" />
       <output id="optIntervalOut">8s</output>
       <button id="copySnippet">Copy</button>

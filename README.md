@@ -23,6 +23,8 @@ shows the portrait's license credit in tiny footer text.
 Contributions are welcome — new figures, fixes, docs and tests. Read
 [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup and data
 conventions, and our [Code of Conduct](CODE_OF_CONDUCT.md) before you start.
+Security vulnerabilities should be reported privately — see
+[SECURITY.md](SECURITY.md).
 
 ## Quick start
 

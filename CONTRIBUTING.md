@@ -163,5 +163,6 @@ already present.
 ## Reporting bugs and security issues
 
 Open a GitHub issue for bugs and data problems, including the URL, the request,
-and the expected versus actual behavior. For security vulnerabilities, contact
-the maintainers privately rather than opening a public issue.
+and the expected versus actual behavior. For security vulnerabilities, follow
+[SECURITY.md](SECURITY.md) and report privately rather than opening a public
+issue.

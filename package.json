@@ -34,6 +34,7 @@
     "import:candidates": "node scripts/import-candidates.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run",
+    "test:visual": "vitest run packages/embed/src/__tests__/visual.test.ts",
     "prepare": "husky"
   },
   "devDependencies": {

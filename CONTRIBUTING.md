@@ -24,11 +24,15 @@ scripts/           Data seeding, research, and publishing scripts
 Requires Node.js 20 or newer.
 
 ```bash
-npm install        # install all workspaces
+npm ci             # install all workspaces from package-lock.json
 npm run build      # build the widget and the server
 npm run dev        # build the widget, then serve on http://localhost:3000
 npm test           # run the vitest suite
 ```
+
+Use `npm ci` for a reproducible install; CI uses the same command. Use
+`npm install` only when you are intentionally adding or updating a dependency,
+and commit the updated `package-lock.json`.
 
 Useful focused commands:
 
@@ -69,7 +73,7 @@ npm run format:check   # prettier, must report nothing to change
 `npm run lint:fix` and `npm run format` apply the fixes for you. CI runs all
 three checks, so a pull request that fails them will not merge.
 
-`npm install` also installs a pre-commit hook (husky + lint-staged) that lints
+`npm ci` also installs a pre-commit hook (husky + lint-staged) that lints
 and formats the files you stage, so the checks usually run before you remember
 to run them by hand.
 

@@ -27,7 +27,7 @@ conventions, and our [Code of Conduct](CODE_OF_CONDUCT.md) before you start.
 ## Quick start
 
 ```bash
-npm install          # installs all workspaces
+npm ci               # installs all workspaces from package-lock.json
 npm run build        # builds the embed widget
 npm run seed:images  # downloads freely-licensed portraits from Wikipedia/Commons (idempotent)
 npm run dev          # serve on http://localhost:3000
@@ -263,7 +263,7 @@ sleeps after idle; the widget's retry loop transparently recovers on wake.
 **Any platform or VPS:**
 
 ```bash
-npm install       # dev deps are needed for this step
+npm ci             # dev deps are needed for this step (reproducible from the lockfile)
 npm run build     # esbuild → packages/embed/dist/embed.js · tsc → apps/server/dist
 npm start         # node apps/server/dist/index.js
 ```

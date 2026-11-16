@@ -157,6 +157,18 @@ Some WordPress themes strip `data-*` attributes; if the widget doesn't render, s
 | `data-api`      | override API base                        | origin of `embed.js` |
 | `data-key`      | optional API key                         | none                 |
 
+### Troubleshooting
+
+| Symptom                                   | Likely cause                                                        | Fix                                                                                                                                                      |
+| ----------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ERR_BLOCKED_BY_CSP` or integrity failure | The snippet's SRI hash is stale, or the host CSP blocks the script. | Rebuild the widget and run `npm run check:sri`; update the hash in every snippet. On a self-hosted page, allow the script origin or its hash in the CSP. |
+| CORS error loading `embed.js`             | The script host does not send `Access-Control-Allow-Origin`.        | Use the provided server (it sends `*`), or configure your host/CDN to allow the embedding origin. `crossorigin="anonymous"` requires CORS.               |
+| Widget does not mount                     | A CMS stripped the `data-*` attributes or moved the script.         | Paste the snippet in an HTML block, not a visual editor, and make sure the container exists before `embed.js` loads.                                     |
+| Blank billboard                           | API unreachable, wrong `data-api`, or no billboards returned.       | Check `GET /healthz`, set `data-api` to the correct origin, and inspect the browser console and network tab.                                             |
+| Images do not appear                      | The portrait is missing or blocked by the page CSP `img-src`.       | Use the monogram fallback or allow the image host in the page CSP.                                                                                       |
+| HTTP 429                                  | Rate limit exceeded.                                                | Respect `Retry-After`; add a valid `data-key` for the keyed limit.                                                                                       |
+| Widget changes do not appear              | Browser cache or a stale `embed.js`.                                | Rebuild, update the SRI hash, and hard-refresh or bump the cache headers.                                                                                |
+
 ## The API (v1)
 
 Open CORS on everything, JSON only, cache-friendly, light rate limiting

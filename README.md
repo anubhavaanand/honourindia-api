@@ -215,12 +215,34 @@ curl "https://host/api/v1/billboards/random?count=8&key=hi_…"   # deprecated
 Keys are stored **only as sha-256 hashes** in `data/keys.json` (safe to
 commit — the plaintext is shown once at issuance and never stored). Embedders
 can pass `data-key="hi_…"` on the billboard container to use a key from the
-widget — the widget sends it to the API as an `Authorization` header. Restart
-the server after issuing keys.
+widget — the widget sends it to the API as an `Authorization` header. The
+server watches `data/keys.json` and reloads keys automatically; restart only if
+file watching is unavailable on your platform.
 
 Ten wrong keys from the same address earn a fifteen-minute lockout — the
 response is a `429` with a `Retry-After` header. Anonymous requests are never
 counted against it.
+
+### API key operations
+
+```bash
+# Issue a key (the plaintext is printed once)
+npm run issue-key -- --name "Partner App"
+
+# Inspect the hashed store (never contains plaintext)
+cat data/keys.json
+
+# Restrict permissions on a server
+chmod 600 data/keys.json
+```
+
+- **Rotate:** issue a new key, deploy it, then remove or disable the old entry
+  (`"enabled": false`) and let the file watcher reload.
+- **Revoke:** remove the key object from `data/keys.json` or set
+  `"enabled": false`; the watcher reloads it.
+- **Backup:** back up `data/keys.json` securely. It contains only hashes, but
+  losing it means reissuing every key.
+- **Recovery:** hashes cannot be reversed. If the file is lost, issue new keys.
 
 Example billboard:
 

@@ -96,6 +96,25 @@ Add or update tests for behavior changes:
 Run `npm test` before opening a pull request. If a change is hard to unit test,
 describe how you verified it manually in the PR description.
 
+## Changing the widget
+
+The widget is bundled from `packages/embed/src/index.ts`, and its SHA-384 hash
+is advertised in several snippets. When you change widget markup or CSS:
+
+1. Edit `packages/embed/src/index.ts`.
+2. Run `npm run build -w packages/embed`.
+3. Run `npm run check:sri`. It prints the expected hash and fails while any
+   snippet still advertises the old one.
+4. Update the hash in:
+   - `README.md`
+   - `apps/site/index.html`
+   - `apps/site/app.js`
+   - `packages/embed/src/index.ts` (the usage comment)
+   - `apps/site/__tests__/app.test.js`
+5. Run `npm run check:sri`, `npm run test:visual`, and `npm test`.
+
+CI runs `check:sri` after `npm run build`, so a stale hash fails the build.
+
 ## Suggesting a figure
 
 You can submit new figures for inclusion in the catalogue either via:

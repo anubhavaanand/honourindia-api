@@ -1,5 +1,5 @@
 import { createReadStream } from 'node:fs'
-import { stat } from 'node:fs/promises'
+import { readFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 import { Readable } from 'node:stream'
 import { serve } from '@hono/node-server'
@@ -66,6 +66,34 @@ async function serveFile(filePath: string, cacheControl: string): Promise<Respon
       'content-type': type,
       'cache-control': cacheControl,
       'content-length': String(size),
+    },
+  })
+}
+
+async function serveHtml(
+  filePath: string,
+  cacheControl: string,
+  nonce?: string,
+): Promise<Response> {
+  let html: string
+  try {
+    html = await readFile(filePath, 'utf8')
+  } catch {
+    return notFound()
+  }
+
+  // Expose the per-request nonce to the page and any future inline scripts.
+  // Inline scripts should use nonce="__CSP_NONCE__"; the placeholder is
+  // replaced by the caller before the HTML is sent.
+  if (nonce) {
+    html = html.replaceAll('__CSP_NONCE__', nonce)
+    html = html.replace(/<\/head>/i, `  <meta name="csp-nonce" content="${nonce}">\n  </head>`)
+  }
+
+  return new Response(html, {
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': cacheControl,
     },
   })
 }
@@ -168,7 +196,7 @@ app.get('/images/*', (c) => {
 })
 
 // Demo + docs site. Assets uncached outside production for fast iteration.
-app.get('/', () => serveFile(path.join(SITE_DIR, 'index.html'), 'no-cache'))
+app.get('/', (c) => serveHtml(path.join(SITE_DIR, 'index.html'), 'no-cache', c.get('cspNonce')))
 app.get('/styles.css', () =>
   serveFile(path.join(SITE_DIR, 'styles.css'), isProd ? 'public, max-age=600' : 'no-cache'),
 )
@@ -178,8 +206,12 @@ app.get('/app.js', () =>
 app.get('/figure.js', () =>
   serveFile(path.join(SITE_DIR, 'figure.js'), isProd ? 'public, max-age=600' : 'no-cache'),
 )
-app.get('/figures/:slug', () => serveFile(path.join(SITE_DIR, 'figure.html'), 'no-cache'))
-app.get('/admin', () => serveFile(path.join(SITE_DIR, 'admin.html'), 'no-cache'))
+app.get('/figures/:slug', (c) =>
+  serveHtml(path.join(SITE_DIR, 'figure.html'), 'no-cache', c.get('cspNonce')),
+)
+app.get('/admin', (c) =>
+  serveHtml(path.join(SITE_DIR, 'admin.html'), 'no-cache', c.get('cspNonce')),
+)
 app.get('/admin.js', () =>
   serveFile(path.join(SITE_DIR, 'admin.js'), isProd ? 'public, max-age=600' : 'no-cache'),
 )

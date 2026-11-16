@@ -3,10 +3,13 @@ import { securityHeaders } from '../lib/security.js'
 import { app } from '../index.js'
 
 function makeContext(path: string) {
+  const values = new Map<string, unknown>()
   const c: any = {
     req: { path },
     res: { headers: new Headers() },
     header: () => {},
+    set: (key: string, value: unknown) => values.set(key, value),
+    get: (key: string) => values.get(key),
   }
   return c
 }
@@ -68,6 +71,36 @@ describe('securityHeaders', () => {
   it('sends the Permissions-Policy on real API responses too (issue #68)', async () => {
     const res = await app.request('/api/v1/meta')
     expect(res.headers.get('Permissions-Policy')).toContain('camera=()')
+  })
+
+  it('adds a per-request nonce to the site CSP (issue #86)', async () => {
+    const c = makeContext('/')
+    await securityHeaders()(c, () => Promise.resolve())
+
+    expect(c.res.headers.get('Content-Security-Policy')).toMatch(
+      /script-src 'self' 'nonce-[A-Za-z0-9+/=]+'/,
+    )
+    expect(c.get('cspNonce')).toBeTruthy()
+  })
+
+  it('does not add a nonce to the API CSP (issue #86)', async () => {
+    const c = makeContext('/api/v1/meta')
+    await securityHeaders()(c, () => Promise.resolve())
+
+    expect(c.res.headers.get('Content-Security-Policy')).not.toContain('nonce-')
+    expect(c.get('cspNonce')).toBeUndefined()
+  })
+
+  it('sends a CSP nonce and injects it into the demo HTML (issue #86)', async () => {
+    const res = await app.request('/')
+    expect(res.status).toBe(200)
+
+    const csp = res.headers.get('Content-Security-Policy') ?? ''
+    const nonce = csp.match(/'nonce-([^']+)'/)?.[1]
+    expect(nonce).toBeTruthy()
+
+    const html = await res.text()
+    expect(html).toContain(`<meta name="csp-nonce" content="${nonce}">`)
   })
 })
 

@@ -109,6 +109,12 @@ app.use('/api/*', rateLimit())
 app.use('/api/*', bodyLimit({ maxSize: MAX_BODY_BYTES, onError: bodyTooLarge }))
 app.route('/api/v1', api)
 
+// The widget is embedded on third-party origins. SRI with
+// crossorigin="anonymous" makes the browser use a CORS request for the script,
+// so the /embed.js response must allow any origin — otherwise the browser
+// blocks the script before it can check its integrity hash.
+app.use('/embed.js', cors({ origin: '*', maxAge: 600 }))
+
 // Rate limiting for non-API endpoints (/embed.js, /images/*, /figures/*, and site routes).
 // Generous limit (300 req/min) ensures normal browser asset loading and browsing isn't impacted
 // while protecting against image scraping, DDoS floods, and endpoint enumeration.

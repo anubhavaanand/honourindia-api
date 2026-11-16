@@ -51,3 +51,15 @@ describe('CORS preflight for keyed cross-origin embeds (issue #44)', () => {
     expect(res.headers.get('Access-Control-Expose-Headers')).toContain('Warning')
   })
 })
+
+describe('CORS for the embed script (issue #87)', () => {
+  it('allows a cross-origin /embed.js request so SRI can be enforced', async () => {
+    const res = await app.request('/embed.js', {
+      headers: { Origin: 'https://embedder.example' },
+    })
+
+    // The browser refuses to enforce integrity on a cross-origin script without
+    // CORS, so this header is required for the SRI snippet to work.
+    expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*')
+  })
+})

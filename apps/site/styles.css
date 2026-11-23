@@ -301,6 +301,15 @@ pre {
 }
 .figure-card:hover { transform: translateY(-3px); border-color: var(--line-strong); text-decoration: none; }
 .figure-thumb { aspect-ratio: 1 / 1; background-size: cover; background-position: 50% 20%; background-color: var(--bg-raise); }
+.figure-thumb--empty {
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--saffron);
+  letter-spacing: 0.06em;
+}
 .figure-body { padding: 12px 14px 14px; }
 .figure-field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; gap: 8px; }
 .figure-field {

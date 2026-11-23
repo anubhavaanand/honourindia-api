@@ -167,7 +167,8 @@ describe('widget visual regression (issue #70)', () => {
       expect(monogram).toBeTruthy()
       expect(monogram!.textContent).toBe('MP')
       expect(active.querySelector('.hi-media img')).toBeNull()
-      expect(active.querySelector('.hi-attr')?.textContent).toContain('Wikimedia Commons')
+      // No portrait means no photo to credit (#216): the attribution is empty.
+      expect(active.querySelector('.hi-attr')?.textContent).toBe('')
 
       expect(widgetSnapshot(host)).toMatchSnapshot()
     })
@@ -218,7 +219,6 @@ describe('widget visual regression (issue #70)', () => {
       '.hi--dark { background: #0a0a0c; color: #f2efe9; }',
       '.hi--light { background: #faf7f0; color: #1a1d21; }',
       '.hi--poster .hi-panel { display: none; }',
-      '.hi--poster .hi-quote { display: none; }',
       '.hi--leaderboard .hi-media { right: auto; width: 96px; }',
       '@media (prefers-reduced-motion: reduce)',
       '.hi-layer { transition: none; }',

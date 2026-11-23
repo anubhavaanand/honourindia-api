@@ -1,6 +1,14 @@
 // Submissions Moderation Dashboard Client
 ;(function () {
   const STORAGE_KEY = 'honourindia_admin_key'
+
+  // Resolve the API base from the site root so the dashboard also works when
+  // the site is served under a subpath (for example a GitHub Pages project).
+  const pathname = location.pathname || ''
+  const adminIdx = pathname.lastIndexOf('/')
+  const rootPath = adminIdx >= 0 ? pathname.slice(0, adminIdx) + '/' : '/'
+  const API_BASE = new URL('api/v1/', new URL(rootPath, location.href))
+
   let adminKey = localStorage.getItem(STORAGE_KEY) || ''
   let currentFilter = ''
   let allSubmissions = []
@@ -47,7 +55,7 @@
       if (adminKey) {
         headers['x-admin-key'] = adminKey
       }
-      const res = await fetch('/api/v1/admin/submissions', { headers })
+      const res = await fetch(new URL('admin/submissions', API_BASE).toString(), { headers })
       if (!res.ok) {
         if (res.status === 401) {
           submissionsList.innerHTML =
@@ -176,18 +184,21 @@
         const reviewNote = noteInput ? noteInput.value.trim() : ''
 
         try {
-          const res = await fetch(`/api/v1/admin/submissions/${encodeURIComponent(id)}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-admin-key': adminKey,
+          const res = await fetch(
+            new URL(`admin/submissions/${encodeURIComponent(id)}`, API_BASE).toString(),
+            {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-admin-key': adminKey,
+              },
+              body: JSON.stringify({
+                status: action,
+                reviewNote: reviewNote || null,
+                reviewer: 'admin-dashboard',
+              }),
             },
-            body: JSON.stringify({
-              status: action,
-              reviewNote: reviewNote || null,
-              reviewer: 'admin-dashboard',
-            }),
-          })
+          )
           if (!res.ok) {
             const errData = await res.json().catch(() => ({}))
             throw new Error(errData.error || `HTTP ${res.status}`)

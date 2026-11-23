@@ -7,7 +7,7 @@
   var PAGE_DIR = new URL('.', location.href)
   var EMBED_ORIGIN = PAGE_DIR.toString().replace(/\/$/, '')
   var API_BASE = new URL('api/v1/', PAGE_DIR)
-  var EMBED_SRI = 'sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK'
+  var EMBED_SRI = 'sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B'
 
   // Fill origin placeholders in the static HTML.
   document.querySelectorAll('.ph-origin').forEach(function (el) {
@@ -158,6 +158,20 @@
 
   var fetchSeq = 0
 
+  function initials(name) {
+    return (
+      String(name || '')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(function (w) {
+          return w.charAt(0)
+        })
+        .join('')
+        .toUpperCase() || '?'
+    )
+  }
+
   function renderCard(f) {
     var a = document.createElement('a')
     a.className = 'figure-card'
@@ -166,7 +180,23 @@
 
     var thumb = document.createElement('div')
     thumb.className = 'figure-thumb'
-    if (f.image) thumb.style.backgroundImage = 'url("' + new URL(f.image.url, API_BASE) + '")'
+    if (f.image) {
+      var imgUrl = new URL(f.image.url, API_BASE).toString()
+      // Escape any characters that would break out of the CSS url("...") value.
+      thumb.style.backgroundImage = 'url("' + imgUrl.replace(/["\\]/g, '\\$&') + '")'
+      // Fall back to a monogram if the portrait fails to load, matching the
+      // detail page instead of leaving an empty grey square.
+      var probe = new Image()
+      probe.onerror = function () {
+        thumb.style.backgroundImage = ''
+        thumb.classList.add('figure-thumb--empty')
+        thumb.textContent = initials(f.name)
+      }
+      probe.src = imgUrl
+    } else {
+      thumb.classList.add('figure-thumb--empty')
+      thumb.textContent = initials(f.name)
+    }
 
     var body = document.createElement('div')
     body.className = 'figure-body'
@@ -224,6 +254,7 @@
 
     fetch(url)
       .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status)
         return r.json()
       })
       .then(function (data) {

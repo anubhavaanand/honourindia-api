@@ -3,7 +3,7 @@
  *
  * Usage (one line on any page):
  *   <div data-honourindia></div>
- *   <script src="https://your-host/embed.js" integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK" crossorigin="anonymous" async></script>
+ *   <script src="https://your-host/embed.js" integrity="sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B" crossorigin="anonymous" async></script>
  *
  * Options (attributes on the container, or passed to HonourIndia.mount):
  *   data-api       — API base, defaults to <origin of embed.js>/api/v1
@@ -201,7 +201,6 @@ const CSS = `
 
 /* ---- poster: square, image-dominant; info over scrim at the bottom ---- */
 .hi--poster .hi-panel { display: none; }
-.hi--poster .hi-quote { display: none; }
 
 .hi--poster .hi-scrim {
   background: linear-gradient(180deg, rgba(8,10,12,0) 0%, rgba(8,10,12,.45) 55%, rgba(8,10,12,.92) 100%);
@@ -268,6 +267,8 @@ const CSS = `
   backdrop-filter: blur(2px);
 }
 .hi:hover .hi-nav, .hi-nav:focus-visible { opacity: 1; }
+/* Expand the tappable area to ~44px without changing the visible 26px button. */
+.hi-nav::after { content: ''; position: absolute; inset: -9px; border-radius: 50%; }
 .hi-prev { left: 6px; }
 .hi-next { right: 6px; }
 .hi-nav:hover { background: rgba(10,12,14,.75); }
@@ -406,6 +407,8 @@ function buildDom(
 
   const loading = document.createElement('div')
   loading.className = 'hi-loading'
+  loading.setAttribute('role', 'status')
+  loading.setAttribute('aria-live', 'polite')
   loading.innerHTML =
     '<div class="hi-loading-brand">सम्मान · Honour India</div>' +
     '<div class="hi-loading-pulse"></div>'
@@ -456,17 +459,6 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string, lazy = tru
   name.textContent = b.name
   tag.textContent = b.tagline
 
-  const quote = layer.querySelector<HTMLElement>('.hi-quote')
-  if (quote) {
-    if (b.quote) {
-      quote.textContent = `“${b.quote.text}”`
-      quote.classList.add('has')
-    } else {
-      quote.textContent = ''
-      quote.classList.remove('has')
-    }
-  }
-
   if (b.image) {
     const img = document.createElement('img')
     img.alt = `Portrait of ${b.name}`
@@ -488,20 +480,24 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string, lazy = tru
       fallback.className = 'hi-noimg'
       fallback.textContent = initials(b.name)
       media.appendChild(fallback)
+      // The photo never loaded, so its credit no longer applies.
+      attr.textContent = ''
     }
     media.innerHTML = ''
     media.appendChild(img)
+
+    const credit = b.image.credit || 'Wikimedia Commons'
+    const license = b.image.license || ''
+    attr.textContent = `Photo: ${credit}${license ? ` · ${license}` : ''}`
   } else {
     media.innerHTML = ''
     const fallback = document.createElement('div')
     fallback.className = 'hi-noimg'
     fallback.textContent = initials(b.name)
     media.appendChild(fallback)
+    // No portrait means no photo to credit — avoid a phantom "Photo: …" line.
+    attr.textContent = ''
   }
-
-  const credit = b.image?.credit || 'Wikimedia Commons'
-  const license = b.image?.license || ''
-  attr.textContent = `Photo: ${credit}${license ? ` · ${license}` : ''}`
 }
 
 export function preload(

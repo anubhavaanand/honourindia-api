@@ -51,7 +51,7 @@ describe('site app.js', () => {
     const snippetCode = document.querySelector('#snippet code')
     expect(snippetCode.textContent).toContain('<div data-honourindia></div>')
     expect(snippetCode.textContent).toContain(
-      '<script src="http://localhost/embed.js" integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK" crossorigin="anonymous" async></script>',
+      '<script src="http://localhost/embed.js" integrity="sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B" crossorigin="anonymous" async></script>',
     )
     expect(snippetCode.innerHTML).toContain('data-honourindia')
     expect(snippetCode.innerHTML).toContain('http://localhost/embed.js')
@@ -116,6 +116,95 @@ describe('site app.js', () => {
     expect(empty).toBeTruthy()
     expect(empty.textContent).toMatch(/No figures/)
     expect(document.querySelectorAll('#figureGrid .figure-card').length).toBe(0)
+  })
+
+  it('renders a monogram for figures without a portrait instead of an empty square', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+    `
+
+    Object.defineProperty(window, 'location', {
+      value: { href: 'http://localhost/' },
+      configurable: true,
+    })
+
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: vi.fn(() => ({ destroy: vi.fn() })) }
+    const figures = [
+      {
+        slug: 'kanad',
+        name: 'Kanada',
+        field: 'Philosophy',
+        years: '600–200 BCE',
+        link: 'https://en.wikipedia.org/wiki/Ka%E1%B9%87%C4%81da',
+        image: null,
+      },
+    ]
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve({ count: 1, figures }) }),
+    )
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+    await new Promise((r) => setTimeout(r, 0))
+
+    const thumb = document.querySelector('#figureGrid .figure-thumb')
+    expect(thumb.classList.contains('figure-thumb--empty')).toBe(true)
+    expect(thumb.textContent).toBe('K')
+  })
+
+  it('shows an error state when the catalogue request fails (r.ok check)', async () => {
+    vi.resetModules()
+    document.body.innerHTML = `
+      <span class="ph-origin"></span>
+      <pre id="snippet"><code></code></pre>
+      <div id="previewMount"></div>
+      <select id="optTheme"><option value="dark" selected>dark</option></select>
+      <select id="optSize"><option value="rectangle" selected>rectangle · 300×250</option></select>
+      <input id="optInterval" type="range" min="5" max="60" value="8" />
+      <output id="optIntervalOut">8s</output>
+      <button id="copySnippet">Copy</button>
+      <div id="figuresCount">Loading…</div>
+      <div id="figureGrid"></div>
+    `
+
+    Object.defineProperty(window, 'location', {
+      value: { href: 'http://localhost/' },
+      configurable: true,
+    })
+
+    // @ts-expect-error test harness mock
+    window.HonourIndia = { version: '0.1.0', mount: vi.fn(() => ({ destroy: vi.fn() })) }
+    // Simulate a non-JSON 500 error response
+    // @ts-expect-error test harness mock
+    globalThis.fetch = vi.fn(() =>
+      Promise.resolve({
+        ok: false,
+        status: 500,
+        json: () => Promise.resolve({ error: 'boom' }),
+      }),
+    )
+    // @ts-expect-error test harness mock
+    navigator.clipboard = { writeText: vi.fn() }
+
+    await import('../app.js')
+    await new Promise((r) => setTimeout(r, 0))
+
+    // The error path renders a message rather than crashing on JSON parsing
+    const count = document.getElementById('figuresCount')
+    expect(count.textContent.toLowerCase()).toMatch(/could not|error|failed/)
   })
 
   it('builds subpath-safe figure card links when deployed under a subpath (issue #100)', async () => {

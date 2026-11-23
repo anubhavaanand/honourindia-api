@@ -6,9 +6,11 @@
   'use strict'
 
   // Work relative to the site root so this works at a domain root (/figures/:slug)
-  // and under a subpath (/repo/figures/:slug).
+  // and under a subpath (/repo/figures/:slug). Use the last "/figures" segment:
+  // slugs never contain a slash, so the final match is always the route, even
+  // if an ancestor path or the slug contains the word "figures".
   var pathname = location.pathname || ''
-  var figuresIdx = pathname.indexOf('/figures')
+  var figuresIdx = pathname.lastIndexOf('/figures')
   var rootPath = figuresIdx !== -1 ? pathname.slice(0, figuresIdx) + '/' : '.'
   var SITE_ROOT = new URL(rootPath, location.href)
   var API_BASE = new URL('api/v1/', SITE_ROOT)
@@ -106,8 +108,15 @@
     if (f.image) {
       portrait.hidden = false
       monogram.hidden = true
-      portrait.src = f.image.url
       portrait.alt = 'Portrait of ' + f.name
+      // If the portrait fails to load, fall back to the monogram rather than
+      // leaving a broken-image icon and a hidden monogram.
+      portrait.onerror = function () {
+        portrait.hidden = true
+        monogram.hidden = false
+        monogram.textContent = initials(f.name)
+      }
+      portrait.src = new URL(f.image.url, API_BASE).toString()
     } else {
       portrait.hidden = true
       monogram.hidden = false

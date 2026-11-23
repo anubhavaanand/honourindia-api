@@ -130,6 +130,37 @@ describe('figure detail page (apps/site/figure.js)', () => {
     expect(data.image).toContain('/images/anna-mani.jpg')
   })
 
+  it('falls back to a monogram when the portrait fails to load', async () => {
+    const { resolve } = stubFetch()
+    vi.resetModules()
+
+    // @ts-expect-error test harness mock
+    await import('../figure.js')
+
+    resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          ...figurePayload,
+          name: 'Kanada',
+          image: { url: '/images/kanada.jpg' },
+        }),
+    })
+    await new Promise((r) => setTimeout(r, 0))
+
+    const portrait = document.getElementById('figurePortrait')
+    const monogram = document.getElementById('figureMonogram')
+    expect(portrait.hidden).toBe(false)
+    expect(monogram.hidden).toBe(true)
+
+    // Simulate the image failing to load
+    portrait.dispatchEvent(new Event('error'))
+
+    expect(portrait.hidden).toBe(true)
+    expect(monogram.hidden).toBe(false)
+    expect(monogram.textContent).toBe('K')
+  })
+
   it('shows not-found when the figure returns 404 (issue #23)', async () => {
     const { resolve } = stubFetch()
     vi.resetModules()

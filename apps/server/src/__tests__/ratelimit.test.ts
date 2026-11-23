@@ -4,6 +4,10 @@ import os from 'node:os'
 import path from 'node:path'
 import { rateLimit, FileRateLimitStore, type RateLimitStore } from '../lib/ratelimit.js'
 
+// The fake contexts below signal the caller IP via x-forwarded-for, which
+// clientIp only honors behind a trusted proxy.
+process.env.TRUST_PROXY = '1'
+
 type AuthKey = { id: string; name: string }
 
 function makeContext(authKey: AuthKey | null = null, ip = '1.2.3.4', reqPath = '/api/v1/test') {

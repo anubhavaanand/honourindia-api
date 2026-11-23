@@ -5,6 +5,10 @@ import path from 'node:path'
 import { hashKey, setKeyFile, resetKeyFile, closeKeyWatcher } from '../lib/auth.js'
 import { app } from '../index.js'
 
+// These tests simulate distinct callers via the x-forwarded-for header, which
+// clientIp only honors behind a trusted proxy.
+process.env.TRUST_PROXY = '1'
+
 const VALID_KEY = 'hi_valid_test_key'
 
 function useTempKeyFile(): void {

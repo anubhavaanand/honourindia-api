@@ -264,7 +264,8 @@ api.get('/admin/submissions/:id', (c) => {
   const id = c.req.param('id')
   const submission = getSubmissionById(id)
   if (!submission) {
-    return c.json({ error: `Submission "${id}" not found` }, 404)
+    // Generic message: don't reflect the caller-supplied id back.
+    return c.json({ error: 'Submission not found' }, 404)
   }
   return c.json({ submission })
 })

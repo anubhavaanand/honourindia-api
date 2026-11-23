@@ -106,8 +106,15 @@
     if (f.image) {
       portrait.hidden = false
       monogram.hidden = true
-      portrait.src = f.image.url
       portrait.alt = 'Portrait of ' + f.name
+      // If the portrait fails to load, fall back to the monogram rather than
+      // leaving a broken-image icon and a hidden monogram.
+      portrait.onerror = function () {
+        portrait.hidden = true
+        monogram.hidden = false
+        monogram.textContent = initials(f.name)
+      }
+      portrait.src = f.image.url
     } else {
       portrait.hidden = true
       monogram.hidden = false

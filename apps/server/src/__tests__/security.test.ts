@@ -122,4 +122,9 @@ describe('/images/* path traversal protection', () => {
     const res = await app.request('/images/%E0%A4%A')
     expect(res.status).toBe(400)
   })
+
+  it('rejects NUL bytes in the image path with 400', async () => {
+    const res = await app.request('/images/cv-raman.jpg%00.png')
+    expect(res.status).toBe(400)
+  })
 })

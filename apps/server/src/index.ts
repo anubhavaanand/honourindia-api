@@ -179,10 +179,16 @@ app.get('/images/*', (c) => {
     return c.text('Bad request', 400)
   }
 
+  // Reject NUL bytes before resolving the path.
+  if (rel.includes('\0')) return c.text('Bad request', 400)
+
   const target = path.resolve(IMAGES_DIR, rel)
   const relToImages = path.relative(IMAGES_DIR, target)
 
-  // Disallow paths escaping IMAGES_DIR (e.g. ../, absolute paths, or self)
+  // Disallow paths escaping IMAGES_DIR (e.g. ../, absolute paths, or self).
+  // startsWith('..') is intentionally conservative: it may also reject an odd
+  // entry whose name merely begins with "..", but it never lets a traversal
+  // through.
   if (relToImages.startsWith('..') || path.isAbsolute(relToImages) || relToImages === '') {
     return c.text('Forbidden: invalid image path', 403)
   }

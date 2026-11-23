@@ -79,3 +79,31 @@ describe('ETag and conditional requests', () => {
     expect(second.status).toBe(304)
   })
 })
+
+describe('GET /figures query validation', () => {
+  it.each(['0', '101', '-1', '12abc', '1e3', '1.5', ''])(
+    'rejects limit=%p with 400',
+    async (limit) => {
+      const { status, body } = await get(`/figures?limit=${encodeURIComponent(limit)}`)
+      expect(status).toBe(400)
+      expect(body.error).toBe('limit must be an integer between 1 and 100')
+    },
+  )
+
+  it.each(['-1', '5abc', '2.5', ''])('rejects offset=%p with 400', async (offset) => {
+    const { status, body } = await get(`/figures?offset=${encodeURIComponent(offset)}`)
+    expect(status).toBe(400)
+    expect(body.error).toBe('offset must be a non-negative integer')
+  })
+
+  it.each(['true', 'false'])('accepts enduring=%p', async (enduring) => {
+    const { status } = await get(`/figures?enduring=${enduring}`)
+    expect(status).toBe(200)
+  })
+
+  it.each(['1', 'yes', 'TRUE', ''])('rejects enduring=%p with 400', async (enduring) => {
+    const { status, body } = await get(`/figures?enduring=${encodeURIComponent(enduring)}`)
+    expect(status).toBe(400)
+    expect(body.error).toContain('enduring must be "true" or "false"')
+  })
+})

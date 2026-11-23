@@ -121,20 +121,24 @@ api.get('/figures', (c) => {
 
   let enduring: boolean | undefined
   if (enduringRaw !== undefined) {
+    if (enduringRaw !== 'true' && enduringRaw !== 'false')
+      return c.json({ error: 'enduring must be "true" or "false"' }, 400)
     enduring = enduringRaw === 'true'
   }
   let limit: number | undefined
   if (limitRaw !== undefined) {
-    const n = Number.parseInt(limitRaw, 10)
-    if (!Number.isFinite(n) || n < 1 || n > 100) {
+    // Reject partial input like "12abc" or "1e3": require digits only, then
+    // convert, so parseInt's silent prefix-parsing can't slip through.
+    const n = /^\d+$/.test(limitRaw) ? Number(limitRaw) : NaN
+    if (!Number.isInteger(n) || n < 1 || n > 100) {
       return c.json({ error: 'limit must be an integer between 1 and 100' }, 400)
     }
     limit = n
   }
   let offset: number | undefined
   if (offsetRaw !== undefined) {
-    const n = Number.parseInt(offsetRaw, 10)
-    if (!Number.isFinite(n) || n < 0) {
+    const n = /^\d+$/.test(offsetRaw) ? Number(offsetRaw) : NaN
+    if (!Number.isInteger(n) || n < 0) {
       return c.json({ error: 'offset must be a non-negative integer' }, 400)
     }
     offset = n

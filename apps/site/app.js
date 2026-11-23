@@ -182,7 +182,8 @@
     thumb.className = 'figure-thumb'
     if (f.image) {
       var imgUrl = new URL(f.image.url, API_BASE).toString()
-      thumb.style.backgroundImage = 'url("' + imgUrl + '")'
+      // Escape any characters that would break out of the CSS url("...") value.
+      thumb.style.backgroundImage = 'url("' + imgUrl.replace(/["\\]/g, '\\$&') + '")'
       // Fall back to a monogram if the portrait fails to load, matching the
       // detail page instead of leaving an empty grey square.
       var probe = new Image()
@@ -253,6 +254,7 @@
 
     fetch(url)
       .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status)
         return r.json()
       })
       .then(function (data) {

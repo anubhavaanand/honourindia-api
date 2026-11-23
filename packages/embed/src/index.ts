@@ -267,6 +267,8 @@ const CSS = `
   backdrop-filter: blur(2px);
 }
 .hi:hover .hi-nav, .hi-nav:focus-visible { opacity: 1; }
+/* Expand the tappable area to ~44px without changing the visible 26px button. */
+.hi-nav::after { content: ''; position: absolute; inset: -9px; border-radius: 50%; }
 .hi-prev { left: 6px; }
 .hi-next { right: 6px; }
 .hi-nav:hover { background: rgba(10,12,14,.75); }
@@ -405,6 +407,8 @@ function buildDom(
 
   const loading = document.createElement('div')
   loading.className = 'hi-loading'
+  loading.setAttribute('role', 'status')
+  loading.setAttribute('aria-live', 'polite')
   loading.innerHTML =
     '<div class="hi-loading-brand">सम्मान · Honour India</div>' +
     '<div class="hi-loading-pulse"></div>'

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { randomBytes } from 'node:crypto'
@@ -53,7 +53,12 @@ export function loadSubmissions(): FigureSubmission[] {
 }
 
 export function saveSubmissions(list: FigureSubmission[]): void {
-  writeFileSync(submissionsFile, JSON.stringify({ submissions: list }, null, 2) + '\n', 'utf8')
+  // Write to a sibling temp file then rename, so a crash mid-write cannot
+  // leave a truncated/corrupt submissions file behind. rename() is atomic on
+  // the same filesystem.
+  const tmp = `${submissionsFile}.${randomBytes(6).toString('hex')}.tmp`
+  writeFileSync(tmp, JSON.stringify({ submissions: list }, null, 2) + '\n', 'utf8')
+  renameSync(tmp, submissionsFile)
 }
 
 export function listSubmissions(options?: { status?: SubmissionStatus }): FigureSubmission[] {

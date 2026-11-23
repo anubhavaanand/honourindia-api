@@ -116,7 +116,7 @@
         monogram.hidden = false
         monogram.textContent = initials(f.name)
       }
-      portrait.src = f.image.url
+      portrait.src = new URL(f.image.url, API_BASE).toString()
     } else {
       portrait.hidden = true
       monogram.hidden = false

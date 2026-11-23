@@ -77,6 +77,21 @@ How it behaves:
 - only 21.5 kB minified (6.7 kB gzipped), no dependencies, works back to ES2018
   browsers. `npm run check:size` keeps it inside its budget.
 
+### Visual regression tests
+
+The widget's billboard rendering is covered by visual regression tests
+(issue #70): six screenshots (3 sizes × 2 themes) are captured in a real
+browser and compared against committed baselines with `pixelmatch`. They run
+outside the normal suite because they need a built widget and a browser:
+
+```bash
+npm run test:visual          # compares current output against baselines
+UPDATE_VISUAL=1              # regenerates baselines after an intentional change
+```
+
+If you change the widget's CSS or markup, regenerate baselines with
+`UPDATE_VISUAL=1` and commit the new `.png` files alongside your change.
+
 ## Embedding on different platforms
 
 The widget is dependency-free and mounts into a shadow root, so it works on any platform that lets you paste HTML or JavaScript.

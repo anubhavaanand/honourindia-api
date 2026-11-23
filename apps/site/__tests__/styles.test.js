@@ -39,23 +39,23 @@ describe('site styles.css print stylesheet (issue #24)', () => {
     const cssContent = readFileSync(cssPath, 'utf8')
 
     const saffronMatch = cssContent.match(/--saffron:\s*(#[0-9a-fA-F]+);/)
-    const saffron = saffronMatch ? saffronMatch[1] : '#ff9e2c'
+    const saffron = saffronMatch ? saffronMatch[1] : '#a44a0a'
 
     const inkFaintMatch = cssContent.match(/--ink-faint:\s*(#[0-9a-fA-F]+);/)
-    const inkFaint = inkFaintMatch ? inkFaintMatch[1] : '#8c8983'
+    const inkFaint = inkFaintMatch ? inkFaintMatch[1] : '#6e675c'
 
-    const bgMatch = cssContent.match(/--bg:\s*(#[0-9a-fA-F]+);/)
-    const bg = bgMatch ? bgMatch[1] : '#000000'
+    const paperMatch = cssContent.match(/--paper:\s*(#[0-9a-fA-F]+);/)
+    const bg = paperMatch ? paperMatch[1] : '#f3ede2'
 
-    // Saffron text on black background
+    // Saffron text on the paper background
     const saffronContrast = contrast(saffron, bg)
     expect(saffronContrast).toBeGreaterThanOrEqual(4.5)
 
-    // Dark text on saffron button
-    const btnTextContrast = contrast('#140c02', saffron)
+    // Paper text on a saffron button
+    const btnTextContrast = contrast(bg, saffron)
     expect(btnTextContrast).toBeGreaterThanOrEqual(4.5)
 
-    // Ink faint text on black background
+    // Faint ink text on the paper background
     const inkFaintContrast = contrast(inkFaint, bg)
     expect(inkFaintContrast).toBeGreaterThanOrEqual(4.5)
   })

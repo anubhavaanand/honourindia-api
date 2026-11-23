@@ -158,6 +158,20 @@
 
   var fetchSeq = 0
 
+  function initials(name) {
+    return (
+      String(name || '')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(function (w) {
+          return w.charAt(0)
+        })
+        .join('')
+        .toUpperCase() || '?'
+    )
+  }
+
   function renderCard(f) {
     var a = document.createElement('a')
     a.className = 'figure-card'
@@ -166,7 +180,22 @@
 
     var thumb = document.createElement('div')
     thumb.className = 'figure-thumb'
-    if (f.image) thumb.style.backgroundImage = 'url("' + new URL(f.image.url, API_BASE) + '")'
+    if (f.image) {
+      var imgUrl = new URL(f.image.url, API_BASE).toString()
+      thumb.style.backgroundImage = 'url("' + imgUrl + '")'
+      // Fall back to a monogram if the portrait fails to load, matching the
+      // detail page instead of leaving an empty grey square.
+      var probe = new Image()
+      probe.onerror = function () {
+        thumb.style.backgroundImage = ''
+        thumb.classList.add('figure-thumb--empty')
+        thumb.textContent = initials(f.name)
+      }
+      probe.src = imgUrl
+    } else {
+      thumb.classList.add('figure-thumb--empty')
+      thumb.textContent = initials(f.name)
+    }
 
     var body = document.createElement('div')
     body.className = 'figure-body'

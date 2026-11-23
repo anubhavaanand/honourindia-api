@@ -455,6 +455,58 @@ describe('widget (packages/embed)', () => {
     vi.clearAllTimers()
   })
 
+  it('does not show a phantom photo credit when a billboard has no image', async () => {
+    fetchMock.mockReturnValue(jsonResponse({ billboards }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by widget bundle
+    const handle = window.HonourIndia.mount(host, { api: 'http://localhost/api/v1' })
+
+    await new Promise((r) => setTimeout(r, 0))
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    expect(active.querySelector('.hi-noimg')).toBeTruthy()
+    const attr = active.querySelector('.hi-attr') as HTMLElement
+    expect(attr.textContent).toBe('')
+
+    handle.destroy()
+  })
+
+  it('shows the photo credit when a billboard has an image', async () => {
+    const withCredit = [
+      {
+        ...billboards[0]!,
+        image: {
+          url: '/images/cv-raman.jpg',
+          credit: 'Nobel Foundation',
+          license: 'Public domain',
+        },
+      },
+    ]
+    fetchMock.mockReturnValue(jsonResponse({ billboards: withCredit }))
+
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+
+    // @ts-expect-error global set by widget bundle
+    const handle = window.HonourIndia.mount(host, {
+      api: 'http://localhost/api/v1',
+      preloadTimeout: 10,
+    })
+
+    await vi.waitFor(() => {
+      expect(host.shadowRoot!.querySelector('.hi-layer.is-active .hi-media img')).toBeTruthy()
+    })
+
+    const active = host.shadowRoot!.querySelector('.hi-layer.is-active')!
+    const attr = active.querySelector('.hi-attr') as HTMLElement
+    expect(attr.textContent).toBe('Photo: Nobel Foundation · Public domain')
+
+    handle.destroy()
+  })
+
   describe('preload (issue #7)', () => {
     it('resolves immediately when billboard has no image', async () => {
       const b = { ...billboards[0]!, image: null }

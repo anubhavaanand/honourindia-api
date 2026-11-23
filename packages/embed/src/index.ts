@@ -488,20 +488,24 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string, lazy = tru
       fallback.className = 'hi-noimg'
       fallback.textContent = initials(b.name)
       media.appendChild(fallback)
+      // The photo never loaded, so its credit no longer applies.
+      attr.textContent = ''
     }
     media.innerHTML = ''
     media.appendChild(img)
+
+    const credit = b.image.credit || 'Wikimedia Commons'
+    const license = b.image.license || ''
+    attr.textContent = `Photo: ${credit}${license ? ` · ${license}` : ''}`
   } else {
     media.innerHTML = ''
     const fallback = document.createElement('div')
     fallback.className = 'hi-noimg'
     fallback.textContent = initials(b.name)
     media.appendChild(fallback)
+    // No portrait means no photo to credit — avoid a phantom "Photo: …" line.
+    attr.textContent = ''
   }
-
-  const credit = b.image?.credit || 'Wikimedia Commons'
-  const license = b.image?.license || ''
-  attr.textContent = `Photo: ${credit}${license ? ` · ${license}` : ''}`
 }
 
 export function preload(

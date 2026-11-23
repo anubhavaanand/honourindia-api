@@ -201,7 +201,6 @@ const CSS = `
 
 /* ---- poster: square, image-dominant; info over scrim at the bottom ---- */
 .hi--poster .hi-panel { display: none; }
-.hi--poster .hi-quote { display: none; }
 
 .hi--poster .hi-scrim {
   background: linear-gradient(180deg, rgba(8,10,12,0) 0%, rgba(8,10,12,.45) 55%, rgba(8,10,12,.92) 100%);
@@ -455,17 +454,6 @@ function fillLayer(layer: HTMLElement, b: Billboard, baseUrl: string, lazy = tru
   }
   name.textContent = b.name
   tag.textContent = b.tagline
-
-  const quote = layer.querySelector<HTMLElement>('.hi-quote')
-  if (quote) {
-    if (b.quote) {
-      quote.textContent = `“${b.quote.text}”`
-      quote.classList.add('has')
-    } else {
-      quote.textContent = ''
-      quote.classList.remove('has')
-    }
-  }
 
   if (b.image) {
     const img = document.createElement('img')

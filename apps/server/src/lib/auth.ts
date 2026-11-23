@@ -63,8 +63,10 @@ export function loadKeys(filePath = currentKeyFile): Map<string, KeyRecord> {
   }
   try {
     const stat = statSync(filePath)
-    lastMtimeMs = stat.mtimeMs
     const parsed = JSON.parse(readFileSync(filePath, 'utf8')) as KeysFile
+    // Only record the mtime after a successful parse, so a broken file keeps
+    // being retried on the next request instead of being pinned by mtime.
+    lastMtimeMs = stat.mtimeMs
     for (const k of parsed.keys ?? []) {
       if (k.enabled !== false) map.set(k.hash, k)
     }

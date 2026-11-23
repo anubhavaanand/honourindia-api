@@ -106,7 +106,7 @@
     if (f.image) {
       portrait.hidden = false
       monogram.hidden = true
-      portrait.src = f.image.url
+      portrait.src = new URL(f.image.url, API_BASE).toString()
       portrait.alt = 'Portrait of ' + f.name
     } else {
       portrait.hidden = true

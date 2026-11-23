@@ -3,6 +3,7 @@ import { existsSync, readFileSync, statSync, watch, type FSWatcher } from 'node:
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Context, Next } from 'hono'
+import { getConnInfo } from '@hono/node-server/conninfo'
 import { log } from './logger.js'
 
 /**
@@ -62,8 +63,10 @@ export function loadKeys(filePath = currentKeyFile): Map<string, KeyRecord> {
   }
   try {
     const stat = statSync(filePath)
-    lastMtimeMs = stat.mtimeMs
     const parsed = JSON.parse(readFileSync(filePath, 'utf8')) as KeysFile
+    // Only record the mtime after a successful parse, so a broken file keeps
+    // being retried on the next request instead of being pinned by mtime.
+    lastMtimeMs = stat.mtimeMs
     for (const k of parsed.keys ?? []) {
       if (k.enabled !== false) map.set(k.hash, k)
     }
@@ -154,11 +157,36 @@ function safeEqual(a: string, b: string): boolean {
   return ba.length === bb.length && timingSafeEqual(ba, bb)
 }
 
-/** The caller's IP, used to group rate limits and failed key attempts. */
+/** True when this deployment sits behind a proxy that sets X-Forwarded-For. */
+function trustsProxy(): boolean {
+  const v = process.env.TRUST_PROXY
+  return v === '1' || v === 'true'
+}
+
+/**
+ * The caller's IP, used to group rate limits and failed key attempts.
+ *
+ * Forwarding headers (X-Forwarded-For / X-Real-IP) are only honored when the
+ * deployment explicitly opts in with TRUST_PROXY=1. Otherwise any anonymous
+ * client could spoof the header to mint a fresh rate-limit identity per request
+ * and evade both the anonymous rate limit and the key-failure lockout.
+ *
+ * Without a trusted proxy we read the transport socket address via the node
+ * adapter's getConnInfo, which a client cannot forge from the request headers.
+ */
 export function clientIp(c: Context<Env>): string {
-  return (
-    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() || c.req.header('x-real-ip') || 'local'
-  )
+  if (trustsProxy()) {
+    const forwarded = c.req.header('x-forwarded-for')?.split(',')[0]?.trim()
+    const realIp = c.req.header('x-real-ip')?.trim()
+    if (forwarded || realIp) return forwarded || realIp!
+  }
+  try {
+    const address = getConnInfo(c).remote.address
+    if (address) return address
+  } catch {
+    // No socket binding (e.g. app.request in tests) — fall through.
+  }
+  return 'local'
 }
 
 // Failed key attempts per client. The keys are 32 random bytes, so guessing

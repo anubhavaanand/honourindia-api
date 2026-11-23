@@ -34,4 +34,15 @@ describe('requestId', () => {
     await requestId()(c, () => Promise.resolve())
     expect(c.res.headers.get('X-Request-ID')).toBe('abc123')
   })
+
+  it('ignores a malformed or oversized inbound request id and generates a fresh one', async () => {
+    for (const bad of ['has space', 'x'.repeat(200), 'bad\nheader', '☃']) {
+      const { c } = makeContext('/')
+      c.req.header = (name: string) => (name === 'x-request-id' ? bad : undefined)
+      await requestId()(c, () => Promise.resolve())
+      const id = c.res.headers.get('X-Request-ID')
+      expect(id).not.toBe(bad)
+      expect(/^[0-9a-f]{16}$/.test(id!)).toBe(true)
+    }
+  })
 })

@@ -77,7 +77,27 @@ describe('Figure submission API (issue #62)', () => {
     })
     expect(res.status).toBe(400)
     const data = (await res.json()) as any
-    expect(data.error).toContain('"born" is required and must be a number')
+    expect(data.error).toContain('"born" is required and must be a valid year')
+  })
+
+  it('rejects a non-finite or out-of-range born year', async () => {
+    for (const born of [1900.5, 999999, -9999]) {
+      const res = await api.request('/figures/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Scientist',
+          born,
+          field: 'Physics',
+          tagline: 'Tagline',
+          summary: 'Summary',
+          wiki: 'Wiki',
+        }),
+      })
+      expect(res.status).toBe(400)
+      const data = (await res.json()) as any
+      expect(data.error).toContain('valid year')
+    }
   })
 
   it('rejects submission with missing summary or wiki', async () => {

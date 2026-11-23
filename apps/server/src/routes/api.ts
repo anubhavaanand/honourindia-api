@@ -121,20 +121,24 @@ api.get('/figures', (c) => {
 
   let enduring: boolean | undefined
   if (enduringRaw !== undefined) {
+    if (enduringRaw !== 'true' && enduringRaw !== 'false')
+      return c.json({ error: 'enduring must be "true" or "false"' }, 400)
     enduring = enduringRaw === 'true'
   }
   let limit: number | undefined
   if (limitRaw !== undefined) {
-    const n = Number.parseInt(limitRaw, 10)
-    if (!Number.isFinite(n) || n < 1 || n > 100) {
+    // Reject partial input like "12abc" or "1e3": require digits only, then
+    // convert, so parseInt's silent prefix-parsing can't slip through.
+    const n = /^\d+$/.test(limitRaw) ? Number(limitRaw) : NaN
+    if (!Number.isInteger(n) || n < 1 || n > 100) {
       return c.json({ error: 'limit must be an integer between 1 and 100' }, 400)
     }
     limit = n
   }
   let offset: number | undefined
   if (offsetRaw !== undefined) {
-    const n = Number.parseInt(offsetRaw, 10)
-    if (!Number.isFinite(n) || n < 0) {
+    const n = /^\d+$/.test(offsetRaw) ? Number(offsetRaw) : NaN
+    if (!Number.isInteger(n) || n < 0) {
       return c.json({ error: 'offset must be a non-negative integer' }, 400)
     }
     offset = n
@@ -179,14 +183,26 @@ api.post('/figures/submit', async (c) => {
   const { name, born, died, field, tagline, summary, wiki, quote, submitterName, submitterEmail } =
     body
 
+  // Bound text fields so a submission can't stuff unbounded payloads into the
+  // moderation queue (the body limit caps the request, this caps each field).
+  const MAX_TEXT = 2000
+  const tooLong = (v: unknown) => typeof v === 'string' && v.length > MAX_TEXT
+
   if (!name || typeof name !== 'string' || name.trim() === '') {
     return c.json({ error: 'Field "name" is required and must be a non-empty string' }, 400)
   }
-  if (born === undefined || born === null || typeof born !== 'number') {
-    return c.json({ error: 'Field "born" is required and must be a number' }, 400)
+  if (tooLong(name) || tooLong(field) || tooLong(tagline) || tooLong(summary) || tooLong(wiki)) {
+    return c.json({ error: `Text fields must be at most ${MAX_TEXT} characters` }, 400)
   }
-  if (died !== undefined && died !== null && typeof died !== 'number') {
-    return c.json({ error: 'Field "died" must be a number or null' }, 400)
+  // born/died must be finite integers within a plausible historical range; this
+  // rejects Infinity, floats and absurd values that would corrupt the catalogue.
+  const isValidYear = (y: unknown) =>
+    Number.isInteger(y) && (y as number) >= -3000 && (y as number) <= 2100
+  if (!isValidYear(born)) {
+    return c.json({ error: 'Field "born" is required and must be a valid year' }, 400)
+  }
+  if (died !== undefined && died !== null && !isValidYear(died)) {
+    return c.json({ error: 'Field "died" must be a valid year or null' }, 400)
   }
   if (!field || typeof field !== 'string' || field.trim() === '') {
     return c.json({ error: 'Field "field" is required and must be a non-empty string' }, 400)
@@ -248,7 +264,8 @@ api.get('/admin/submissions/:id', (c) => {
   const id = c.req.param('id')
   const submission = getSubmissionById(id)
   if (!submission) {
-    return c.json({ error: `Submission "${id}" not found` }, 404)
+    // Generic message: don't reflect the caller-supplied id back.
+    return c.json({ error: 'Submission not found' }, 404)
   }
   return c.json({ submission })
 })

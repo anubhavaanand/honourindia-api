@@ -179,10 +179,16 @@ app.get('/images/*', (c) => {
     return c.text('Bad request', 400)
   }
 
+  // Reject NUL bytes before resolving the path.
+  if (rel.includes('\0')) return c.text('Bad request', 400)
+
   const target = path.resolve(IMAGES_DIR, rel)
   const relToImages = path.relative(IMAGES_DIR, target)
 
-  // Disallow paths escaping IMAGES_DIR (e.g. ../, absolute paths, or self)
+  // Disallow paths escaping IMAGES_DIR (e.g. ../, absolute paths, or self).
+  // startsWith('..') is intentionally conservative: it may also reject an odd
+  // entry whose name merely begins with "..", but it never lets a traversal
+  // through.
   if (relToImages.startsWith('..') || path.isAbsolute(relToImages) || relToImages === '') {
     return c.text('Forbidden: invalid image path', 403)
   }
@@ -244,6 +250,13 @@ app.notFound((c) => {
 const isProd = process.env.NODE_ENV === 'production'
 
 if (process.env.NODE_ENV !== 'test' && !process.env.VITEST) {
+  // Admin routes fail closed without a key, so production would silently lock
+  // out moderators — warn loudly at boot instead of failing mysteriously later.
+  if (isProd && !process.env.ADMIN_KEY && !process.env.HONOURINDIA_ADMIN_KEY) {
+    log('warn', 'ADMIN_KEY is not set — moderation endpoints will reject every request', {
+      hint: 'Set ADMIN_KEY to enable /api/v1/admin/* in production.',
+    })
+  }
   const port = Number(process.env.PORT ?? 3000)
   const server = serve({ fetch: app.fetch, port }, (info) => {
     log('info', 'server started', {

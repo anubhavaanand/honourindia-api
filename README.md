@@ -9,7 +9,7 @@ rarely celebrated. One line of code on any site, free forever, no tracking.
 
 ```
 <div data-honourindia></div>
-<script src="https://your-host/embed.js" integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK" crossorigin="anonymous" async></script>
+<script src="https://your-host/embed.js" integrity="sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B" crossorigin="anonymous" async></script>
 ```
 
 That's the whole integration. A tasteful billboard fades in, rotates through
@@ -94,7 +94,7 @@ The widget is dependency-free and mounts into a shadow root, so it works on any 
 <div data-honourindia data-size="poster" data-theme="dark" data-interval="8"></div>
 <script
   src="https://your-host/embed.js"
-  integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK"
+  integrity="sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B"
   crossorigin="anonymous"
   async
 ></script>
@@ -139,7 +139,7 @@ Add a **Custom HTML** block to your page or widget area:
 <div data-honourindia data-size="leaderboard"></div>
 <script
   src="https://your-host/embed.js"
-  integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK"
+  integrity="sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B"
   crossorigin="anonymous"
   async
 ></script>

@@ -7,7 +7,7 @@
   var PAGE_DIR = new URL('.', location.href)
   var EMBED_ORIGIN = PAGE_DIR.toString().replace(/\/$/, '')
   var API_BASE = new URL('api/v1/', PAGE_DIR)
-  var EMBED_SRI = 'sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK'
+  var EMBED_SRI = 'sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B'
 
   // Fill origin placeholders in the static HTML.
   document.querySelectorAll('.ph-origin').forEach(function (el) {

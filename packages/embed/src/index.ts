@@ -3,7 +3,7 @@
  *
  * Usage (one line on any page):
  *   <div data-honourindia></div>
- *   <script src="https://your-host/embed.js" integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK" crossorigin="anonymous" async></script>
+ *   <script src="https://your-host/embed.js" integrity="sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B" crossorigin="anonymous" async></script>
  *
  * Options (attributes on the container, or passed to HonourIndia.mount):
  *   data-api       — API base, defaults to <origin of embed.js>/api/v1

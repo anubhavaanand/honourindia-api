@@ -51,7 +51,7 @@ describe('site app.js', () => {
     const snippetCode = document.querySelector('#snippet code')
     expect(snippetCode.textContent).toContain('<div data-honourindia></div>')
     expect(snippetCode.textContent).toContain(
-      '<script src="http://localhost/embed.js" integrity="sha384-XTEXrYvun/pWlclCcmXe0PtYbUYPjPy8hZWIbCzsIxDbpyLfi6K7WVKoQW7ql7rK" crossorigin="anonymous" async></script>',
+      '<script src="http://localhost/embed.js" integrity="sha384-EVcappaRO+6cs/fj/SpUHvBcRwZosZP9ALTkXX/BqRjgEg2hOOP7TFRcovMwwP1B" crossorigin="anonymous" async></script>',
     )
     expect(snippetCode.innerHTML).toContain('data-honourindia')
     expect(snippetCode.innerHTML).toContain('http://localhost/embed.js')

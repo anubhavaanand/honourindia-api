@@ -3,20 +3,24 @@
    portrait plates with printed captions.
    Type: Fraunces (display, italic for the archive voice) + Space Grotesk (text/UI) */
 
+/* सम्मान · Honour India — archive plate theme (inverted: black plate)
+   A printed reference index, not a product page: the plate is black india ink
+   struck with light. Hairline rules, portrait plates with printed captions.
+   Type: Fraunces (display, italic for the archive voice) + Space Grotesk (text/UI) */
 :root {
-  --paper: #f3ede2;
-  --paper-raise: #ece4d6;
-  --paper-deep: #e3d9c7;
-  --ink: #1c1916;
-  --ink-soft: #4a443c;
-  --ink-dim: #574f45;
-  --ink-faint: #6e675c;
-  --rule: rgba(28, 25, 22, 0.16);
-  --rule-strong: rgba(28, 25, 22, 0.32);
-  --saffron: #a44a0a;
-  --saffron-soft: #b4550c;
-  --plate: #141210;
-  --green: #2f5d32;
+  --paper: #141210;
+  --paper-raise: #1c1815;
+  --paper-deep: #221e1a;
+  --ink: #f3ede2;
+  --ink-soft: #cfc6b8;
+  --ink-dim: #b0a697;
+  --ink-faint: #8f877d;
+  --rule: rgba(243, 237, 226, 0.14);
+  --rule-strong: rgba(243, 237, 226, 0.32);
+  --saffron: #e8913c;
+  --saffron-soft: #f0a05a;
+  --plate: #0d0b0a;
+  --green: #7aa87d;
   --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
@@ -58,17 +62,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-::selection { background: rgba(164, 74, 10, 0.2); color: var(--ink); }
+::selection { background: rgba(232, 145, 60, 0.28); color: var(--ink); }
 
 .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
 
-a { color: var(--saffron); text-decoration: none; text-underline-offset: 3px; }
-a:hover { text-decoration: underline; }
+/* Links are ink, underlined on the plate. Saffron is rationed to actions. */
+a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+a:hover { color: var(--saffron); text-decoration: underline; text-decoration-color: var(--saffron); }
 
 /* header — a masthead rule, not chrome */
 .site-head {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(243, 237, 226, 0.9);
+  background: rgba(20, 18, 16, 0.88);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--rule-strong);
 }
@@ -78,7 +83,7 @@ a:hover { text-decoration: underline; }
   font-weight: 600; font-size: 1.18rem; letter-spacing: -0.01em;
   color: var(--ink);
 }
-.wordmark:hover { text-decoration: none; color: var(--saffron); }
+.wordmark:hover { text-decoration: none; color: var(--ink-dim); }
 .site-head nav { display: flex; gap: 26px; }
 .site-head nav a {
   color: var(--ink-soft); font-size: 0.9rem; font-weight: 500;
@@ -86,21 +91,36 @@ a:hover { text-decoration: underline; }
 }
 .site-head nav a:hover { color: var(--ink); text-decoration: none; border-bottom-color: var(--saffron); }
 
-/* ---- hero: headline + portrait plate ---- */
+/* ---- hero: the plate itself ----
+   The widget is the artefact, so it sits in a recessed mount well — an
+   inset field with its own hairline and a shadow that reads light coming
+   from above. Not a card: no radius, no drop shadow, no gradient. */
 .hero {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 56px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
   align-items: center;
-  padding-top: 76px;
-  padding-bottom: 76px;
+  padding-top: 72px;
+  padding-bottom: 72px;
 }
 .kicker {
-  font-size: 0.82rem;
-  color: var(--saffron);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  margin: 0 0 18px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.02rem;
+  color: var(--ink-dim);
+  margin: 0 0 20px;
+  /* The archive catalogue writes its entries as a rule-delimited run. */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.kicker::before {
+  content: '';
+  width: 34px;
+  height: 1px;
+  background: var(--ink-dim);
+  flex: none;
 }
 .hero h1 {
   font-family: var(--serif);
@@ -121,6 +141,30 @@ a:hover { text-decoration: underline; }
   margin: 0 0 28px;
 }
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+/* The recessed well: the widget is bolted into the plate, not floating on it. */
+.hero-stage {
+  position: relative;
+  padding: 26px 26px 22px;
+  background: var(--plate);
+  border: 1px solid var(--rule-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(243, 237, 226, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+/* A struck-plate caption under the mount — identifies what is bolted here. */
+.hero-stage::after {
+  content: 'Live embed — mounted on this page';
+  display: block;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--ink-faint);
+  text-align: center;
+}
+.hero-stage [data-honourindia] { display: flex; justify-content: center; }
 .hero-note {
   margin: 22px 0 0;
   font-size: 0.82rem;
@@ -183,10 +227,12 @@ a:hover { text-decoration: underline; }
 }
 .section h2 .num { display: none; }
 .section-lede {
-  font-size: 1.06rem;
-  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--ink-dim);
   max-width: 62ch;
-  margin: 0 0 36px;
+  margin: 0 0 40px;
 }
 
 /* ---- embed playground ---- */
@@ -311,8 +357,8 @@ pre {
   overflow: hidden;
 }
 .figure-field {
-  font-size: 0.76rem; color: var(--saffron); font-weight: 600;
-  letter-spacing: 0.005em; margin: 0;
+  font-size: 0.76rem; color: var(--ink-soft); font-weight: 500;
+  letter-spacing: 0.02em; margin: 0;
   min-width: 0; flex: 1 1 auto;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -320,7 +366,7 @@ pre {
   font-family: var(--serif); font-weight: 500; font-size: 1.18rem;
   margin: 0 0 4px; letter-spacing: -0.005em; line-height: 1.2;
 }
-.figure-card:hover .figure-name { color: var(--saffron); }
+.figure-card:hover .figure-name { color: var(--saffron); text-decoration-color: var(--saffron); }
 .figure-years { color: var(--ink-faint); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
 .figure-era-badge {
   font-size: 0.72rem; color: var(--ink-faint); font-style: italic;

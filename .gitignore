@@ -7,3 +7,4 @@ dist-pages/
 *.log
 .DS_Store
 .zcode/
+.claude/
